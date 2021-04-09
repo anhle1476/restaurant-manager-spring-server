@@ -29,4 +29,14 @@ public class ShiftStaff {
     private Violation violation;
 
     private boolean deleted;
+
+    @Override
+    public String toString() {
+        return "ShiftStaff{" +
+                "id=" + id +
+                ", staff=" + staff +
+                ", violation=" + violation +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

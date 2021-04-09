@@ -26,4 +26,14 @@ public class SalaryHistory {
     private List<SalaryDetail> salaryDetails;
 
     private boolean deleted;
+
+    @Override
+    public String toString() {
+        return "SalaryHistory{" +
+                "id=" + id +
+                ", firstDateOfMonth=" + firstDateOfMonth +
+                ", salaryDetails=" + salaryDetails +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

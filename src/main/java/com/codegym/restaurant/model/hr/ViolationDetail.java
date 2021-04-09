@@ -29,4 +29,15 @@ public class ViolationDetail {
     private int numberOfViolations;
 
     private boolean deleted;
+
+    @Override
+    public String toString() {
+        return "ViolationDetail{" +
+                "id=" + id +
+                ", violation=" + violation +
+                ", finesPercent=" + finesPercent +
+                ", numberOfViolations=" + numberOfViolations +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

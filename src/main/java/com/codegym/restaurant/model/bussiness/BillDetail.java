@@ -50,4 +50,17 @@ public class BillDetail {
     protected void onUpdate() {
         resetOrderTime();
     }
+
+    @Override
+    public String toString() {
+        return "BillDetail{" +
+                "id=" + id +
+                ", food=" + food +
+                ", quantity=" + quantity +
+                ", doneQuantity=" + doneQuantity +
+                ", pricePerUnit=" + pricePerUnit +
+                ", lastOrderTime=" + lastOrderTime +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

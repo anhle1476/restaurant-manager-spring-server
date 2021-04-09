@@ -34,4 +34,15 @@ public class SalaryDetail {
     private List<ViolationDetail> violationDetails;
 
     private boolean deleted;
+
+    @Override
+    public String toString() {
+        return "SalaryDetail{" +
+                "id=" + id +
+                ", staff=" + staff +
+                ", numberOfShift=" + numberOfShift +
+                ", salary=" + salary +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

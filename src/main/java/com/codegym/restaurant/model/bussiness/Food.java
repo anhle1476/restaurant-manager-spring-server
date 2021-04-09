@@ -33,7 +33,23 @@ public class Food {
     @JsonIgnore
     private List<BillDetail> billDetails;
 
+    private String imageUrl;
+
     private boolean available;
 
     private boolean deleted;
+
+    @Override
+    public String toString() {
+        return "Food{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", unit='" + unit + '\'' +
+                ", foodType=" + foodType +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", available=" + available +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

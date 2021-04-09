@@ -30,4 +30,15 @@ public class ReservingOrder {
     private List<AppTable> appTables;
 
     private boolean deleted;
+
+    @Override
+    public String toString() {
+        return "ReservingOrder{" +
+                "id=" + id +
+                ", reservingTime=" + reservingTime +
+                ", customerName='" + customerName + '\'' +
+                ", customerPhoneNumber='" + customerPhoneNumber + '\'' +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

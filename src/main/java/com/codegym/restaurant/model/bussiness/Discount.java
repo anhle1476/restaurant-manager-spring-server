@@ -29,4 +29,14 @@ public class Discount {
     private List<Bill> bills;
 
     private boolean deleted;
+
+    @Override
+    public String toString() {
+        return "Discount{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", percent=" + percent +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

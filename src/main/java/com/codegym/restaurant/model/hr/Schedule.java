@@ -32,4 +32,16 @@ public class Schedule {
 
     @Column(length = 300)
     private String note;
+
+    @Override
+    public String toString() {
+        return "Schedule{" +
+                "id=" + id +
+                ", date=" + date +
+                ", shift=" + shift +
+                ", shiftStaffs=" + shiftStaffs +
+                ", deleted=" + deleted +
+                ", note='" + note + '\'' +
+                '}';
+    }
 }

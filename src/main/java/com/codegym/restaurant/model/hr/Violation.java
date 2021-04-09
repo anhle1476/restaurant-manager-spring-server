@@ -32,4 +32,14 @@ public class Violation {
     private List<ViolationDetail> violationDetails;
 
     private boolean deleted;
+
+    @Override
+    public String toString() {
+        return "Violation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", finesPercent=" + finesPercent +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

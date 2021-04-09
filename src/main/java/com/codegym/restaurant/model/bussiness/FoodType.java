@@ -28,4 +28,14 @@ public class FoodType {
     private boolean refundable;
 
     private boolean deleted;
+
+    @Override
+    public String toString() {
+        return "FoodType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", refundable=" + refundable +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

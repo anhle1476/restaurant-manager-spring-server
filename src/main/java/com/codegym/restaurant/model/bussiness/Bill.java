@@ -53,4 +53,20 @@ public class Bill {
             throw new RuntimeException("Không thể đặt order cho bàn phụ được ghép");
         this.startTime = LocalDateTime.now();
     }
+
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "id=" + id +
+                ", startTime=" + startTime +
+                ", payTime=" + payTime +
+                ", lastPrice=" + lastPrice +
+                ", staff=" + staff +
+                ", discount=" + discount +
+                ", directDiscount=" + directDiscount +
+                ", directDiscountDescription='" + directDiscountDescription + '\'' +
+                ", appTable=" + appTable +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

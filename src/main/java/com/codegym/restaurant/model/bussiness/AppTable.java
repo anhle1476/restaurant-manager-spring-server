@@ -40,4 +40,14 @@ public class AppTable {
     private List<ReservingOrder> reservingOrders;
 
     private boolean deleted;
+
+    @Override
+    public String toString() {
+        return "AppTable{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", parent=" + parent +
+                ", deleted=" + deleted +
+                '}';
+    }
 }
