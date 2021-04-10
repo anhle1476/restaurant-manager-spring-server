@@ -24,6 +24,8 @@ public class SalaryDetail {
 
     private int numberOfShift;
 
+    private float totalOvertimeHours;
+
     private long salary;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,6 +44,7 @@ public class SalaryDetail {
                 ", staff=" + staff +
                 ", numberOfShift=" + numberOfShift +
                 ", salary=" + salary +
+                ", totalOvertimeHours=" + totalOvertimeHours +
                 ", deleted=" + deleted +
                 '}';
     }

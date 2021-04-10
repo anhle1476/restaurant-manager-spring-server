@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @Data
-public class ShiftStaff {
+public class ScheduleDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,14 +28,17 @@ public class ShiftStaff {
     @ManyToOne
     private Violation violation;
 
+    private float overtimeHours;
+
     private boolean deleted;
 
     @Override
     public String toString() {
-        return "ShiftStaff{" +
+        return "ScheduleDetail{" +
                 "id=" + id +
                 ", staff=" + staff +
                 ", violation=" + violation +
+                ", overtimeHours=" + overtimeHours +
                 ", deleted=" + deleted +
                 '}';
     }

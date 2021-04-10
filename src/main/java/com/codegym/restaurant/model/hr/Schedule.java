@@ -25,8 +25,8 @@ public class Schedule {
     @ManyToOne
     private Shift shift;
 
-    @OneToMany(mappedBy = "schedule", fetch = FetchType.EAGER)
-    private List<ShiftStaff> shiftStaffs;
+    @OneToMany(mappedBy = "schedule", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<ScheduleDetail> scheduleDetails;
 
     private boolean deleted;
 
@@ -39,7 +39,7 @@ public class Schedule {
                 "id=" + id +
                 ", date=" + date +
                 ", shift=" + shift +
-                ", shiftStaffs=" + shiftStaffs +
+                ", scheduleDetails=" + scheduleDetails +
                 ", deleted=" + deleted +
                 ", note='" + note + '\'' +
                 '}';

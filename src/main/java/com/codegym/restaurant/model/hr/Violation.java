@@ -25,7 +25,7 @@ public class Violation {
 
     @OneToMany(mappedBy = "violation")
     @JsonIgnore
-    private List<ShiftStaff> shiftStaffs;
+    private List<ScheduleDetail> scheduleDetails;
 
     @OneToMany(mappedBy = "violation")
     @JsonIgnore

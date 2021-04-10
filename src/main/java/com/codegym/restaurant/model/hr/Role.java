@@ -23,8 +23,6 @@ public class Role {
     @Column(name = "role_name")
     private String name;
 
-    private long salaryPerShift;
-
     @Enumerated(EnumType.STRING)
     private RoleCode code;
 
@@ -39,7 +37,6 @@ public class Role {
         return "Role{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", salaryPerShift=" + salaryPerShift +
                 ", code=" + code +
                 ", deleted=" + deleted +
                 '}';

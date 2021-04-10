@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,12 +32,14 @@ public class Staff implements UserDetails {
 
     private String phoneNumber;
 
+    private long salaryPerShift;
+
     @ManyToOne
     private Role role;
 
     @OneToMany(mappedBy = "staff")
     @JsonIgnore
-    private List<ShiftStaff> shiftStaffs;
+    private List<ScheduleDetail> scheduleDetails;
 
     @OneToMany(mappedBy = "staff")
     @JsonIgnore
@@ -90,4 +91,17 @@ public class Staff implements UserDetails {
         return !deleted;
     }
 
+    @Override
+    public String toString() {
+        return "Staff{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", fullname='" + fullname + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", salaryPerShift=" + salaryPerShift +
+                ", role=" + role +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

@@ -24,10 +24,6 @@ public class Shift {
     @Column(name = "shift_name", unique = true)
     private String name;
 
-    private LocalTime startTime;
-
-    private LocalTime endTime;
-
     @OneToMany(mappedBy = "shift")
     @JsonIgnore
     private List<Schedule> schedules;
@@ -39,8 +35,6 @@ public class Shift {
         return "Shift{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
                 ", deleted=" + deleted +
                 '}';
     }
