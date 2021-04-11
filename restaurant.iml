@@ -16,7 +16,7 @@
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
           <factory-entry name="entityManagerFactory" value="4175e29d-f4b9-4266-b43c-9ea727b3c1e8" />
-          <factory-entry name="restaurant" />
+          <factory-entry name="restaurant" value="ab0a21db-7237-4bcf-9869-6c708c45e30c" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>
@@ -85,9 +85,6 @@
     <orderEntry type="library" name="Maven: jakarta.validation:jakarta.validation-api:2.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:2.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-json:2.4.4" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.11.4" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.11.4" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.11.4" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.4" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.4" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.module:jackson-module-parameter-names:2.11.4" level="project" />
@@ -99,8 +96,16 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.springframework.boot:spring-boot-devtools:2.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.4.4" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-configuration-processor:2.4.4" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: mysql:mysql-connector-java:8.0.23" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.18" level="project" />
+    <orderEntry type="library" name="Maven: io.jsonwebtoken:jjwt-api:0.11.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: io.jsonwebtoken:jjwt-impl:0.11.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: io.jsonwebtoken:jjwt-jackson:0.11.2" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.11.4" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.11.4" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.11.4" level="project" />
+    <orderEntry type="library" name="Maven: org.modelmapper:modelmapper:2.3.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:2.4.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.4.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test-autoconfigure:2.4.4" level="project" />
