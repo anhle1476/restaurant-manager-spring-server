@@ -1,5 +1,7 @@
 package com.codegym.restaurant.service.impl;
 
+import com.codegym.restaurant.exception.EntityRestoreFailedException;
+import com.codegym.restaurant.exception.ShiftNotFoundException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
 import com.codegym.restaurant.model.hr.Shift;
 import com.codegym.restaurant.repository.ShiftRepository;
@@ -29,19 +31,18 @@ public class ShiftServiceImpl implements ShiftService {
     @Override
     public Shift getById(Integer integer) {
         return shiftRepository.findAvailableById(integer)
-                .orElseThrow(() -> new StaffNotFoundException("Ca làm việc không tồn tại"));
+                .orElseThrow(() -> new ShiftNotFoundException("Ca làm việc không tồn tại"));
     }
 
     @Override
     public Shift create(Shift shift) {
-        shiftRepository.save(shift);
-        return shift;
+        return shiftRepository.save(shift);
     }
 
     @Override
     public Shift update(Shift shift) {
-        shiftRepository.save(shift);
-        return shift;
+        return shiftRepository.save(shift);
+
     }
 
     @Override
@@ -54,9 +55,9 @@ public class ShiftServiceImpl implements ShiftService {
     @Override
     public void restore(Integer integer) {
         Shift shift = shiftRepository.findById(integer)
-                .orElseThrow(() -> new RuntimeException("Ca khong ton tai"));
+                .orElseThrow(() -> new ShiftNotFoundException("Ca này không tồn tại"));
         if (!shift.isDeleted())
-            throw new RuntimeException("Khong phuc hoi duoc ca chua xoa");
+            throw new EntityRestoreFailedException("Không phục hồi khi đối tượng chưa xóa");
         shift.setDeleted(false);
         shiftRepository.save(shift);
     }
