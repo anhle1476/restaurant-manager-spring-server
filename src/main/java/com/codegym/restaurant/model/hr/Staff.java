@@ -13,6 +13,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -24,17 +29,25 @@ public class Staff implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Pattern(regexp = "^[a-zA-Z0-9_]{4,25}$", message = "Tên người dùng phải chứa từ 4-25 ký tự và không có ký tự đặc biệt")
+    @NotBlank(message = "Tên người dùng không được trống")
     private String username;
 
     private String password;
 
+    @Pattern(regexp = "^[\\pL ]{4,50}$", message = "Tên người dùng phải chứa từ 4-50 ký tự và không có ký tự đặc biệt")
+    @NotBlank(message = "Họ và tên nhân viên không được trống")
     private String fullname;
 
+    @Pattern(regexp = "^0[\\d]{9,10}$", message = "Số điện thoại phải chứa 10-11 số và bắt đầu bằng số 0")
+    @NotBlank(message = "Số điện thoại không được trống")
     private String phoneNumber;
 
+    @Positive(message = "Lương mỗi ca không được âm")
     private long salaryPerShift;
 
     @ManyToOne
+    @NotNull(message = "Chức vụ không được để trống")
     private Role role;
 
     @OneToMany(mappedBy = "staff")
@@ -53,6 +66,7 @@ public class Staff implements UserDetails {
     private boolean deleted;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // tra ve mang cac quyen cua user
         RoleCode code = role.getCode();
@@ -72,16 +86,19 @@ public class Staff implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }

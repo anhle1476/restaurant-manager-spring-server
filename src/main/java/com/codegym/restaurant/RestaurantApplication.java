@@ -37,6 +37,8 @@ public class RestaurantApplication implements CommandLineRunner {
         Staff staff = new Staff();
         staff.setUsername("admin");
         staff.setFullname("Nguyen Van Min");
+        staff.setPhoneNumber("0124350922");
+        staff.setSalaryPerShift(100000);
         staff.setPassword(passwordEncoder.encode("password"));
         staff.setRole(role);
         staffRepository.save(staff);

@@ -1,0 +1,30 @@
+{
+  "groups": [
+    {
+      "name": "application.jwt",
+      "type": "com.codegym.restaurant.security.jwt.JwtConfig",
+      "sourceType": "com.codegym.restaurant.security.jwt.JwtConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "application.jwt.secret-key",
+      "type": "java.lang.String",
+      "description": "Jwt secret key config.",
+      "sourceType": "com.codegym.restaurant.security.jwt.JwtConfig"
+    },
+    {
+      "name": "application.jwt.token-expiration-after-days",
+      "type": "java.lang.Integer",
+      "description": "Number of days before Token expired.",
+      "sourceType": "com.codegym.restaurant.security.jwt.JwtConfig"
+    },
+    {
+      "name": "application.jwt.token-prefix",
+      "type": "java.lang.String",
+      "description": "Jwt token prefix.",
+      "sourceType": "com.codegym.restaurant.security.jwt.JwtConfig"
+    }
+  ],
+  "hints": []
+}
