@@ -29,7 +29,7 @@ public class ShiftController {
     private ShiftServiceImpl shiftService;
 
     @GetMapping
-    public ResponseEntity<List<Shift>> showAllFalse(@RequestParam(name = "deleted", required = false) String deleted) {
+    public ResponseEntity<List<Shift>> show(@RequestParam(name = "deleted", required = false) String deleted) {
         List<Shift> shiftList = deleted == null || !deleted.equals("true")
                 ? shiftService.getAll()
                 : shiftService.getAllDeleted();
