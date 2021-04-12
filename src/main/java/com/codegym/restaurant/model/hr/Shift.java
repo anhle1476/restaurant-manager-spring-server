@@ -23,8 +23,9 @@ public class Shift {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Pattern(regexp = "^[\\pL ]{2,10}$", message = "Tên Ca phải chứa từ 2-10 ký tự và không có ký tự đặc biệt")
-    @NotBlank(message = "Tên Ca không được trống")
+    @Pattern(regexp = "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_0-9 ():-]{5,30}$"
+            , message = "Tên ca phải chứa từ 5-30 ký tự.")
+    @NotBlank(message = "Tên ca không được trống")
     @Column(name = "shift_name", unique = true)
     private String name;
 

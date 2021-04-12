@@ -10,11 +10,11 @@ public interface BaseService<G, ID> {
 
     G getById(ID id);
 
-    void create(G g);
+    G create(G g);
 
-    void update(G g);
+    G update(G g);
 
     void delete(ID id);
 
-    void Restore(ID id);
+    void restore(ID id);
 }
