@@ -14,34 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.transaction.Transactional;
 
 @SpringBootApplication
-public class RestaurantApplication implements CommandLineRunner {
-    @Autowired
-    private StaffRepository staffRepository;
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+public class RestaurantApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(RestaurantApplication.class, args);
     }
 
-    @Override
-    @Transactional
-    public void run(String... args) throws Exception {
-        Role role = new Role();
-        role.setCode(RoleCode.ADMIN);
-        role.setName("Quan tri vien");
-        roleRepository.save(role);
-
-        Staff staff = new Staff();
-        staff.setUsername("admin");
-        staff.setFullname("Nguyen Van Min");
-        staff.setPhoneNumber("0124350922");
-        staff.setSalaryPerShift(100000);
-        staff.setPassword(passwordEncoder.encode("password"));
-        staff.setRole(role);
-        staffRepository.save(staff);
-
-    }
 }
