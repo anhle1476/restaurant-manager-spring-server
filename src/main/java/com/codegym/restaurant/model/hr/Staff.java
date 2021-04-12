@@ -33,6 +33,7 @@ public class Staff implements UserDetails {
     @NotBlank(message = "Tên người dùng không được trống")
     private String username;
 
+    @JsonIgnore
     private String password;
 
     @Pattern(regexp = "^[\\pL ]{4,50}$", message = "Tên người dùng phải chứa từ 4-50 ký tự và không có ký tự đặc biệt")
@@ -104,6 +105,7 @@ public class Staff implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return !deleted;
     }
