@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -21,6 +23,8 @@ public class Shift {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Pattern(regexp = "^[\\pL ]{2,10}$", message = "Tên Ca phải chứa từ 2-10 ký tự và không có ký tự đặc biệt")
+    @NotBlank(message = "Tên Ca không được trống")
     @Column(name = "shift_name", unique = true)
     private String name;
 
