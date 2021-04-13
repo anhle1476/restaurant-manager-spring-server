@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Entity
@@ -20,10 +22,14 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+
+    @Pattern(regexp = "^[a-zA-Z0-9_]{1,25}$", message = "Tên chức vụ phải chứa từ 1-25 ký tự và không có ký tự đặc biệt")
+    @NotBlank(message = "Tên chức vụ không được để trống")
     @Column(name = "role_name")
     private String name;
 
     @Enumerated(EnumType.STRING)
+    @NotBlank(message = "Mã chức vụ không được để trống")
     private RoleCode code;
 
     @OneToMany(mappedBy = "role")
