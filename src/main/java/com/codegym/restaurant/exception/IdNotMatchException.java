@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class EntityRestoreFailedException extends RuntimeException {
+public class IdNotMatchException extends RuntimeException {
 
-    public static final String ERROR_CODE = "Entity.RestoreFailed";
+    public static final String ERROR_CODE = "Id.NotMatch";
 
-    public EntityRestoreFailedException(String message) {
+    public IdNotMatchException(String message) {
         super(message);
     }
 }
