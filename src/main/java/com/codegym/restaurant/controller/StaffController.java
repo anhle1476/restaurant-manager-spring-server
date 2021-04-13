@@ -46,14 +46,16 @@ public class StaffController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateStaff( @PathVariable(value = "id") Integer id,
-                                          @Valid @RequestBody Staff staff, BindingResult result) {
-        if (result.hasErrors()) {
+    public ResponseEntity<?> updateStaff(
+            @PathVariable(value = "id") Integer id,
+            @Valid @RequestBody Staff staff,
+            BindingResult result) {
+        if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        }
-        Staff staffs = staffService.getById(id);
-        staffService.update(staffs);
-        return new ResponseEntity<>(staffs, HttpStatus.CREATED);
+        if (!staff.getId().equals(id))
+            throw new RuntimeException("Khong trung id");
+        // TODO: chinh lai loi thanh IdNotMatchExc
+        return new ResponseEntity<>(staffService.update(staff), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -68,22 +70,17 @@ public class StaffController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //admin cấp lại mật khẩu cho toàn bộ staff
     @PostMapping("/{id}/update-password")
-    public ResponseEntity<Staff> updateStaffPassword(@PathVariable(value = "id") Integer id,
-                                                     @Valid @RequestBody UpdateStaffPasswordDTO updateStaffPasswordDTO
-            , BindingResult result) {
-        Staff staff = staffService.getById(id);
+    public ResponseEntity<?> updateStaffPassword(
+            @PathVariable(value = "id") Integer id,
+            @Valid @RequestBody UpdateStaffPasswordDTO updateStaffPasswordDTO,
+            BindingResult result) {
+        if (result.hasErrors())
+            return appUtils.mapErrorToResponse(result);
+        if (!updateStaffPasswordDTO.getStaffId().equals(id))
+            throw new RuntimeException("Khong trung id");
+        // TODO: chinh lai loi thanh IdNotMatchExc
         staffService.updateStaffPassword(updateStaffPasswordDTO);
-        return new ResponseEntity<>(staff, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
-    // nhan {currentPassword , newPassword} + (Principal -> id tai khoan hien tai)
-    // xu ly o service
-    // ma hoa currentPassword -> dang 255
-    // lay Id va currentPassword -> tao 1 ham trong staffRepo: findByIdAndPassword(Integer id, String password)
-    // neu tra ve null -> quang loi: xac nhan mat khau that bai (400)
-    // neu nhu ham tren ma tra ve 1 doi tuowng -> mat khau hien tai la cua tai khoan dang dang nhap
-    // dung doi tuong do -> set mat khau moi (encode) vo
 }

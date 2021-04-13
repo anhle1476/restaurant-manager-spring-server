@@ -3,6 +3,7 @@ package com.codegym.restaurant.service.impl;
 import com.codegym.restaurant.dto.UpdateAccountInfoDTO;
 import com.codegym.restaurant.dto.UpdateAccountPasswordDTO;
 import com.codegym.restaurant.dto.UpdateStaffPasswordDTO;
+import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
 import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.repository.StaffRepository;
@@ -80,15 +81,14 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
         Staff staff = staffRepository.findById(integer)
                 .orElseThrow(() -> new StaffNotFoundException("Không thể phục hồi nhân viên này"));
         if (!staff.isDeleted())
-            throw new RuntimeException("không thể phục hồi tài khoản");
+            throw new EntityRestoreFailedException("không thể phục hồi tài khoản");
         staff.setDeleted(false);
         staffRepository.save(staff);
     }
 
     @Override
         public void updateStaffPassword(UpdateStaffPasswordDTO updateStaffPasswordDTO) {
-        Staff staff = staffRepository.findAvailableById(updateStaffPasswordDTO.getStaffId())
-                .orElseThrow(() -> new StaffNotFoundException("Không tìm thây tài khoảng"));
+        Staff staff = getById(updateStaffPasswordDTO.getStaffId());
         staff.setPassword(passwordEncoder.encode(updateStaffPasswordDTO.getNewPassword()));
         staffRepository.save(staff);
     }
