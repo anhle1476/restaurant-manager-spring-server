@@ -1,8 +1,8 @@
 package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.exception.IdNotMatchException;
-import com.codegym.restaurant.model.hr.Shift;
-import com.codegym.restaurant.service.impl.ShiftServiceImpl;
+import com.codegym.restaurant.model.hr.Violation;
+import com.codegym.restaurant.service.impl.ViolationServiceImpl;
 import com.codegym.restaurant.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,51 +22,49 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/shifts")
-public class ShiftController {
+@RequestMapping("/api/v1/violations")
+public class ViolationController {
+    @Autowired
+    private ViolationServiceImpl violationService;
 
     @Autowired
     private AppUtils appUtils;
 
-    @Autowired
-    private ShiftServiceImpl shiftService;
-
     @GetMapping
-    public ResponseEntity<List<Shift>> show(@RequestParam(name = "deleted", required = false) String deleted) {
-        List<Shift> shiftList = deleted == null || !deleted.equals("true")
-                ? shiftService.getAll()
-                : shiftService.getAllDeleted();
-        return new ResponseEntity<>(shiftList, HttpStatus.OK);
+    public ResponseEntity<List<Violation>> show(@RequestParam(value = "deleted", required = false) String deleted){
+        List<Violation> violations = deleted == null || !deleted.equals("true")
+                ? violationService.getAll()
+                : violationService.getAllDeleted();
+        return new ResponseEntity<>(violations, HttpStatus.OK);
     }
 
-
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody Shift shift, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody Violation violation, BindingResult result){
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        return new ResponseEntity<>(shiftService.create(shift), HttpStatus.CREATED);
+        return new ResponseEntity<>(violationService.create(violation), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid  @RequestBody Shift shift,
+    public ResponseEntity<?> update(@Valid @RequestBody Violation violation,
                                     BindingResult result,
-                                    @PathVariable(value = "id") Integer id) {
+                                    @PathVariable(value = "id") Integer id){
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        if (!shift.getId().equals(id))
+        if (!violation.getId().equals(id))
             throw new IdNotMatchException("Id không trùng hợp");
-        return new ResponseEntity<>(shiftService.update(shift), HttpStatus.CREATED);
+        return new ResponseEntity<>(violationService.update(violation), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(value = "id") Integer id) {
-        shiftService.delete(id);
+    public ResponseEntity<Violation> delete(@PathVariable(value = "id") Integer id){
+        violationService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}/restore")
-    public ResponseEntity<Shift> restore(@PathVariable(value = "id") Integer id) {
-        shiftService.restore(id);
+    public ResponseEntity<Violation> restore(@PathVariable(value = "id") Integer id){
+        violationService.restore(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

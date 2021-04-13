@@ -2,7 +2,6 @@ package com.codegym.restaurant.service.impl;
 
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.ShiftNotFoundException;
-import com.codegym.restaurant.exception.StaffNotFoundException;
 import com.codegym.restaurant.model.hr.Shift;
 import com.codegym.restaurant.repository.ShiftRepository;
 import com.codegym.restaurant.service.ShiftService;
@@ -42,7 +41,6 @@ public class ShiftServiceImpl implements ShiftService {
     @Override
     public Shift update(Shift shift) {
         return shiftRepository.save(shift);
-
     }
 
     @Override

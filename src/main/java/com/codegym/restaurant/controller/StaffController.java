@@ -2,7 +2,7 @@ package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.StaffCreationDTO;
 import com.codegym.restaurant.dto.UpdateStaffPasswordDTO;
-import com.codegym.restaurant.model.hr.Shift;
+import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.service.StaffService;
 import com.codegym.restaurant.utils.AppUtils;
@@ -10,9 +10,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -20,9 +26,6 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/staffs")
 public class StaffController {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @Autowired
     private StaffService staffService;
 
@@ -53,8 +56,7 @@ public class StaffController {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
         if (!staff.getId().equals(id))
-            throw new RuntimeException("Khong trung id");
-        // TODO: chinh lai loi thanh IdNotMatchExc
+            throw new IdNotMatchException("Id không trùng khớp");
         return new ResponseEntity<>(staffService.update(staff), HttpStatus.CREATED);
     }
 
@@ -65,7 +67,7 @@ public class StaffController {
     }
 
     @PostMapping("/{id}/restore")
-    public ResponseEntity<Staff> undo(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Staff> restore(@PathVariable(value = "id") Integer id) {
         staffService.restore(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -78,8 +80,7 @@ public class StaffController {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
         if (!updateStaffPasswordDTO.getStaffId().equals(id))
-            throw new RuntimeException("Khong trung id");
-        // TODO: chinh lai loi thanh IdNotMatchExc
+            throw new IdNotMatchException("Id không trùng khớp");
         staffService.updateStaffPassword(updateStaffPasswordDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
