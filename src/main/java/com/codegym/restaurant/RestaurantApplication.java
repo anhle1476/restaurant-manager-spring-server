@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.transaction.Transactional;
 
 @SpringBootApplication
+
 public class RestaurantApplication  {
 //    @Autowired
 //    private StaffRepository staffRepository;
@@ -23,12 +24,10 @@ public class RestaurantApplication  {
 //    private RoleRepository roleRepository;
 //    @Autowired
 //    private PasswordEncoder passwordEncoder;
-
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-
     public static void main(String[] args) {
         SpringApplication.run(RestaurantApplication.class, args);
     }

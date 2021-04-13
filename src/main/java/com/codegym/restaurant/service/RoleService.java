@@ -1,4 +1,4 @@
 package com.codegym.restaurant.service;
 
-public class ShiftServiceImpl {
+public interface RoleService {
 }

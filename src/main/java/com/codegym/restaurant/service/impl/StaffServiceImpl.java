@@ -1,10 +1,15 @@
-package com.codegym.restaurant.service;
+package com.codegym.restaurant.service.impl;
 
+import com.codegym.restaurant.dto.UpdateAccountInfoDTO;
+import com.codegym.restaurant.dto.UpdateAccountPasswordDTO;
+import com.codegym.restaurant.dto.UpdateStaffPasswordDTO;
 import com.codegym.restaurant.exception.StaffNotFoundException;
 import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.repository.StaffRepository;
+import com.codegym.restaurant.service.StaffService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,11 +57,10 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
         return staffRepository.save(staff);
     }
 
-    // cá độ huy anh xem pasword co null ko.
     @Override
     public Staff update(Staff staff) {
         Staff found = staffRepository.findById(staff.getId())
-                .orElseThrow(() -> new StaffNotFoundException("Khong co"));
+                .orElseThrow(() -> new StaffNotFoundException("Không thể cập nhật thông tin nhân viên này"));
         found.setFullname(staff.getFullname());
         found.setPhoneNumber(staff.getPhoneNumber());
         found.setSalaryPerShift(staff.getSalaryPerShift());
@@ -73,11 +77,36 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
 
     @Override
     public void restore(Integer integer) {
-        Staff staff = staffRepository.findById(integer).orElseThrow(() -> new StaffNotFoundException("Không thể phục hồi nhân viên này"));
+        Staff staff = staffRepository.findById(integer)
+                .orElseThrow(() -> new StaffNotFoundException("Không thể phục hồi nhân viên này"));
         if (!staff.isDeleted())
             throw new RuntimeException("không thể phục hồi tài khoản");
         staff.setDeleted(false);
         staffRepository.save(staff);
     }
 
+    @Override
+        public void updateStaffPassword(UpdateStaffPasswordDTO updateStaffPasswordDTO) {
+        Staff staff = staffRepository.findAvailableById(updateStaffPasswordDTO.getStaffId())
+                .orElseThrow(() -> new StaffNotFoundException("Không tìm thây tài khảng"));
+        staff.setPassword(passwordEncoder.encode(updateStaffPasswordDTO.getNewPassword()));
+        staffRepository.save(staff);
+    }
+
+    @Override
+    public void updateAccountPassword(Integer accountId, UpdateAccountPasswordDTO updateAccountPasswordDTO) {
+        String encodedCurrentPassword = passwordEncoder.encode(updateAccountPasswordDTO.getCurrentPassword());
+        Staff staff = staffRepository.findByAndIdAndPassword(accountId, encodedCurrentPassword)
+                .orElseThrow(() -> new StaffNotFoundException("sai mật khẩu"));
+        staff.setPassword(passwordEncoder.encode(updateAccountPasswordDTO.getNewPassword()));
+        staffRepository.save(staff);
+    }
+
+    @Override
+    public Staff updateAccountInfo(Integer accountId, UpdateAccountInfoDTO updateAccountInfoDTO) {
+        Staff staff = getById(accountId);
+        staff.setFullname(updateAccountInfoDTO.getFullname());
+        staff.setPhoneNumber(updateAccountInfoDTO.getPhoneNumber());
+        return staffRepository.save(staff);
+    }
 }

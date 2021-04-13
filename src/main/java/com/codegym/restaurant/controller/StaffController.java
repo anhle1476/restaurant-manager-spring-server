@@ -1,6 +1,8 @@
 package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.StaffCreationDTO;
+import com.codegym.restaurant.dto.UpdateStaffPasswordDTO;
+import com.codegym.restaurant.model.hr.Shift;
 import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.service.StaffService;
 import com.codegym.restaurant.utils.AppUtils;
@@ -8,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,9 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/staffs")
 public class StaffController {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private StaffService staffService;
 
@@ -38,6 +44,48 @@ public class StaffController {
         Staff staff = modelMapper.map(staffCreationDTO, Staff.class);
         return new ResponseEntity<>(staffService.create(staff), HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateStaff(@Valid @PathVariable(value = "id") Integer id,
+                                         @RequestBody Staff staff, BindingResult result) {
+        if (result.hasErrors()) {
+            return appUtils.mapErrorToResponse(result);
+        }
+        Staff staffs = staffService.getById(id);
+        //kiem tra lai
+        if (staff == null) {
+            return new ResponseEntity<Staff>(HttpStatus.NOT_FOUND);
+        }
+        staffs.setFullname(staff.getFullname());
+        staffs.setPhoneNumber(staff.getPhoneNumber());
+        staffs.setSalaryPerShift(staff.getSalaryPerShift());
+        staffs.setRole(staff.getRole());
+        staffService.update(staffs);
+        return new ResponseEntity<>(staffs, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteStaff(@PathVariable(value = "id") Integer id) {
+        staffService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{id}/restore")
+    public ResponseEntity<Staff> undo(@PathVariable(value = "id") Integer id) {
+        staffService.restore(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //admin cấp lại mật khẩu cho toàn bộ staff
+    @PostMapping("/{id}/update-password")
+    public ResponseEntity<Staff> updateStaffPassword(@Valid @PathVariable(value = "id") Integer id,
+                                                     @RequestBody UpdateStaffPasswordDTO updateStaffPasswordDTO
+            , BindingResult result) {
+        Staff staff = staffService.getById(id);
+        staffService.updateStaffPassword(updateStaffPasswordDTO);
+        return new ResponseEntity<>(staff, HttpStatus.NO_CONTENT);
+    }
+
 
     // nhan {currentPassword , newPassword} + (Principal -> id tai khoan hien tai)
     // xu ly o service
