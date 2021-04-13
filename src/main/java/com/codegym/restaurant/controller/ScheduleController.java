@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -33,9 +32,10 @@ public class ScheduleController {
     private AppUtils appUtils;
 
     @GetMapping
-    public ResponseEntity<List<Schedule>> showSchedule(){
+    public ResponseEntity<List<Schedule>> showSchedule() {
         return new ResponseEntity<>(scheduleService.getAll(), HttpStatus.OK);
     }
+
     @PostMapping
     public ResponseEntity<?> createSchedule(@Valid @RequestBody Schedule schedule, BindingResult result) {
         if (result.hasErrors())
@@ -44,9 +44,10 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateSchedule(@Valid  @RequestBody Schedule schedule,
-                                    BindingResult result,
-                                    @PathVariable(value = "id") Integer id) {
+    public ResponseEntity<?> updateSchedule(
+            @Valid @RequestBody Schedule schedule,
+            BindingResult result,
+            @PathVariable(value = "id") Integer id) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
         if (!schedule.getId().equals(id))

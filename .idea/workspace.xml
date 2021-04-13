@@ -4,7 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84a3c5c7-d8a0-4a7d-be3a-8021115d4b83" name="Default Changelist" comment="" />
+    <list default="true" id="84a3c5c7-d8a0-4a7d-be3a-8021115d4b83" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/service/SchedulerBaseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/controller/RoleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/controller/RoleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/controller/ScheduleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/controller/ScheduleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/model/hr/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/model/hr/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/model/hr/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/model/hr/Schedule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/repository/StaffRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/repository/StaffRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/service/RoleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/service/RoleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/service/ScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/service/ScheduleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/service/impl/RoleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/service/impl/RoleServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/service/impl/ScheduleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/service/impl/ScheduleServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/service/impl/StaffServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/codegym/restaurant/service/impl/StaffServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/controller/RoleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/controller/RoleController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/controller/ScheduleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/controller/ScheduleController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/model/hr/Role.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/model/hr/Role.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/model/hr/Schedule.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/model/hr/Schedule.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/repository/StaffRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/repository/StaffRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/service/impl/RoleServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/service/impl/RoleServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/service/impl/ScheduleServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/codegym/restaurant/service/impl/ScheduleServiceImpl.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,8 +33,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -95,7 +115,7 @@
       <updated>1618198792360</updated>
       <workItem from="1618198806871" duration="10678000" />
       <workItem from="1618219703698" duration="175000" />
-      <workItem from="1618222914926" duration="34434000" />
+      <workItem from="1618222914926" duration="36066000" />
     </task>
     <servers />
   </component>

@@ -22,11 +22,11 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull(message = "Ngày của lịch làm không được thiếu")
+    @NotNull(message = "Ngày của lịch làm không được để trống")
     private LocalDate date;
 
     @ManyToOne
-    @NotNull(message = "ca làm việc không được thiếu")
+    @NotNull(message = "Ca làm việc không được để trống")
     private Shift shift;
 
     @OneToMany(mappedBy = "schedule", fetch = FetchType.EAGER, orphanRemoval = true)

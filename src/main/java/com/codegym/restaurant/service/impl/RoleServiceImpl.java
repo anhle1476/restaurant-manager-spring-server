@@ -5,19 +5,17 @@ import com.codegym.restaurant.exception.RoleNotFoundException;
 import com.codegym.restaurant.model.hr.Role;
 import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.repository.RoleRepository;
-import com.codegym.restaurant.repository.ShiftRepository;
 import com.codegym.restaurant.repository.StaffRepository;
 import com.codegym.restaurant.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
-
 @Service
+@Transactional
 public class RoleServiceImpl implements RoleService {
-
-
     @Autowired
     private RoleRepository roleRepository;
 
@@ -60,20 +58,15 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void restore(Integer integer) {
         Role role = roleRepository.findById(integer)
-                .orElseThrow(() -> new RoleNotFoundException("Role Này Không tông tại"));
+                .orElseThrow(() -> new RoleNotFoundException("Role Này không tồn tại"));
         if(!role.isDeleted())
-            throw new EntityRestoreFailedException("Không phục hồi khi đối tượng chưa xóa");
+            throw new EntityRestoreFailedException("Không thể phục hồi khi đối tượng chưa xóa");
         role.setDeleted(false);
         roleRepository.save(role);
-
     }
-
 
     @Override
     public List<Staff> getAllStaffsOfRole(Integer id) {
-        Role role = getById(id);
-        if(role.isDeleted())
-            throw new EntityRestoreFailedException("Role đã bị xóa");
-        return staffRepository.findByDeletedIsFalseAndRoleId(role.getId());
+        return staffRepository.findStaffByRoleId(id);
     }
 }

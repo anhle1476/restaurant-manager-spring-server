@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface RoleService extends BaseService<Role,Integer> {
     List<Staff> getAllStaffsOfRole(Integer id);
-
 }

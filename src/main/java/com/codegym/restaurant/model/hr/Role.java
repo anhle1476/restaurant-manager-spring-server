@@ -30,7 +30,7 @@ public class Role {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "Phải chọn role chức vụ")
+    @NotNull(message = "Phải chọn mã chức vụ")
     private RoleCode code;
 
     @OneToMany(mappedBy = "role")

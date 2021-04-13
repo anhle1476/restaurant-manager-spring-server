@@ -17,9 +17,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class StaffServiceImpl implements UserDetailsService, StaffService {
 
     @Autowired
@@ -47,8 +49,8 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
     }
 
     @Override
-    public Staff getById(Integer integer) {
-        return staffRepository.findAvailableById(integer)
+    public Staff getById(Integer id) {
+        return staffRepository.findAvailableById(id)
                 .orElseThrow(() -> new StaffNotFoundException("Không có tài khoản này"));
     }
 
@@ -78,8 +80,8 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
     }
 
     @Override
-    public void restore(Integer integer) {
-        Staff staff = staffRepository.findById(integer)
+    public void restore(Integer id) {
+        Staff staff = staffRepository.findById(id)
                 .orElseThrow(() -> new StaffNotFoundException("Không thể phục hồi nhân viên này"));
         if (!staff.isDeleted())
             throw new EntityRestoreFailedException("không thể phục hồi tài khoản");

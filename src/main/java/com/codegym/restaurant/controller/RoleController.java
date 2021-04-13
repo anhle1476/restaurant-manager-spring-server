@@ -1,11 +1,8 @@
 package com.codegym.restaurant.controller;
 
-import com.codegym.restaurant.dto.StaffCreationDTO;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.model.hr.Role;
-import com.codegym.restaurant.model.hr.Shift;
 import com.codegym.restaurant.model.hr.Staff;
-import com.codegym.restaurant.repository.RoleRepository;
 import com.codegym.restaurant.service.RoleService;
 import com.codegym.restaurant.utils.AppUtils;
 import org.modelmapper.ModelMapper;
@@ -37,6 +34,7 @@ public class RoleController {
                 : roleService.getAllDeleted();
         return new ResponseEntity<>(roleList, HttpStatus.OK);
     }
+
     @PostMapping
     public ResponseEntity<?> createRole(@Valid @RequestBody Role role, BindingResult result) {
         if (result.hasErrors())
@@ -68,10 +66,10 @@ public class RoleController {
         roleService.restore(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @GetMapping("/{roleId}/staffs")
-    public ResponseEntity<List<Staff>> AllStaffsOfRoleId( @PathVariable(value ="roleId") Integer roleId){
 
-    return new ResponseEntity<List<Staff>>(roleService.getAllStaffsOfRole(roleId),HttpStatus.OK);
+    @GetMapping("/{roleId}/staffs")
+    public ResponseEntity<List<Staff>> AllStaffsOfRoleId(@PathVariable(value = "roleId") Integer roleId) {
+        return new ResponseEntity<>(roleService.getAllStaffsOfRole(roleId), HttpStatus.OK);
     }
 
 }
