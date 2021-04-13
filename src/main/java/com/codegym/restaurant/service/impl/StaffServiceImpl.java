@@ -88,7 +88,7 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
     @Override
         public void updateStaffPassword(UpdateStaffPasswordDTO updateStaffPasswordDTO) {
         Staff staff = staffRepository.findAvailableById(updateStaffPasswordDTO.getStaffId())
-                .orElseThrow(() -> new StaffNotFoundException("Không tìm thây tài khảng"));
+                .orElseThrow(() -> new StaffNotFoundException("Không tìm thây tài khoảng"));
         staff.setPassword(passwordEncoder.encode(updateStaffPasswordDTO.getNewPassword()));
         staffRepository.save(staff);
     }

@@ -29,7 +29,7 @@ public class Role {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank(message = "Tên chức vụ không được để trống")
+    @NotBlank(message = "Mã chức vụ không được để trống")
     private RoleCode code;
 
     @OneToMany(mappedBy = "role")

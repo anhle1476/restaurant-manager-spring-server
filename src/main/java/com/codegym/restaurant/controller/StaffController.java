@@ -46,20 +46,12 @@ public class StaffController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateStaff(@Valid @PathVariable(value = "id") Integer id,
-                                         @RequestBody Staff staff, BindingResult result) {
+    public ResponseEntity<?> updateStaff( @PathVariable(value = "id") Integer id,
+                                          @Valid @RequestBody Staff staff, BindingResult result) {
         if (result.hasErrors()) {
             return appUtils.mapErrorToResponse(result);
         }
         Staff staffs = staffService.getById(id);
-        //kiem tra lai
-        if (staff == null) {
-            return new ResponseEntity<Staff>(HttpStatus.NOT_FOUND);
-        }
-        staffs.setFullname(staff.getFullname());
-        staffs.setPhoneNumber(staff.getPhoneNumber());
-        staffs.setSalaryPerShift(staff.getSalaryPerShift());
-        staffs.setRole(staff.getRole());
         staffService.update(staffs);
         return new ResponseEntity<>(staffs, HttpStatus.CREATED);
     }
@@ -78,8 +70,8 @@ public class StaffController {
 
     //admin cấp lại mật khẩu cho toàn bộ staff
     @PostMapping("/{id}/update-password")
-    public ResponseEntity<Staff> updateStaffPassword(@Valid @PathVariable(value = "id") Integer id,
-                                                     @RequestBody UpdateStaffPasswordDTO updateStaffPasswordDTO
+    public ResponseEntity<Staff> updateStaffPassword(@PathVariable(value = "id") Integer id,
+                                                     @Valid @RequestBody UpdateStaffPasswordDTO updateStaffPasswordDTO
             , BindingResult result) {
         Staff staff = staffService.getById(id);
         staffService.updateStaffPassword(updateStaffPasswordDTO);
