@@ -41,4 +41,10 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), IdNotMatchException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = InvalidDateInputException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleInvalidDateInputException(InvalidDateInputException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), InvalidDateInputException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }

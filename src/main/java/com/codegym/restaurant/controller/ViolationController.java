@@ -24,7 +24,7 @@ public class ViolationController {
     private AppUtils appUtils;
 
     @GetMapping
-    public ResponseEntity<List<Violation>> show(@RequestParam(value = "deleted", required = false) String deleted){
+    public ResponseEntity<List<Violation>> showViolation(@RequestParam(value = "deleted", required = false) String deleted){
         List<Violation> violations = deleted == null || !deleted.equals("true")
                 ? violationService.getAll()
                 : violationService.getAllDeleted();
@@ -32,14 +32,14 @@ public class ViolationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody Violation violation, BindingResult result){
+    public ResponseEntity<?> createViolation(@Valid @RequestBody Violation violation, BindingResult result){
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
         return new ResponseEntity<>(violationService.create(violation), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody Violation violation,
+    public ResponseEntity<?> updateViolation(@Valid @RequestBody Violation violation,
                                     BindingResult result,
                                     @PathVariable(value = "id") Integer id){
         if (result.hasErrors())
@@ -50,13 +50,13 @@ public class ViolationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Violation> delete(@PathVariable(value = "id") Integer id){
+    public ResponseEntity<Violation> deleteViolation(@PathVariable(value = "id") Integer id){
         violationService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}/restore")
-    public ResponseEntity<Violation> restore(@PathVariable(value = "id") Integer id){
+    public ResponseEntity<Violation> restoreViolation(@PathVariable(value = "id") Integer id){
         violationService.restore(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

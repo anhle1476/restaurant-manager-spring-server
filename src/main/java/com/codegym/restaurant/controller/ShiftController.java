@@ -30,7 +30,7 @@ public class ShiftController {
     private ShiftServiceImpl shiftService;
 
     @GetMapping
-    public ResponseEntity<List<Shift>> show(@RequestParam(name = "deleted", required = false) String deleted) {
+    public ResponseEntity<List<Shift>> showShift(@RequestParam(name = "deleted", required = false) String deleted) {
         List<Shift> shiftList = deleted == null || !deleted.equals("true")
                 ? shiftService.getAll()
                 : shiftService.getAllDeleted();
@@ -39,14 +39,14 @@ public class ShiftController {
 
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody Shift shift, BindingResult result) {
+    public ResponseEntity<?> createShift(@Valid @RequestBody Shift shift, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
         return new ResponseEntity<>(shiftService.create(shift), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid  @RequestBody Shift shift,
+    public ResponseEntity<?> updateShift(@Valid  @RequestBody Shift shift,
                                     BindingResult result,
                                     @PathVariable(value = "id") Integer id) {
         if (result.hasErrors())
@@ -57,13 +57,13 @@ public class ShiftController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<?> deleteShift(@PathVariable(value = "id") Integer id) {
         shiftService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}/restore")
-    public ResponseEntity<Shift> undo(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Shift> restoreShift(@PathVariable(value = "id") Integer id) {
         shiftService.restore(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
