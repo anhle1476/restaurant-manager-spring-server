@@ -24,7 +24,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/shifts")
 public class ShiftController {
-
     @Autowired
     private AppUtils appUtils;
 
@@ -39,7 +38,6 @@ public class ShiftController {
         return new ResponseEntity<>(shiftList, HttpStatus.OK);
     }
 
-
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody Shift shift, BindingResult result) {
         if (result.hasErrors())
@@ -48,7 +46,7 @@ public class ShiftController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid  @RequestBody Shift shift,
+    public ResponseEntity<?> update(@Valid @RequestBody Shift shift,
                                     BindingResult result,
                                     @PathVariable(value = "id") Integer id) {
         if (result.hasErrors())

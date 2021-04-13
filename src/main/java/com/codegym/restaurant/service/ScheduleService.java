@@ -1,4 +1,7 @@
 package com.codegym.restaurant.service;
 
-public interface ScheduleService {
+import com.codegym.restaurant.model.hr.Schedule;
+
+
+public interface ScheduleService extends SchedulerBaseService<Schedule, Integer> {
 }

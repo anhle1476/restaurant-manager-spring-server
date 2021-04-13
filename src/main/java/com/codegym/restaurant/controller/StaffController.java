@@ -3,6 +3,7 @@ package com.codegym.restaurant.controller;
 import com.codegym.restaurant.dto.StaffCreationDTO;
 import com.codegym.restaurant.dto.UpdateStaffPasswordDTO;
 import com.codegym.restaurant.exception.IdNotMatchException;
+import com.codegym.restaurant.model.hr.Shift;
 import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.service.StaffService;
 import com.codegym.restaurant.utils.AppUtils;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -36,8 +38,11 @@ public class StaffController {
     private ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<List<Staff>> findAll() {
-        return new ResponseEntity<>(staffService.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<Staff>> show(@RequestParam(name = "deleted", required = false) String deleted) {
+        List<Staff> staffList = deleted == null || !deleted.equals("true")
+                ? staffService.getAll()
+                : staffService.getAllDeleted();
+        return new ResponseEntity<>(staffList, HttpStatus.OK);
     }
 
     @PostMapping
@@ -55,7 +60,7 @@ public class StaffController {
             BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        if (!staff.getId().equals(id))
+            if (!staff.getId().equals(id))
             throw new IdNotMatchException("Id không trùng khớp");
         return new ResponseEntity<>(staffService.update(staff), HttpStatus.CREATED);
     }

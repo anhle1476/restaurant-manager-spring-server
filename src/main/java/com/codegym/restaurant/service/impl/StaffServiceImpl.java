@@ -17,9 +17,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class StaffServiceImpl implements UserDetailsService, StaffService {
 
     @Autowired
@@ -37,6 +39,7 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
     //CRUD
     @Override
     public List<Staff> getAll() {
+
         return staffRepository.findAllAvailable();
     }
 
@@ -46,8 +49,8 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
     }
 
     @Override
-    public Staff getById(Integer integer) {
-        return staffRepository.findAvailableById(integer)
+    public Staff getById(Integer id) {
+        return staffRepository.findAvailableById(id)
                 .orElseThrow(() -> new StaffNotFoundException("Không có tài khoản này"));
     }
 
@@ -77,8 +80,8 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
     }
 
     @Override
-    public void restore(Integer integer) {
-        Staff staff = staffRepository.findById(integer)
+    public void restore(Integer id) {
+        Staff staff = staffRepository.findById(id)
                 .orElseThrow(() -> new StaffNotFoundException("Không thể phục hồi nhân viên này"));
         if (!staff.isDeleted())
             throw new EntityRestoreFailedException("không thể phục hồi tài khoản");
@@ -95,9 +98,12 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
 
     @Override
     public void updateAccountPassword(Integer accountId, UpdateAccountPasswordDTO updateAccountPasswordDTO) {
-        String encodedCurrentPassword = passwordEncoder.encode(updateAccountPasswordDTO.getCurrentPassword());
-        Staff staff = staffRepository.findByAndIdAndPassword(accountId, encodedCurrentPassword)
-                .orElseThrow(() -> new StaffNotFoundException("sai mật khẩu"));
+        Staff staff = staffRepository.findAvailableById(accountId)
+                .orElseThrow(() -> new StaffNotFoundException("Tài khoản đã bị khóa, không thể đổi mật khẩu"));
+        boolean matches = passwordEncoder.matches(updateAccountPasswordDTO.getCurrentPassword(), staff.getPassword());
+        if (!matches)
+            throw new RuntimeException("Sai mật khẩu");
+        // TODO: tao class UpdatePasswordFailedException 400
         staff.setPassword(passwordEncoder.encode(updateAccountPasswordDTO.getNewPassword()));
         staffRepository.save(staff);
     }

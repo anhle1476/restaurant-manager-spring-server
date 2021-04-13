@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class Role {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank(message = "Mã chức vụ không được để trống")
+    @NotNull(message = "Phải chọn mã chức vụ")
     private RoleCode code;
 
     @OneToMany(mappedBy = "role")
