@@ -1,8 +1,12 @@
 package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.ExceptionResponseDTO;
+
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.IdNotMatchException;
+import com.codegym.restaurant.exception.InvalidDateInputException;
+import com.codegym.restaurant.exception.RoleNotFoundException;
+import com.codegym.restaurant.exception.ScheduleNotFoundException;
 import com.codegym.restaurant.exception.ShiftNotFoundException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
 import com.codegym.restaurant.exception.ViolationNotFoundException;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 
 @ControllerAdvice
 @RestController
@@ -44,5 +49,20 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
     public ResponseEntity<ExceptionResponseDTO> handleIdNotMatchException(IdNotMatchException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), IdNotMatchException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(value = RoleNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleRoleNotFoundException(RoleNotFoundException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), RoleNotFoundException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(value = InvalidDateInputException.class)
+    public ResponseEntity<ExceptionResponseDTO> InvalidDateInputException(InvalidDateInputException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), InvalidDateInputException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(value = ScheduleNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> ScheduleNotFoundException(ScheduleNotFoundException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), ScheduleNotFoundException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

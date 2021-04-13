@@ -36,7 +36,7 @@ public class AccountController {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
 
-        AuthInfoDTO authInfoDTO = appUtils.extractUserInfoFromToken(principal);
+            AuthInfoDTO authInfoDTO = appUtils.extractUserInfoFromToken(principal);
         Integer id = authInfoDTO.getId();
 
         staffService.updateAccountPassword(id, dto);

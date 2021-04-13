@@ -11,5 +11,8 @@ import java.util.Optional;
 public interface StaffRepository extends JpaSoftDeleteRepository<Staff, Integer> {
     Optional<Staff> findByUsername(String username);
 
-    Optional<Staff> findByAndIdAndPassword(Integer id, String password);
+    Optional<Staff> findByIdAndPassword(Integer id, String password);
+
+    List<Staff> findByDeletedIsFalseAndRoleId(Integer integer);
+
 }

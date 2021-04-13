@@ -1,4 +1,7 @@
 package com.codegym.restaurant.repository;
 
-public interface ScheduleRepository {
+import com.codegym.restaurant.model.hr.Schedule;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ScheduleRepository extends JpaRepository<Schedule,Integer> {
 }

@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,9 +22,11 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotNull(message = "Ngày của lịch làm không được thiếu")
     private LocalDate date;
 
     @ManyToOne
+    @NotNull(message = "ca làm việc không được thiếu")
     private Shift shift;
 
     @OneToMany(mappedBy = "schedule", fetch = FetchType.EAGER, orphanRemoval = true)

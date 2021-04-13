@@ -37,6 +37,7 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
     //CRUD
     @Override
     public List<Staff> getAll() {
+
         return staffRepository.findAllAvailable();
     }
 
@@ -95,9 +96,12 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
 
     @Override
     public void updateAccountPassword(Integer accountId, UpdateAccountPasswordDTO updateAccountPasswordDTO) {
-        String encodedCurrentPassword = passwordEncoder.encode(updateAccountPasswordDTO.getCurrentPassword());
-        Staff staff = staffRepository.findByAndIdAndPassword(accountId, encodedCurrentPassword)
-                .orElseThrow(() -> new StaffNotFoundException("sai mật khẩu"));
+        Staff staff = staffRepository.findAvailableById(accountId)
+                .orElseThrow(() -> new StaffNotFoundException("Tài khoản đã bị khóa, không thể đổi mật khẩu"));
+        boolean matches = passwordEncoder.matches(updateAccountPasswordDTO.getCurrentPassword(), staff.getPassword());
+        if (!matches)
+            throw new RuntimeException("Sai mật khẩu");
+        // TODO: tao class UpdatePasswordFailedException 400
         staff.setPassword(passwordEncoder.encode(updateAccountPasswordDTO.getNewPassword()));
         staffRepository.save(staff);
     }
