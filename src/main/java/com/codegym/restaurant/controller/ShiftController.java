@@ -1,5 +1,6 @@
 package com.codegym.restaurant.controller;
 
+import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.model.hr.SalaryHistory;
 import com.codegym.restaurant.model.hr.Shift;
 import com.codegym.restaurant.security.PasswordConfig;
@@ -39,25 +40,20 @@ public class ShiftController {
 
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody Shift shift, BindingResult result) {
-        if (result.hasErrors()) {
+        if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        }
-        Shift saved = shiftService.create(shift);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        return new ResponseEntity<>(shiftService.create(shift), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable(value = "id") Integer id, @RequestBody Shift shift, BindingResult result) {
-        if (result.hasErrors()) {
+    public ResponseEntity<?> update(@Valid  @RequestBody Shift shift,
+                                    BindingResult result,
+                                    @PathVariable(value = "id") Integer id) {
+        if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        }
-        Shift currentShift = shiftService.getById(id);
-        if (shift == null) {
-            return new ResponseEntity<Shift>(HttpStatus.NOT_FOUND);
-        }
-        currentShift.setName(shift.getName());
-        shiftService.update(currentShift);
-        return new ResponseEntity<>(currentShift, HttpStatus.OK);
+        if (shift.getId() != id)
+            throw new IdNotMatchException("Id không trùng hợp");
+        return new ResponseEntity<>(shiftService.update(shift), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

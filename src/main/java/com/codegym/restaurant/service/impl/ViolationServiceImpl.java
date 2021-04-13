@@ -17,7 +17,6 @@ public class ViolationServiceImpl implements ViolationService {
     @Autowired
     private ViolationRepository violationRepository;
 
-
     @Override
     public List<Violation> getAll() {
         return violationRepository.findAllAvailable();
@@ -55,9 +54,8 @@ public class ViolationServiceImpl implements ViolationService {
     public void restore(Integer integer) {
         Violation violation = violationRepository.findById(integer)
                 .orElseThrow(() -> new ViolationNotFoundException("Vi phạm này không tồn tại."));
-        if (!violation.isDeleted()) {
+        if (!violation.isDeleted())
             throw new EntityRestoreFailedException("không thể phục hồi vi phạm chưa xóa");
-        }
         violation.setDeleted(false);
         violationRepository.save(violation);
     }
