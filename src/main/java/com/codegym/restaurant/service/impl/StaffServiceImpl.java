@@ -67,7 +67,14 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
                 .orElseThrow(() -> new StaffNotFoundException("Không thể cập nhật thông tin nhân viên này"));
         found.setFullname(staff.getFullname());
         found.setPhoneNumber(staff.getPhoneNumber());
+        // TODO: kiem tra luong cua found co giong voi luong cua staff truyen vo khong
         found.setSalaryPerShift(staff.getSalaryPerShift());
+        // neu co thay doi thi cap nhat cua staff & cap nhat salary trong SalaryDetail tu thang nay ve sau
+
+        // loi ve List<SalaryDetail> s co: s.staff.id = id staff moi cap nhat
+        // AND s.salaryHistory.firstDateOfMonth >= ngay dau tien cua thang hien tai
+        // duyet qua tung SalaryDetail -> cap nhat salary = staff.salaryPerShift * numberOfShift
+        // saveAll()
         found.setRole(staff.getRole());
         return staffRepository.save(found);
     }

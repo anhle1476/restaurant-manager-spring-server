@@ -3,6 +3,7 @@ package com.codegym.restaurant.model.hr;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -32,7 +33,7 @@ public class SalaryDetail {
     @JsonIgnore
     private SalaryHistory salaryHistory;
 
-    @OneToMany(mappedBy = "salaryDetail", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "salaryDetail", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ViolationDetail> violationDetails;
 
     private boolean deleted;

@@ -2,6 +2,7 @@ package com.codegym.restaurant.model.hr;
 
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,7 +30,7 @@ public class Schedule {
     @NotNull(message = "Ca làm việc không được để trống")
     private Shift shift;
 
-    @OneToMany(mappedBy = "schedule", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "schedule", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ScheduleDetail> scheduleDetails;
 
     private boolean deleted;

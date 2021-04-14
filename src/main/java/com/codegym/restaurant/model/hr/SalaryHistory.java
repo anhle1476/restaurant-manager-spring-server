@@ -2,6 +2,7 @@ package com.codegym.restaurant.model.hr;
 
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,7 +23,7 @@ public class SalaryHistory {
 
     private LocalDate firstDateOfMonth;
 
-    @OneToMany(mappedBy = "salaryHistory", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "salaryHistory", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<SalaryDetail> salaryDetails;
 
     private boolean deleted;

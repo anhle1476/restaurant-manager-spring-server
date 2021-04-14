@@ -1,10 +1,7 @@
 package com.codegym.restaurant.controller;
 
-import com.codegym.restaurant.dto.StaffCreationDTO;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.model.hr.Schedule;
-import com.codegym.restaurant.model.hr.Shift;
-import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.service.ScheduleService;
 import com.codegym.restaurant.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("api/v1/schedules")
+@RequestMapping("/api/v1/schedules")
 public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
+
     @Autowired
     private AppUtils appUtils;
 
@@ -61,5 +61,9 @@ public class ScheduleController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/by-month/{yearMonth}")
+    public ResponseEntity<Map<LocalDate, List<Schedule>>> findSchedulesOfMonth(@PathVariable(value = "yearMonth") String yearMonth) {
+        return new ResponseEntity<>(scheduleService.findSchedulesOfMonth(yearMonth), HttpStatus.OK);
+    }
 
 }
