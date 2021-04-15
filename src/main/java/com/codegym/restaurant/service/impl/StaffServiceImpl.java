@@ -69,11 +69,11 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
         found.setPhoneNumber(staff.getPhoneNumber());
         // TODO: kiem tra luong cua found co giong voi luong cua staff truyen vo khong
         found.setSalaryPerShift(staff.getSalaryPerShift());
-        // neu co thay doi thi cap nhat cua staff & cap nhat salary trong SalaryDetail tu thang nay ve sau
+        // neu co thay doi thi cap nhat cua staff & cap nhat salary trong SalaryDetailService tu thang nay ve sau
 
-        // loi ve List<SalaryDetail> s co: s.staff.id = id staff moi cap nhat
+        // loi ve List<SalaryDetailService> s co: s.staff.id = id staff moi cap nhat
         // AND s.salaryHistory.firstDateOfMonth >= ngay dau tien cua thang hien tai
-        // duyet qua tung SalaryDetail -> cap nhat salary = staff.salaryPerShift * numberOfShift
+        // duyet qua tung SalaryDetailService -> cap nhat salary = staff.salaryPerShift * numberOfShift
         // saveAll()
         found.setRole(staff.getRole());
         return staffRepository.save(found);
