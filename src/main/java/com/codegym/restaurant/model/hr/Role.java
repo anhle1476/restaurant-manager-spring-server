@@ -24,7 +24,7 @@ public class Role {
     private Integer id;
 
 
-    @Pattern(regexp = "^[a-zA-Z0-9_]{1,25}$", message = "Tên chức vụ phải chứa từ 1-25 ký tự và không có ký tự đặc biệt")
+    @Pattern(regexp = "^[\\pL 0-9]{1,25}$", message = "Tên chức vụ phải chứa từ 1-25 ký tự và không có ký tự đặc biệt")
     @NotBlank(message = "Tên chức vụ không được để trống")
     @Column(name = "role_name")
     private String name;

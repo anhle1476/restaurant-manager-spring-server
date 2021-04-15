@@ -40,7 +40,7 @@ public class SalaryDetail {
 
     @Override
     public String toString() {
-        return "SalaryDetail{" +
+        return "SalaryDetailService{" +
                 "id=" + id +
                 ", staff=" + staff +
                 ", numberOfShift=" + numberOfShift +
