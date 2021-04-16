@@ -1,6 +1,5 @@
 package com.codegym.restaurant.model.hr;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.CascadeType;
@@ -11,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -25,13 +25,11 @@ public class SalaryDetail {
 
     private int numberOfShift;
 
+    private LocalDate firstDateOfMonth;
+
     private float totalOvertimeHours;
 
     private long salary;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    private SalaryHistory salaryHistory;
 
     @OneToMany(mappedBy = "salaryDetail", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ViolationDetail> violationDetails;
@@ -40,12 +38,14 @@ public class SalaryDetail {
 
     @Override
     public String toString() {
-        return "SalaryDetailService{" +
+        return "SalaryDetail{" +
                 "id=" + id +
                 ", staff=" + staff +
                 ", numberOfShift=" + numberOfShift +
-                ", salary=" + salary +
+                ", firstDateOfMonth=" + firstDateOfMonth +
                 ", totalOvertimeHours=" + totalOvertimeHours +
+                ", salary=" + salary +
+                ", violationDetails=" + violationDetails +
                 ", deleted=" + deleted +
                 '}';
     }
