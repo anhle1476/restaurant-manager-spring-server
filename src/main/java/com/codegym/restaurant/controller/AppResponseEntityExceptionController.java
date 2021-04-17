@@ -5,6 +5,7 @@ import com.codegym.restaurant.dto.ExceptionResponseDTO;
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.exception.InvalidDateInputException;
+import com.codegym.restaurant.exception.InvalidScheduleException;
 import com.codegym.restaurant.exception.RoleNotFoundException;
 import com.codegym.restaurant.exception.ScheduleNotFoundException;
 import com.codegym.restaurant.exception.ShiftNotFoundException;
@@ -57,14 +58,20 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
     }
 
     @ExceptionHandler(value = InvalidDateInputException.class)
-    public ResponseEntity<ExceptionResponseDTO> InvalidDateInputException(InvalidDateInputException ex) {
+    public ResponseEntity<ExceptionResponseDTO> handleInvalidDateInputException(InvalidDateInputException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), InvalidDateInputException.ERROR_CODE);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = ScheduleNotFoundException.class)
-    public ResponseEntity<ExceptionResponseDTO> ScheduleNotFoundException(ScheduleNotFoundException ex) {
+    public ResponseEntity<ExceptionResponseDTO> handleScheduleNotFoundException(ScheduleNotFoundException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), ScheduleNotFoundException.ERROR_CODE);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);// không tìm thấy
+    }
+
+    @ExceptionHandler(value = InvalidScheduleException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleInvalidScheduleException(InvalidScheduleException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), InvalidScheduleException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); //gởi dữ liệu lên bi lỗi (client)
     }
 }
