@@ -3,7 +3,6 @@ package com.codegym.restaurant.service.impl;
 import com.codegym.restaurant.dto.SalaryDifferenceDTO;
 import com.codegym.restaurant.repository.SalaryRepository;
 import com.codegym.restaurant.repository.ScheduleDetailRepository;
-import com.codegym.restaurant.repository.StaffRepository;
 import com.codegym.restaurant.service.SalaryDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Map;
+
 
 
 @Service
@@ -24,6 +24,5 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 
     @Override
     public void salaryDetailsWithStaff(LocalDate firstDateOfMonth, Map<Integer, SalaryDifferenceDTO> differenceMap) {
-
     }
 }

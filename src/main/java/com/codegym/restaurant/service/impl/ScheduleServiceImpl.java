@@ -12,17 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +48,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Schedule create(Schedule schedule) {
         Map<Integer, SalaryDifferenceDTO> salaryMap = new HashMap<>();
-
         Schedule saved = scheduleRepository.save(schedule);
         List<ScheduleDetail> scheduleDetails = saved.getScheduleDetails();
         for (ScheduleDetail s : scheduleDetails) {
@@ -61,9 +57,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             SalaryDifferenceDTO dto = getSalaryDifference(null, s);
             salaryMap.put(staffId, dto);
         }
-
         scheduleDetailRepository.saveAll(scheduleDetails);
-
         // TODO: goi service Salary, dung salaryMap de cap nhap
         System.out.println(salaryMap);
         return saved;
@@ -79,11 +73,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         Map<Integer, ScheduleDetail> staffDetailMap = schedule.getScheduleDetails()
                 .stream()
                 .collect(Collectors.toMap(sd -> sd.getStaff().getId(), Function.identity()));
-
         // list Details goc & list chuan bi xoa
         List<ScheduleDetail> originalDetails = found.getScheduleDetails();
         List<ScheduleDetail> deletedDetails = new ArrayList<>();
-
         for (ScheduleDetail original : originalDetails) {
             Integer staffId = original.getStaff().getId(); //idStaff old
             // lich lam viec moi cua nhan vien
@@ -104,7 +96,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 original.setViolation(newSchedule.getViolation());
                 staffDetailMap.remove(staffId);  //cap nhat song thi xoa luon trong mapNew
             }
-            //phan con lai trong map la phan them moi
         }
         // doi tuong trong list delete -> xoa
         scheduleDetailRepository.deleteAll(deletedDetails);
@@ -125,6 +116,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // TODO: goi service Salary, dung salaryMap de cap nhap
         System.out.println(salaryMap);
+        found.setShift(schedule.getShift());
+        found.setNote(schedule.getNote());
         return scheduleRepository.save(found);
     }
 
