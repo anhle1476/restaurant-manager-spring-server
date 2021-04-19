@@ -23,7 +23,7 @@ public class Violation {
     private Integer id;
 
     @NotBlank(message = "Tên vi phạm không thể trống")
-    @Pattern(regexp = "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_0-9 ():-]{4,50}$"
+    @Pattern(regexp = "^[\\pL 0-9():-]{4,50}$"
             , message = "Tên ca phải chứa từ 4-50 ký tự.")
     @Column(name = "violation_name", unique = true)
     private String name;

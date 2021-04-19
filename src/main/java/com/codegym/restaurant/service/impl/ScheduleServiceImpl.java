@@ -6,6 +6,7 @@ import com.codegym.restaurant.model.hr.Schedule;
 import com.codegym.restaurant.model.hr.ScheduleDetail;
 import com.codegym.restaurant.repository.ScheduleDetailRepository;
 import com.codegym.restaurant.repository.ScheduleRepository;
+import com.codegym.restaurant.service.SalaryDetailService;
 import com.codegym.restaurant.service.ScheduleService;
 import com.codegym.restaurant.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     private ScheduleDetailRepository scheduleDetailRepository;
 
     @Autowired
+    private SalaryDetailService salaryDetailService;
+
+    @Autowired
     private DateUtils dateUtils;
 
     @Override
@@ -48,6 +52,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Schedule create(Schedule schedule) {
         Map<Integer, SalaryDifferenceDTO> salaryMap = new HashMap<>();
+
         Schedule saved = scheduleRepository.save(schedule);
         List<ScheduleDetail> scheduleDetails = saved.getScheduleDetails();
         for (ScheduleDetail s : scheduleDetails) {
@@ -57,9 +62,11 @@ public class ScheduleServiceImpl implements ScheduleService {
             SalaryDifferenceDTO dto = getSalaryDifference(null, s);
             salaryMap.put(staffId, dto);
         }
+
         scheduleDetailRepository.saveAll(scheduleDetails);
+
         // TODO: goi service Salary, dung salaryMap de cap nhap
-        System.out.println(salaryMap);
+        salaryDetailService.updateSalaryWhenScheduleChange(schedule.getDate(), salaryMap);
         return saved;
     }
 
@@ -73,29 +80,32 @@ public class ScheduleServiceImpl implements ScheduleService {
         Map<Integer, ScheduleDetail> staffDetailMap = schedule.getScheduleDetails()
                 .stream()
                 .collect(Collectors.toMap(sd -> sd.getStaff().getId(), Function.identity()));
+
         // list Details goc & list chuan bi xoa
         List<ScheduleDetail> originalDetails = found.getScheduleDetails();
+
         List<ScheduleDetail> deletedDetails = new ArrayList<>();
+
         for (ScheduleDetail original : originalDetails) {
             Integer staffId = original.getStaff().getId(); //idStaff old
             // lich lam viec moi cua nhan vien
             ScheduleDetail newSchedule = staffDetailMap.get(staffId);  //so sanh va tim kiem kiem tra co hay khoong
+            SalaryDifferenceDTO dto;
             if (newSchedule == null) {  // cu co moi ko co
                 // nhan vien khong co trong lich lam viec -> chuan bi de xoa
-                SalaryDifferenceDTO dto = getSalaryDifference(original, null);
-                salaryMap.put(staffId, dto);
-
+                dto = getSalaryDifference(original, null);
                 deletedDetails.add(original);
             } else { //chi can cap nhat(moi co cu ko co)
                 // cap nhat lich lam viec cua nhan vien va xoa doi tuong trong map
-
-                SalaryDifferenceDTO dto = getSalaryDifference(original, newSchedule);
+                dto = getSalaryDifference(original, newSchedule);
                 dto.setNewViolation(newSchedule.getViolation());
 
                 original.setOvertimeHours(newSchedule.getOvertimeHours());
                 original.setViolation(newSchedule.getViolation());
                 staffDetailMap.remove(staffId);  //cap nhat song thi xoa luon trong mapNew
             }
+            salaryMap.put(staffId, dto);
+            //phan con lai trong map la phan them moi
         }
         // doi tuong trong list delete -> xoa
         scheduleDetailRepository.deleteAll(deletedDetails);
@@ -115,18 +125,16 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         // TODO: goi service Salary, dung salaryMap de cap nhap
-        System.out.println(salaryMap);
-        found.setShift(schedule.getShift());
-        found.setNote(schedule.getNote());
+        salaryDetailService.updateSalaryWhenScheduleChange(schedule.getDate(), salaryMap);
         return scheduleRepository.save(found);
     }
 
     @Override
     public void deleteById(Integer id) {
-        Schedule found = getById(id);
+        Schedule schedule = getById(id);
         Map<Integer, SalaryDifferenceDTO> salaryMap = new HashMap<>();
 
-        List<ScheduleDetail> details = found.getScheduleDetails();
+        List<ScheduleDetail> details = schedule.getScheduleDetails();
         for (ScheduleDetail s : details) {
             Integer staffId = s.getStaff().getId();
             SalaryDifferenceDTO dto = getSalaryDifference(s, null);
@@ -134,7 +142,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         // TODO: goi service Salary, dung salaryMap de cap nhap
-        System.out.println(salaryMap);
+        salaryDetailService.updateSalaryWhenScheduleChange(schedule.getDate(), salaryMap);
         scheduleRepository.deleteById(id);
     }
 

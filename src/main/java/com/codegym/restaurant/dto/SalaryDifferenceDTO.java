@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class SalaryDifferenceDTO {
+
     private int numberOfShift;
 
     private float overtimeHours;
