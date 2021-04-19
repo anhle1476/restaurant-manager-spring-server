@@ -38,6 +38,14 @@ public class SalaryDetail {
 
     private boolean deleted;
 
+    public void addNumberOfShift(int amount) {
+        this.numberOfShift += amount;
+    }
+
+    public void addOvertimeHours(float amount) {
+        this.totalOvertimeHours += amount;
+    }
+
     @Override
     public String toString() {
         return "SalaryDetail{" +
