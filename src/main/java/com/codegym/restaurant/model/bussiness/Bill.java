@@ -32,8 +32,7 @@ public class Bill {
     @ManyToOne
     private Staff staff;
 
-    @ManyToOne
-    private Discount discount;
+    private Long discount;
 
     private long directDiscount;
 
