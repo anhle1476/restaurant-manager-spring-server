@@ -23,6 +23,8 @@ public class SalaryDetail {
     @ManyToOne
     private Staff staff;
 
+    private long currentSalaryPerShift;
+
     private int numberOfShift;
 
     private LocalDate firstDateOfMonth;
@@ -41,6 +43,7 @@ public class SalaryDetail {
         return "SalaryDetail{" +
                 "id=" + id +
                 ", staff=" + staff +
+                ", currentSalaryPerShift=" + currentSalaryPerShift +
                 ", numberOfShift=" + numberOfShift +
                 ", firstDateOfMonth=" + firstDateOfMonth +
                 ", totalOvertimeHours=" + totalOvertimeHours +

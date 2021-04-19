@@ -113,6 +113,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
                     totalFinesPercent = violationDetail.getNumberOfViolations() * ((float) violationDetail.getFinesPercent() / 100);
             }
             long finalSalary = (long) (salaryPerShift * (numberOfShift - totalFinesPercent));
+            salaryDetail.setCurrentSalaryPerShift(salaryPerShift);
             salaryDetail.setSalary(finalSalary);
         }
         salaryDetailRepository.saveAll(currentSalaryDetails);
