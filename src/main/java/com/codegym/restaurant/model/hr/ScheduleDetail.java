@@ -8,10 +8,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Data
+@Table(uniqueConstraints=
+@UniqueConstraint(columnNames = {"schedule_id", "staff_id"}))
 public class ScheduleDetail {
 
     @Id
@@ -19,9 +24,11 @@ public class ScheduleDetail {
     private Integer id;
 
     @ManyToOne
+    @JoinColumn(name = "staff_id")
     private Staff staff;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_id")
     @JsonIgnore
     private Schedule schedule;
 

@@ -91,11 +91,13 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
             salaryDetail.setTotalOvertimeHours(dto.getOvertimeHours());
             salaryDetail.setNumberOfShift(1);
 
-            ViolationDetail violationDetail = createViolationDetail(dto);
-            violationDetail.setSalaryDetail(salaryDetail);
-            List<ViolationDetail> violationList = new ArrayList<>();
-            violationList.add(violationDetail);
-            salaryDetail.setViolationDetails(violationList);
+            if (dto.getNewViolation() != null) {
+                ViolationDetail violationDetail = createViolationDetail(dto);
+                violationDetail.setSalaryDetail(salaryDetail);
+                List<ViolationDetail> violationList = new ArrayList<>();
+                violationList.add(violationDetail);
+                salaryDetail.setViolationDetails(violationList);
+            }
 
             // them salaryDetail vao list hien tai
             currentSalaryDetails.add(salaryDetail);
@@ -105,8 +107,11 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
             long salaryPerShift = salaryDetail.getStaff().getSalaryPerShift();
             float numberOfShift = (float) salaryDetail.getNumberOfShift();
             float totalFinesPercent = 0;
-            for (ViolationDetail violationDetail : salaryDetail.getViolationDetails())
-                totalFinesPercent = violationDetail.getNumberOfViolations() * (violationDetail.getFinesPercent() / 100);
+            List<ViolationDetail> violationDetails = salaryDetail.getViolationDetails();
+            if (violationDetails != null) {
+                for (ViolationDetail violationDetail : violationDetails)
+                    totalFinesPercent = violationDetail.getNumberOfViolations() * ((float) violationDetail.getFinesPercent() / 100);
+            }
             long finalSalary = (long) (salaryPerShift * (numberOfShift - totalFinesPercent));
             salaryDetail.setSalary(finalSalary);
         }
@@ -124,11 +129,6 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
     }
 
     private LocalDate getFirstDate(LocalDate dates) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-mm-yyyy");
-        String formattedString = dates.format(formatter);
-        String[] part = formattedString.split("-");
-        int year = Integer.parseInt(part[0]);
-        int month = Integer.parseInt(part[1]);
-        return LocalDate.of(year, month, 1);
+        return LocalDate.of(dates.getYear(), dates.getMonth(), 1);
     }
 }

@@ -90,22 +90,21 @@ public class ScheduleServiceImpl implements ScheduleService {
             Integer staffId = original.getStaff().getId(); //idStaff old
             // lich lam viec moi cua nhan vien
             ScheduleDetail newSchedule = staffDetailMap.get(staffId);  //so sanh va tim kiem kiem tra co hay khoong
+            SalaryDifferenceDTO dto;
             if (newSchedule == null) {  // cu co moi ko co
                 // nhan vien khong co trong lich lam viec -> chuan bi de xoa
-                SalaryDifferenceDTO dto = getSalaryDifference(original, null);
-                salaryMap.put(staffId, dto);
-
+                dto = getSalaryDifference(original, null);
                 deletedDetails.add(original);
             } else { //chi can cap nhat(moi co cu ko co)
                 // cap nhat lich lam viec cua nhan vien va xoa doi tuong trong map
-
-                SalaryDifferenceDTO dto = getSalaryDifference(original, newSchedule);
+                dto = getSalaryDifference(original, newSchedule);
                 dto.setNewViolation(newSchedule.getViolation());
 
                 original.setOvertimeHours(newSchedule.getOvertimeHours());
                 original.setViolation(newSchedule.getViolation());
                 staffDetailMap.remove(staffId);  //cap nhat song thi xoa luon trong mapNew
             }
+            salaryMap.put(staffId, dto);
             //phan con lai trong map la phan them moi
         }
         // doi tuong trong list delete -> xoa

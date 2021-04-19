@@ -1,10 +1,12 @@
 package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.exception.IdNotMatchException;
+import com.codegym.restaurant.exception.InvalidScheduleException;
 import com.codegym.restaurant.model.hr.Schedule;
 import com.codegym.restaurant.service.ScheduleService;
 import com.codegym.restaurant.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +43,12 @@ public class ScheduleController {
     public ResponseEntity<?> createSchedule(@Valid @RequestBody Schedule schedule, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        return new ResponseEntity<>(scheduleService.create(schedule), HttpStatus.CREATED);
+
+        try {
+            return new ResponseEntity<>(scheduleService.create(schedule), HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e){
+            throw new InvalidScheduleException("Trong 1 ngày không thể có 2 ca giống nhau");
+        }
     }
 
     @PutMapping("/{id}")
@@ -52,7 +60,11 @@ public class ScheduleController {
             return appUtils.mapErrorToResponse(result);
         if (!schedule.getId().equals(id))
             throw new IdNotMatchException("Id không trùng hợp");
-        return new ResponseEntity<>(scheduleService.update(schedule), HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(scheduleService.update(schedule), HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e){
+            throw new InvalidScheduleException("Trong 1 ngày không thể có 2 ca giống nhau");
+        }
     }
 
     @DeleteMapping("/{id}")
