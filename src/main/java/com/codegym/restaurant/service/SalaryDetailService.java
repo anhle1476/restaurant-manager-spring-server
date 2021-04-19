@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface SalaryDetailService {
 
-    void salaryDetailsWithStaff(LocalDate firstDateOfMonth, Map<Integer, SalaryDifferenceDTO> differenceMap);
+    void updateSalaryWhenScheduleChange(LocalDate firstDateOfMonth, Map<Integer, SalaryDifferenceDTO> differenceMap);
+
 
 }
