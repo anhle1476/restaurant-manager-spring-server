@@ -39,8 +39,6 @@ public class Schedule {
     @OneToMany(mappedBy = "schedule", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ScheduleDetail> scheduleDetails;
 
-    private boolean deleted;
-
     @Column(length = 300)
     private String note;
 
@@ -51,7 +49,6 @@ public class Schedule {
                 ", date=" + date +
                 ", shift=" + shift +
                 ", scheduleDetails=" + scheduleDetails +
-                ", deleted=" + deleted +
                 ", note='" + note + '\'' +
                 '}';
     }

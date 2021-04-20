@@ -1,6 +1,5 @@
 package com.codegym.restaurant.repository;
 
-import com.codegym.restaurant.dto.UpdateStaffPasswordDTO;
 import com.codegym.restaurant.model.hr.Staff;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

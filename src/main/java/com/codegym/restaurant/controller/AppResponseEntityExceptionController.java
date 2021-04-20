@@ -3,6 +3,9 @@ package com.codegym.restaurant.controller;
 import com.codegym.restaurant.dto.ExceptionResponseDTO;
 
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
+import com.codegym.restaurant.exception.FoodNotFoundException;
+import com.codegym.restaurant.exception.FoodTypeDeleteFailedException;
+import com.codegym.restaurant.exception.FoodTypeException;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.exception.InvalidDateInputException;
 import com.codegym.restaurant.exception.InvalidScheduleException;
@@ -74,4 +77,20 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), InvalidScheduleException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); //gởi dữ liệu lên bi lỗi (client)
     }
+    @ExceptionHandler(value = FoodNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleFoodNotFountException(FoodNotFoundException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodNotFoundException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(value = FoodTypeException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleFoodTypeException(FoodTypeException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodTypeException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(value = FoodTypeDeleteFailedException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleFoodTypeDeleteFailException(FoodTypeDeleteFailedException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodTypeDeleteFailedException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
 }

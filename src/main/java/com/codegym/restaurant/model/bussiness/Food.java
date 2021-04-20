@@ -10,6 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Entity
@@ -20,19 +24,25 @@ public class Food {
     private Integer id;
 
     @Column(name = "food_name", unique = true)
+    @Pattern(regexp = "^[\\pL 0-9()_:-]{2,50}$", message = "Tên món ăn phải chứa từ 4-50 ký tự và không có ký tự đặc biệt")
+    @NotBlank(message = "Tên món không được trống")
     private String name;
-
+    @Min(value = 0,message = "giá không được để giá trị trống")
     private long price;
 
+    @Pattern(regexp = "^[\\pL ]{2,50}$", message = "Tên đơn vị từ 4-50 ký tự và không có ký tự đặc biệt")
+    @NotBlank(message = "Đơn vị không được trống")
     private String unit;
 
     @ManyToOne
+    @NotNull(message = "Loại món không được trống")
     private FoodType foodType;
 
     @OneToMany(mappedBy = "food")
     @JsonIgnore
     private List<BillDetail> billDetails;
 
+    @NotBlank(message = "Hình ảnh không được trống")
     private String imageUrl;
 
     private boolean available;
@@ -43,11 +53,11 @@ public class Food {
     public String toString() {
         return "Food{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + name +
                 ", price=" + price +
-                ", unit='" + unit + '\'' +
+                ", unit='" + unit +
                 ", foodType=" + foodType +
-                ", imageUrl='" + imageUrl + '\'' +
+                ", imageUrl='" + imageUrl +
                 ", available=" + available +
                 ", deleted=" + deleted +
                 '}';

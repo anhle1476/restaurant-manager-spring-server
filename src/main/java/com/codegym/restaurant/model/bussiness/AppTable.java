@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,6 @@ public class AppTable {
     @Column(name = "app_table_name", unique = true)
     private String name;
 
-    // TODO: doi map dit phan bac
     @ManyToOne
     private AppTable parent;
 
@@ -38,6 +38,10 @@ public class AppTable {
     @ManyToMany(mappedBy = "appTables")
     @JsonIgnore
     private List<ReservingOrder> reservingOrders;
+
+    @ManyToOne
+    @NotNull(message = "Khu vực không được để trống")
+    private Area area;
 
     private boolean deleted;
 
