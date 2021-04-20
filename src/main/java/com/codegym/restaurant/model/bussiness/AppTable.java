@@ -24,7 +24,6 @@ public class AppTable {
     @Column(name = "app_table_name", unique = true)
     private String name;
 
-    // TODO: doi map dit phan bac
     @ManyToOne
     private AppTable parent;
 
@@ -39,8 +38,9 @@ public class AppTable {
     @ManyToMany(mappedBy = "appTables")
     @JsonIgnore
     private List<ReservingOrder> reservingOrders;
+
     @ManyToOne
-    @NotNull(message = "Chức vụ không được để trống")
+    @NotNull(message = "Khu vực không được để trống")
     private Area area;
 
     private boolean deleted;

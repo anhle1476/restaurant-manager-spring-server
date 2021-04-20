@@ -32,11 +32,11 @@ public class Bill {
     @ManyToOne
     private Staff staff;
 
-    private Long discount;
+    private long surcharge;
 
-    private long directDiscount;
+    private long discount;
 
-    private String directDiscountDescription;
+    private String discountDescription;
 
     @ManyToOne
     private AppTable appTable;
@@ -62,8 +62,8 @@ public class Bill {
                 ", lastPrice=" + lastPrice +
                 ", staff=" + staff +
                 ", discount=" + discount +
-                ", directDiscount=" + directDiscount +
-                ", directDiscountDescription='" + directDiscountDescription + '\'' +
+                ", directDiscount=" + discount +
+                ", directDiscountDescription='" + discountDescription + '\'' +
                 ", appTable=" + appTable +
                 ", deleted=" + deleted +
                 '}';

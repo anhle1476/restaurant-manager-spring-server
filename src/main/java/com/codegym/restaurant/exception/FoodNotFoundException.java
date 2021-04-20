@@ -1,9 +1,9 @@
 package com.codegym.restaurant.exception;
 
-public class FoodNotFountException extends RuntimeException {
+public class FoodNotFoundException extends RuntimeException {
     public static final String ERROR_CODE = "Food.NotFound";
 
-    public FoodNotFountException(String message) {
+    public FoodNotFoundException(String message) {
         super(message);
     }
 }

@@ -32,8 +32,6 @@ public class FoodTypeController {
 
     @Autowired
     private AppUtils appUtils;
-    @Autowired
-    private ModelMapper modelMapper;
 
     @GetMapping
     public ResponseEntity<List<FoodType>> show(@RequestParam(name = "deleted", required = false) String deleted) {
@@ -46,8 +44,7 @@ public class FoodTypeController {
     public ResponseEntity<?> createFoodType(@Valid @RequestBody FoodType foodType, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        FoodType foodType1 = modelMapper.map(foodType, FoodType.class);
-        return new ResponseEntity<>(foodTypeService.create(foodType1), HttpStatus.CREATED);
+        return new ResponseEntity<>(foodTypeService.create(foodType), HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
     public ResponseEntity<?> updateRole(

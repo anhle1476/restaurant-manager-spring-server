@@ -53,13 +53,13 @@ public class FoodTypeServiceImpl implements FoodTypeService {
     public void delete(Integer integer) {
         FoodType foodType = getById(integer);
         foodType.setDeleted(true);
-        foodTypeRepository.save(foodType);
+        foodTypeRepository.save(foodType); 
     }
 
     @Override
     public void restore(Integer integer) {
         FoodType foodType = foodTypeRepository.findById(integer)
-                .orElseThrow(() -> new ShiftNotFoundException("Loại món này không tồn tại"));
+                .orElseThrow(() -> new FoodTypeException("Loại món này không tồn tại"));
         if (!foodType.isDeleted())
             throw new EntityRestoreFailedException("Không phục hồi khi đối tượng chưa xóa");
         foodType.setDeleted(false);

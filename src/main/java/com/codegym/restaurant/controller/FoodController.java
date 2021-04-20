@@ -43,8 +43,7 @@ public class FoodController {
     public ResponseEntity<?> createFoodType(@Valid @RequestBody Food food, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        Food foods = modelMapper.map(food, Food.class);
-        return new ResponseEntity<>(foodService.create(foods), HttpStatus.CREATED);
+        return new ResponseEntity<>(foodService.create(food), HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
     public ResponseEntity<?> updateRole(

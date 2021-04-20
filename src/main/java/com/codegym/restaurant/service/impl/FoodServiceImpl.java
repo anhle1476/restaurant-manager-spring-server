@@ -1,13 +1,10 @@
 package com.codegym.restaurant.service.impl;
 
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
-import com.codegym.restaurant.exception.FoodNotFountException;
-import com.codegym.restaurant.exception.FoodTypeException;
+import com.codegym.restaurant.exception.FoodNotFoundException;
 import com.codegym.restaurant.exception.ShiftNotFoundException;
 import com.codegym.restaurant.model.bussiness.Food;
-import com.codegym.restaurant.model.bussiness.FoodType;
 import com.codegym.restaurant.repository.FoodRepository;
-import com.codegym.restaurant.repository.FoodTypeRepository;
 import com.codegym.restaurant.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +30,7 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public Food getById(Integer id) {
         return foodRepository.findAvailableById(id)
-                .orElseThrow(() -> new FoodNotFountException("Món không tồn tại"));
+                .orElseThrow(() -> new FoodNotFoundException("Món không tồn tại"));
     }
 
     @Override
