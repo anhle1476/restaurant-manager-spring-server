@@ -4,6 +4,7 @@ import com.codegym.restaurant.dto.ExceptionResponseDTO;
 
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.FoodNotFoundException;
+import com.codegym.restaurant.exception.FoodTypeDeleteFailedException;
 import com.codegym.restaurant.exception.FoodTypeException;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.exception.InvalidDateInputException;
@@ -86,4 +87,10 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodTypeException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(value = FoodTypeDeleteFailedException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleFoodTypeDeleteFailException(FoodTypeDeleteFailedException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodTypeDeleteFailedException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
 }

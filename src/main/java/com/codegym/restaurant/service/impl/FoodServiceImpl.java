@@ -54,7 +54,7 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public void restore(Integer integer) {
         Food food = foodRepository.findById(integer)
-                .orElseThrow(() -> new ShiftNotFoundException("Loại món này không tồn tại"));
+                .orElseThrow(() -> new FoodNotFoundException("Loại món này không tồn tại"));
         if (!food.isDeleted())
             throw new EntityRestoreFailedException("Không phục hồi khi đối tượng chưa xóa");
         food.setDeleted(false);

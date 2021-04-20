@@ -1,6 +1,7 @@
 package com.codegym.restaurant.service.impl;
 
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
+import com.codegym.restaurant.exception.FoodTypeDeleteFailedException;
 import com.codegym.restaurant.exception.FoodTypeException;
 import com.codegym.restaurant.exception.ShiftNotFoundException;
 import com.codegym.restaurant.model.bussiness.Food;
@@ -50,10 +51,15 @@ public class FoodTypeServiceImpl implements FoodTypeService {
     }
 
     @Override
-    public void delete(Integer integer) {
-        FoodType foodType = getById(integer);
-        foodType.setDeleted(true);
-        foodTypeRepository.save(foodType); 
+    public void delete(Integer id) {
+        FoodType foodType = getById(id);
+        List<Food> foods = foodRepository.findFoodByFoodTypeId(id);
+        if (foods == null) {
+            foodType.setDeleted(true);
+            foodTypeRepository.save(foodType);
+        }else {
+            throw new FoodTypeDeleteFailedException("Trong menu vẫn còn món của loại này không xóa được  ");
+        }
     }
 
     @Override

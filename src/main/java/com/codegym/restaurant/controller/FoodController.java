@@ -30,8 +30,6 @@ public class FoodController {
     private FoodService foodService;
     @Autowired
     private AppUtils appUtils;
-    @Autowired
-    private ModelMapper modelMapper;
     @GetMapping
     public ResponseEntity<List<Food>> show(@RequestParam(name = "deleted", required = false) String deleted) {
         List<Food> foodTypes = deleted == null || !deleted.equals("true")

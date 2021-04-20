@@ -61,9 +61,9 @@ public class Bill {
                 ", payTime=" + payTime +
                 ", lastPrice=" + lastPrice +
                 ", staff=" + staff +
+                ", surcharge=" + surcharge +
                 ", discount=" + discount +
-                ", directDiscount=" + discount +
-                ", directDiscountDescription='" + discountDescription + '\'' +
+                ", discountDescription='" + discountDescription + '\'' +
                 ", appTable=" + appTable +
                 ", deleted=" + deleted +
                 '}';
