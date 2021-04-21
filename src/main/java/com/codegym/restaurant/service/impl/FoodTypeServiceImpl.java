@@ -2,11 +2,9 @@ package com.codegym.restaurant.service.impl;
 
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.FoodTypeDeleteFailedException;
-import com.codegym.restaurant.exception.FoodTypeException;
-import com.codegym.restaurant.exception.ShiftNotFoundException;
+import com.codegym.restaurant.exception.FoodTypeNotFoundException;
 import com.codegym.restaurant.model.bussiness.Food;
 import com.codegym.restaurant.model.bussiness.FoodType;
-import com.codegym.restaurant.model.hr.Shift;
 import com.codegym.restaurant.repository.FoodRepository;
 import com.codegym.restaurant.repository.FoodTypeRepository;
 import com.codegym.restaurant.service.FoodTypeService;
@@ -37,7 +35,7 @@ public class FoodTypeServiceImpl implements FoodTypeService {
     @Override
     public FoodType getById(Integer id) {
         return foodTypeRepository.findAvailableById(id)
-                .orElseThrow(() -> new FoodTypeException("Loại món không tồn tại"));
+                .orElseThrow(() -> new FoodTypeNotFoundException("Loại món không tồn tại"));
     }
 
     @Override
@@ -63,7 +61,7 @@ public class FoodTypeServiceImpl implements FoodTypeService {
     @Override
     public void restore(Integer integer) {
         FoodType foodType = foodTypeRepository.findById(integer)
-                .orElseThrow(() -> new FoodTypeException("Loại món này không tồn tại"));
+                .orElseThrow(() -> new FoodTypeNotFoundException("Loại món này không tồn tại"));
         if (!foodType.isDeleted())
             throw new EntityRestoreFailedException("Không thể phục hồi khi đối tượng chưa xóa");
         foodType.setDeleted(false);

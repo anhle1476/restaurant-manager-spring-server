@@ -3,9 +3,12 @@ package com.codegym.restaurant.controller;
 import com.codegym.restaurant.dto.ExceptionResponseDTO;
 
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
+import com.codegym.restaurant.exception.FoodImageUploadFailedException;
+import com.codegym.restaurant.exception.FoodNameExistsException;
 import com.codegym.restaurant.exception.FoodNotFoundException;
 import com.codegym.restaurant.exception.FoodTypeDeleteFailedException;
-import com.codegym.restaurant.exception.FoodTypeException;
+import com.codegym.restaurant.exception.FoodTypeNameExistsException;
+import com.codegym.restaurant.exception.FoodTypeNotFoundException;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.exception.InvalidDateInputException;
 import com.codegym.restaurant.exception.InvalidScheduleException;
@@ -77,19 +80,40 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), InvalidScheduleException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); //gởi dữ liệu lên bi lỗi (client)
     }
+
     @ExceptionHandler(value = FoodNotFoundException.class)
     public ResponseEntity<ExceptionResponseDTO> handleFoodNotFountException(FoodNotFoundException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodNotFoundException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
-    @ExceptionHandler(value = FoodTypeException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleFoodTypeException(FoodTypeException ex) {
-        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodTypeException.ERROR_CODE);
+
+    @ExceptionHandler(value = FoodTypeNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleFoodTypeNotFoundException(FoodTypeNotFoundException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodTypeNotFoundException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(value = FoodTypeDeleteFailedException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleFoodTypeDeleteFailException(FoodTypeDeleteFailedException ex) {
+    public ResponseEntity<ExceptionResponseDTO> handleFoodTypeDeleteFailedException(FoodTypeDeleteFailedException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodTypeDeleteFailedException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = FoodTypeNameExistsException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleFoodTypeNameExistsException(FoodTypeNameExistsException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodTypeNameExistsException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = FoodImageUploadFailedException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleFoodImageUploadFailedException(FoodImageUploadFailedException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodImageUploadFailedException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = FoodNameExistsException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleFoodNameExistsException(FoodNameExistsException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodNameExistsException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 

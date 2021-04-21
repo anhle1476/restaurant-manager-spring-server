@@ -43,7 +43,6 @@ public class Food {
     @JsonIgnore
     private List<BillDetail> billDetails;
 
-    @NotBlank(message = "Hình ảnh không được trống")
     private String imageUrl;
 
     private boolean available;
