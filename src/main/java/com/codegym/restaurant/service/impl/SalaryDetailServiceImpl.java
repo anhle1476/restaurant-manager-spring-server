@@ -1,6 +1,7 @@
 package com.codegym.restaurant.service.impl;
 
 import com.codegym.restaurant.dto.SalaryDifferenceDTO;
+import com.codegym.restaurant.dto.TotalSalaryByMonthStats;
 import com.codegym.restaurant.exception.StaffNotFoundException;
 import com.codegym.restaurant.exception.ViolationNotFoundException;
 import com.codegym.restaurant.model.hr.SalaryDetail;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -157,6 +159,29 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
                 salaryDetailRepository.save(salaryDetail);
             }
         }
+    }
+
+    @Override
+    public List<TotalSalaryByMonthStats> getSalaryStats() {
+        return salaryDetailRepository.getSalaryStats();
+    }
+
+    @Override
+    public List<SalaryDetail> findByMonth(String month) {
+        LocalDate firstDateOfMonth = dateUtils.getFirstDateOfMonth(month);
+        return salaryDetailRepository.findByFirstDateOfMonth(firstDateOfMonth);
+    }
+
+    @Override
+    public SalaryDetail findByStaffIdAndMonth(Integer id, String month) {
+        LocalDate firstDateOfMonth = dateUtils.getFirstDateOfMonth(month);
+        return salaryDetailRepository.findByStaffIdAndFirstDateOfMonth(id, firstDateOfMonth)
+                .orElseThrow(() -> new IllegalStateException(""));
+    }
+
+    @Override
+    public List<SalaryDetail> findByStaffId(Integer id) {
+        return salaryDetailRepository.findByStaffId(id);
     }
 
     private void updateSalaryPerShiftAndTotalSalary(List<SalaryDetail> salaryDetails) {

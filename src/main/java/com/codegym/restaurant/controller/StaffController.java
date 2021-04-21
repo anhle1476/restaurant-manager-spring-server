@@ -3,8 +3,10 @@ package com.codegym.restaurant.controller;
 import com.codegym.restaurant.dto.StaffCreationDTO;
 import com.codegym.restaurant.dto.UpdateStaffPasswordDTO;
 import com.codegym.restaurant.exception.IdNotMatchException;
+import com.codegym.restaurant.model.hr.SalaryDetail;
 import com.codegym.restaurant.model.hr.Shift;
 import com.codegym.restaurant.model.hr.Staff;
+import com.codegym.restaurant.service.SalaryDetailService;
 import com.codegym.restaurant.service.StaffService;
 import com.codegym.restaurant.utils.AppUtils;
 import org.modelmapper.ModelMapper;
@@ -30,6 +32,9 @@ import java.util.List;
 public class StaffController {
     @Autowired
     private StaffService staffService;
+
+    @Autowired
+    private SalaryDetailService salaryDetailService;
 
     @Autowired
     private AppUtils appUtils;
@@ -88,5 +93,10 @@ public class StaffController {
             throw new IdNotMatchException("Id không trùng khớp");
         staffService.updateStaffPassword(updateStaffPasswordDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}/salaries")
+    public ResponseEntity<List<SalaryDetail>> findAllSalaries(@PathVariable(value = "id") Integer id) {
+        return new ResponseEntity<>(salaryDetailService.findByStaffId(id), HttpStatus.OK);
     }
 }

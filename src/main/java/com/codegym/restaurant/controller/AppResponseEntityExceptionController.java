@@ -96,19 +96,19 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
     @ExceptionHandler(value = FoodTypeDeleteFailedException.class)
     public ResponseEntity<ExceptionResponseDTO> handleFoodTypeDeleteFailedException(FoodTypeDeleteFailedException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodTypeDeleteFailedException.ERROR_CODE);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = FoodTypeNameExistsException.class)
     public ResponseEntity<ExceptionResponseDTO> handleFoodTypeNameExistsException(FoodTypeNameExistsException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodTypeNameExistsException.ERROR_CODE);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = FoodImageUploadFailedException.class)
     public ResponseEntity<ExceptionResponseDTO> handleFoodImageUploadFailedException(FoodImageUploadFailedException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodImageUploadFailedException.ERROR_CODE);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(value = FoodNameExistsException.class)
