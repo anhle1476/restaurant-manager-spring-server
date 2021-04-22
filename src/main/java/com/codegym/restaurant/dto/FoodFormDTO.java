@@ -22,7 +22,7 @@ public class FoodFormDTO {
     @Min(value = 0,message = "Giá không được âm")
     private long price;
 
-    @Pattern(regexp = "^[\\pL 0-9()_:-]{1,50}$", message = "Tên đơn vị từ 1-50 ký tự và không có ký tự đặc biệt")
+    @Pattern(regexp = "^[\\pL /0-9()_:-]{1,50}$", message = "Tên đơn vị từ 1-50 ký tự và không có ký tự đặc biệt")
     @NotBlank(message = "Đơn vị không được trống")
     private String unit;
 

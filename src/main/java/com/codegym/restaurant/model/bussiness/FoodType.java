@@ -21,7 +21,7 @@ public class FoodType {
     private Integer id;
 
     @Column(name = "type_name", unique = true)
-    @Pattern(regexp = "^[\\pL 0-9()_:-]{2,50}$", message = "Loại món ăn phải chứa từ 2-50 ký tự và không có ký tự đặc biệt")
+    @Pattern(regexp = "^[\\pL .,0-9()_:-]{2,50}$", message = "Loại món ăn phải chứa từ 2-50 ký tự và không có ký tự đặc biệt")
     @NotBlank(message = "Tên món ăn không được trống")
     private String name;
 

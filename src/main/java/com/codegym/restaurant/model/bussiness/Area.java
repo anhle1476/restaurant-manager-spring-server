@@ -20,7 +20,7 @@ public class Area {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Pattern(regexp = "^[\\pL 0-9():-]{1,25}$", message = "Tên Khu vực phải chứa từ 1-25 ký tự và không có ký tự đặc biệt")
+    @Pattern(regexp = "^[\\pL 0-9.():-]{1,25}$", message = "Tên Khu vực phải chứa từ 1-25 ký tự và không có ký tự đặc biệt")
     @NotBlank(message = "Tên khu vực không được để trống")
     @Column(name = "area_name")
     private String name;
