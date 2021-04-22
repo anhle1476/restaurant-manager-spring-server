@@ -46,12 +46,6 @@ public class ReservingOrderController {
         return new ResponseEntity<>(reservingOrderList, HttpStatus.OK);
     }
 
-    @GetMapping("/bill")
-    private ResponseEntity<List<ReservingOrder>> findReservingOrderByDate(@RequestParam(value = "date", required = false) LocalDate date) {
-        List<ReservingOrder> list = (List<ReservingOrder>) reservingOrderService.findReservingOrdersBy(date);
-        return new ResponseEntity<List<ReservingOrder>>(list, HttpStatus.OK);
-    }
-
     @PostMapping
     private ResponseEntity<?> createReservingOrder(@Valid @RequestBody ReservingOrder reservingOrder, BindingResult result) {
         if (result.hasErrors()) {
