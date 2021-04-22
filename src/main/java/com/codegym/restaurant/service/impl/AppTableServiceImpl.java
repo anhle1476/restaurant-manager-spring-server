@@ -1,5 +1,6 @@
 package com.codegym.restaurant.service.impl;
 
+import com.codegym.restaurant.dto.TableGroupingDTO;
 import com.codegym.restaurant.exception.AppTableNotFoundException;
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.model.bussiness.AppTable;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -55,10 +57,24 @@ public class AppTableServiceImpl implements AppTableService {
     public void restore(Integer integer) {
         AppTable appTable = appTableRepository.findById(integer)
                 .orElseThrow(() -> new AppTableNotFoundException("Bàn này không tồn tại"));
-        if (!appTable.isDeleted()){
+        if (!appTable.isDeleted()) {
             throw new EntityRestoreFailedException("Không thể khôi phục khi bàn chưa xóa");
         }
         appTable.setDeleted(false);
         appTableRepository.save(appTable);
+    }
+
+    @Override
+    public List<AppTable> groupingTables(TableGroupingDTO tableGroupingDTO) {
+        List<AppTable> appTableList = new ArrayList<>();
+
+        AppTable appTableParent = appTableRepository.findById(tableGroupingDTO.getChildrenId())
+                .orElseThrow(()-> new AppTableNotFoundException("Bàn này không tồn tại"));
+       if (appTableParent == null){
+           throw new AppTableNotFoundException("Không tìm thấy bàn chính");
+       }
+
+
+        return appTableList;
     }
 }

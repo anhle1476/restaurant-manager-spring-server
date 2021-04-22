@@ -77,20 +77,20 @@ public class ReservingOrderServiceImpl implements ReservingService {
 
 
     @Override
-    public Map<LocalDateTime, List<ReservingOrder>> findReservingOrdersBy(LocalDate dateOrder) {
-        LocalDateTime startTimeDate = dateUtils.getStartDate(dateOrder);
-        LocalDateTime endTimeDate = dateUtils.getEndDate(dateOrder);
+    public List<ReservingOrder> findReservingOrdersBy(LocalDate dateOrder) {
+        LocalDateTime startTimeDate = dateUtils.startOfDate(dateOrder);
+        LocalDateTime endTimeDate = dateUtils.endOfDate(dateOrder);
         List<ReservingOrder> orderList = reservingRepository.findReservingOrdersBy(startTimeDate, endTimeDate);
-        Map<LocalDateTime, List<ReservingOrder>> localDateTimeListMap = new TreeMap<>();
-        for (ReservingOrder currentReserving : orderList) {
-            LocalDateTime currentTime = currentReserving.getReservingTime();
-            List<ReservingOrder> reservingOrderList = localDateTimeListMap.get(currentTime);
-            if (reservingOrderList == null) {
-                reservingOrderList = new ArrayList<>();
-                reservingOrderList.add(currentReserving);
-                localDateTimeListMap.put(currentTime, reservingOrderList);
-            }
-        }
-        return localDateTimeListMap;
+//        Map<LocalDateTime, List<ReservingOrder>> localDateTimeListMap = new TreeMap<>();
+//        for (ReservingOrder currentReserving : orderList) {
+//            LocalDateTime currentTime = currentReserving.getReservingTime();
+//            List<ReservingOrder> reservingOrderList = localDateTimeListMap.get(currentTime);
+//            if (reservingOrderList == null) {
+//                reservingOrderList = new ArrayList<>();
+//                reservingOrderList.add(currentReserving);
+//                localDateTimeListMap.put(currentTime, reservingOrderList);
+//            }
+//        }
+        return orderList;
     }
 }

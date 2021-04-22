@@ -22,7 +22,7 @@ public class AppTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Pattern(regexp = "^[\\pL 0-9]{1,20}$", message = "Tên bàn phải chứa 1-20 ký tự và không có ký tự đặc biệt")
+    @Pattern(regexp = "^[\\pL 0-9.()-:]{1,20}$", message = "Tên bàn phải chứa 1-20 ký tự và không có ký tự đặc biệt")
     @NotBlank(message = "Tên bàn không được trống")
     @Column(name = "app_table_name", unique = true)
     private String name;

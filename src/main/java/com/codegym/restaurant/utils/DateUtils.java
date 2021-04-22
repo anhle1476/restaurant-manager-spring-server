@@ -30,21 +30,21 @@ public class DateUtils {
         }
     }
 
-    public LocalDateTime getStartDate(LocalDate dateStr) {
-        try {
-            return startOfDate(dateStr);
-        } catch (Exception e) {
-            throw new InvalidDateInputException("Giờ không đúng định dạng");
-        }
-    }
-
-    public LocalDateTime getEndDate(LocalDate dateStr) {
-        try {
-            return endOfDate(dateStr);
-        } catch (Exception e) {
-            throw new InvalidDateInputException("Giờ không đúng định dạng");
-        }
-    }
+//    public LocalDateTime getStartDate(LocalDate dateStr) {
+//        try {
+//            return startOfDate(dateStr);
+//        } catch (Exception e) {
+//            throw new InvalidDateInputException("Giờ không đúng định dạng");
+//        }
+//    }
+//
+//    public LocalDateTime getEndDate(LocalDate dateStr) {
+//        try {
+//            return endOfDate(dateStr);
+//        } catch (Exception e) {
+//            throw new InvalidDateInputException("Giờ không đúng định dạng");
+//        }
+//    }
 
     private YearMonth parseYearMonth(String dateStr) {
         String[] dateParts = dateStr.split("-");
@@ -53,12 +53,12 @@ public class DateUtils {
         return YearMonth.of(year, month);
     }
 
-    private LocalDateTime startOfDate(LocalDate date) {
+    public LocalDateTime startOfDate(LocalDate date) {
         return date.atStartOfDay();
     }
 
 
-    private LocalDateTime endOfDate(LocalDate date) {
+    public LocalDateTime endOfDate(LocalDate date) {
         return date.atTime(LocalTime.MAX);
     }
 

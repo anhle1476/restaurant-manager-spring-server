@@ -9,6 +9,6 @@ import java.util.Map;
 
 public interface ReservingService extends BaseService<ReservingOrder, Integer> {
 
-  Map<LocalDateTime, List<ReservingOrder>> findReservingOrdersBy(LocalDate dateOrder);
+  List<ReservingOrder> findReservingOrdersBy(LocalDate dateOrder);
 
 }
