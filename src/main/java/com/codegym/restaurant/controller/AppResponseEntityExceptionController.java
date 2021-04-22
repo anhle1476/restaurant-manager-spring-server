@@ -1,11 +1,12 @@
 package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.ExceptionResponseDTO;
-
+import com.codegym.restaurant.exception.AppTableNotFoundException;
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.exception.InvalidDateInputException;
 import com.codegym.restaurant.exception.InvalidScheduleException;
+import com.codegym.restaurant.exception.ReservingOrderNotFoundException;
 import com.codegym.restaurant.exception.RoleNotFoundException;
 import com.codegym.restaurant.exception.ScheduleNotFoundException;
 import com.codegym.restaurant.exception.ShiftNotFoundException;
@@ -73,5 +74,17 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
     public ResponseEntity<ExceptionResponseDTO> handleInvalidScheduleException(InvalidScheduleException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), InvalidScheduleException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); //gởi dữ liệu lên bi lỗi (client)
+    }
+
+    @ExceptionHandler(value = ReservingOrderNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleReservingOrderNotFoundException(ReservingOrderNotFoundException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), ReservingOrderNotFoundException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND); //
+    }
+
+    @ExceptionHandler(value = AppTableNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleAppTableNotFoundException(AppTableNotFoundException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), AppTableNotFoundException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND); //
     }
 }

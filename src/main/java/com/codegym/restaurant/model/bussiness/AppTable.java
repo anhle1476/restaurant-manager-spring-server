@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Entity
@@ -20,12 +22,15 @@ public class AppTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Pattern(regexp = "^[\\pL 0-9]{1,20}$", message = "Tên bàn phải chứa 1-20 ký tự và không có ký tự đặc biệt")
+    @NotBlank(message = "Tên bàn không được trống")
     @Column(name = "app_table_name", unique = true)
     private String name;
 
-    // TODO: doi map dit phan bac
     @ManyToOne
     private AppTable parent;
+
+
 
     @OneToMany(mappedBy = "parent")
     @JsonIgnore

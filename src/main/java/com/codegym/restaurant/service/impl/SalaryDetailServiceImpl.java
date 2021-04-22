@@ -8,7 +8,6 @@ import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.model.hr.Violation;
 import com.codegym.restaurant.model.hr.ViolationDetail;
 import com.codegym.restaurant.repository.SalaryDetailRepository;
-import com.codegym.restaurant.repository.ScheduleDetailRepository;
 import com.codegym.restaurant.repository.StaffRepository;
 import com.codegym.restaurant.repository.ViolationRepository;
 import com.codegym.restaurant.service.SalaryDetailService;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -117,6 +115,9 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
         }
         salaryDetailRepository.saveAll(currentSalaryDetails);
     }
+
+
+
 
     private ViolationDetail createViolationDetail(SalaryDifferenceDTO differenceDTO) {
         Violation violation = violationRepository.findById(differenceDTO.getNewViolation().getId())
