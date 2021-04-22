@@ -24,7 +24,6 @@ public class ReservingOrder {
     private Integer id;
 
     @NotNull(message = "Ngày đặt bàn không được để trống")
-    @JsonFormat(pattern = "yyyy-mm-dd HH:mm")
     private LocalDateTime reservingTime;
 
     @Pattern(regexp = "^[\\pL ]{4,50}$", message = "Tên khách hàng phải chứa từ 4-50 ký tự và không có ký tự đặc biệt")

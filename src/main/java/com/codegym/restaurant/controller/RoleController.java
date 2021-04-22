@@ -71,5 +71,4 @@ public class RoleController {
     public ResponseEntity<List<Staff>> AllStaffsOfRoleId(@PathVariable(value = "roleId") Integer roleId) {
         return new ResponseEntity<>(roleService.getAllStaffsOfRole(roleId), HttpStatus.OK);
     }
-
 }

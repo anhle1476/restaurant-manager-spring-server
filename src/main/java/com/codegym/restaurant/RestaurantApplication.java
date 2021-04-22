@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-
-public class RestaurantApplication  {
+public class RestaurantApplication {
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();

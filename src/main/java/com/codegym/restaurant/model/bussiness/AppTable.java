@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -30,8 +31,6 @@ public class AppTable {
     @ManyToOne
     private AppTable parent;
 
-
-
     @OneToMany(mappedBy = "parent")
     @JsonIgnore
     private List<AppTable> children;
@@ -43,6 +42,10 @@ public class AppTable {
     @ManyToMany(mappedBy = "appTables")
     @JsonIgnore
     private List<ReservingOrder> reservingOrders;
+
+    @ManyToOne
+    @NotNull(message = "Khu vực không được để trống")
+    private Area area;
 
     private boolean deleted;
 

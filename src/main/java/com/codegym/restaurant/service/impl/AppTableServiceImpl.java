@@ -68,11 +68,7 @@ public class AppTableServiceImpl implements AppTableService {
     public List<AppTable> groupingTables(TableGroupingDTO tableGroupingDTO) {
         List<AppTable> appTableList = new ArrayList<>();
 
-        AppTable appTableParent = appTableRepository.findById(tableGroupingDTO.getChildrenId())
-                .orElseThrow(()-> new AppTableNotFoundException("Bàn này không tồn tại"));
-       if (appTableParent == null){
-           throw new AppTableNotFoundException("Không tìm thấy bàn chính");
-       }
+        AppTable appTableParent = getById(tableGroupingDTO.getParent());
 
 
         return appTableList;

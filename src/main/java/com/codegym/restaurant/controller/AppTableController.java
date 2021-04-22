@@ -32,7 +32,7 @@ public class AppTableController {
 
     @GetMapping
     private ResponseEntity<List<AppTable>> listTable(@RequestParam(value = "deleted", required = false) String deleted) {
-        List<AppTable> appTableList = deleted == null || deleted.equals(true)
+        List<AppTable> appTableList = deleted == null || deleted.equals("true")
                 ? appTableService.getAll()
                 : appTableService.getAllDeleted();
         return new ResponseEntity<>(appTableList, HttpStatus.OK);
@@ -47,8 +47,11 @@ public class AppTableController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<?> updateAppTable(@Valid @RequestBody AppTable appTable,
-                                             BindingResult result, @PathVariable(value = "id") Integer id) {
+    private ResponseEntity<?> updateAppTable(
+            @Valid @RequestBody AppTable appTable,
+            BindingResult result,
+            @PathVariable(value = "id") Integer id
+    ) {
         if (result.hasErrors()) {
             return appUtils.mapErrorToResponse(result);
         }

@@ -5,6 +5,6 @@ import java.util.List;
 
 @Data
 public class TableGroupingDTO {
-    private Integer childrenId;
-    private List<Integer> tableId;
+    private Integer parent;
+    private List<Integer> children;
 }

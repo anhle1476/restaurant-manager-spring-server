@@ -14,6 +14,10 @@ import java.util.Date;
 
 @Component
 public class DateUtils {
+    public LocalDate getFirstDateOfMonth(LocalDate date) {
+        return LocalDate.of(date.getYear(), date.getMonth(), 1);
+    }
+
     public LocalDate getFirstDateOfMonth(String dateStr) {
         try {
             return parseYearMonth(dateStr).atDay(1);

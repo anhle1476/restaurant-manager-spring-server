@@ -4,6 +4,7 @@ import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.ViolationNotFoundException;
 import com.codegym.restaurant.model.hr.Violation;
 import com.codegym.restaurant.repository.ViolationRepository;
+import com.codegym.restaurant.service.SalaryDetailService;
 import com.codegym.restaurant.service.ViolationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ import java.util.List;
 public class ViolationServiceImpl implements ViolationService {
     @Autowired
     private ViolationRepository violationRepository;
+
+    @Autowired
+    private SalaryDetailService salaryDetailService;
 
     @Override
     public List<Violation> getAll() {
@@ -40,6 +44,12 @@ public class ViolationServiceImpl implements ViolationService {
 
     @Override
     public Violation update(Violation violation) {
+        Violation found = getById(violation.getId());
+        found.setName(violation.getName());
+        if (found.getFinesPercent() != violation.getFinesPercent()) {
+            found.setFinesPercent(violation.getFinesPercent());
+            salaryDetailService.updateSalaryDetailsWhenViolationFinesPercentChanged(violation);
+        }
         return violationRepository.save(violation);
     }
 

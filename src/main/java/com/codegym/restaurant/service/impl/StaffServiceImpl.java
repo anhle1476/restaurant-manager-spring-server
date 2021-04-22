@@ -7,6 +7,7 @@ import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
 import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.repository.StaffRepository;
+import com.codegym.restaurant.service.SalaryDetailService;
 import com.codegym.restaurant.service.StaffService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -26,6 +28,9 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
 
     @Autowired
     private StaffRepository staffRepository;
+
+    @Autowired
+    private SalaryDetailService salaryDetailService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -67,15 +72,12 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
                 .orElseThrow(() -> new StaffNotFoundException("Không thể cập nhật thông tin nhân viên này"));
         found.setFullname(staff.getFullname());
         found.setPhoneNumber(staff.getPhoneNumber());
-        // TODO: kiem tra luong cua found co giong voi luong cua staff truyen vo khong
-        found.setSalaryPerShift(staff.getSalaryPerShift());
-        // neu co thay doi thi cap nhat cua staff & cap nhat salary trong SalaryDetailService tu thang nay ve sau
-
-        // loi ve List<SalaryDetailService> s co: s.staff.id = id staff moi cap nhat
-        // AND s.salaryHistory.firstDateOfMonth >= ngay dau tien cua thang hien tai
-        // duyet qua tung SalaryDetailService -> cap nhat salary = staff.salaryPerShift * numberOfShift
-        // saveAll()
         found.setRole(staff.getRole());
+        // TODO: kiem tra luong cua found co giong voi luong cua staff truyen vo khong
+        if (found.getSalaryPerShift() != staff.getSalaryPerShift()) {
+            found.setSalaryPerShift(staff.getSalaryPerShift());
+            salaryDetailService.updateSalaryDetailsWhenStaffSalaryChanged(found);
+        }
         return staffRepository.save(found);
     }
 
