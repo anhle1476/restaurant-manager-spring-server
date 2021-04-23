@@ -1,9 +1,9 @@
 package com.codegym.restaurant.exception;
 
-public class BillNotFoundException extends RuntimeException{
+public class BillDetailNotFoundException extends RuntimeException{
     public static final String ERROR_CODE = "Bill.NotFound";
 
-    public BillNotFoundException(String message) {
+    public BillDetailNotFoundException(String message) {
         super(message);
     }
 

@@ -1,8 +1,7 @@
 package com.codegym.restaurant.service.impl;
 
-import com.codegym.restaurant.dto.UpdateBillDetailDTO;
-import com.codegym.restaurant.exception.BillNotFoundException;
-import com.codegym.restaurant.exception.DeleteBillFailException;
+import com.codegym.restaurant.exception.BillDetailNotFoundException;
+import com.codegym.restaurant.exception.BillUpdateFailException;
 import com.codegym.restaurant.exception.DoPaymentFailException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
 import com.codegym.restaurant.model.bussiness.Bill;
@@ -19,10 +18,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,7 +46,8 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Bill getById(String id) {
-        return billRepository.findBillByUUID(id);
+        return billRepository.findById(id)
+                .orElseThrow(() -> new BillDetailNotFoundException("Hóa đơn không tồn tại"));
     }
 
     @Override
@@ -59,75 +57,79 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Bill create(Bill bill) {
-        Bill bills = billRepository.checkBillByAppTableAndPayTime(bill.getAppTable().getId());
-        if (bills != null) {
-            throw new BillNotFoundException("Không thể tạo bill ở bàn này vì bàn này đã co bill");
+        Bill currentBill = billRepository.checkBillByAppTableAndPayTime(bill.getAppTable().getId());
+        if (currentBill != null)
+            throw new BillDetailNotFoundException("Không thể tạo bill ở bàn này vì bàn này đã co bill");
+        Bill saved = billRepository.save(bill);
+        List<BillDetail> billDetails = bill.getBillDetails();
+        for (BillDetail billDetail : billDetails) {
+            billDetail.setBill(saved);
         }
-        bill.setStartTime(LocalDateTime.now());
-        return billRepository.save(bill);
+        billDetailRepository.saveAll(billDetails);
+        return saved;
     }
 
-
     @Override
-    public Bill update(Bill bill) {
-        Bill oldBill = getById(bill.getId());
-        Map<Integer, UpdateBillDetailDTO> billDetailDTOMap = new HashMap<>();
-        Map<Integer, BillDetail> billDetails = bill.getBillDetails()
+    public Bill update(Bill newBill) {
+        Bill oldBill = getById(newBill.getId());
+        Map<Integer, BillDetail> newBillDetailsMap = newBill.getBillDetails()
                 .stream()
                 .collect(Collectors.toMap(sd -> sd.getFood().getId(), Function.identity()));
+
         List<BillDetail> oldBillDetails = oldBill.getBillDetails();
         List<BillDetail> deleteBillDetail = new ArrayList<>();
         for (BillDetail oldBillDetail : oldBillDetails) {
             Integer foodId = oldBillDetail.getFood().getId();
-            BillDetail newBill = billDetails.get(foodId);
-            UpdateBillDetailDTO billDetailDTO;
-            if (newBill == null) {
-                if (oldBillDetail.getDoneQuantity() > 0) {
-                    throw new RuntimeException("Không thể xóa món đã nấu xong");
-                }
+            BillDetail newBillDetail = newBillDetailsMap.get(foodId);
+            if (newBillDetail == null || newBillDetail.getQuantity() == 0) {
+                // case 1: bill moi khong ton tai mon nay -> dua vao list de chuan bi xoa
+                if (oldBillDetail.getDoneQuantity() > 0)
+                    throw new BillUpdateFailException("Không thể xóa món đã nấu xong");
                 deleteBillDetail.add(oldBillDetail);
             } else {
-                // case: tang them so luong cua mon -> cap nhat lai thoi gian order cuoi cung
-                if (newBill.getQuantity() > oldBillDetail.getQuantity())
+                // case 2: bill moi co ton tai mon -> cap nhat
+                // check 1: tang them so luong cua mon -> cap nhat lai thoi gian order cuoi cung
+                if (newBillDetail.getQuantity() > oldBillDetail.getQuantity())
                     oldBillDetail.setLastOrderTime(LocalDateTime.now());
-                // case: so luong moi < so luong da lam xong -> quang loi
-                if (newBill.getQuantity() < oldBillDetail.getDoneQuantity())
-                    throw new DeleteBillFailException("Không thể giảm số lượng của món đã nấu xong");
-                oldBillDetail.setQuantity(newBill.getQuantity());
+                // check 2: so luong moi < so luong da lam xong -> quang loi
+                if (newBillDetail.getQuantity() < oldBillDetail.getDoneQuantity())
+                    throw new BillUpdateFailException("Không thể giảm số lượng của món đã nấu xong");
+                oldBillDetail.setQuantity(newBillDetail.getQuantity());
+                // xoa billDetail da cap nhat xong o trong map
+                newBillDetailsMap.remove(foodId);
             }
         }
+        // xoa nhung billDetail cu
         billDetailRepository.deleteAll(deleteBillDetail);
         oldBillDetails.removeAll(deleteBillDetail);
-        //nhung doi tuong con lai la doi tuong them moi
-        Collection<BillDetail> newBillDetail = billDetails.values();
-        if (newBillDetail.size() > 0) {
-            for (BillDetail bd : newBillDetail) {
-                bd.setBill(oldBill);
-                oldBillDetails.add(bd);
+        //nhung doi tuong con lai trong map la billDetail them moi
+        Collection<BillDetail> newBillDetails = newBillDetailsMap.values();
+        if (newBillDetails.size() > 0) {
+            for (BillDetail newBillDetail : newBillDetails) {
+                newBillDetail.setBill(oldBill);
+                oldBillDetails.add(newBillDetail);
             }
-            billDetailRepository.saveAll(newBillDetail);
+            billDetailRepository.saveAll(newBillDetails);
         }
         return billRepository.save(oldBill);
     }
 
     @Override
     public Bill doPayment(Bill bill, Integer staffId) {
-        Bill bills = billRepository.findBillByUUID(bill.getId()
-        );
-        if (bill.getPayTime() != null) {
-            throw new DoPaymentFailException("bill này đã thanh toán không thể thanh toán lại");
-        }
+        Bill bills = getById(bill.getId());
+        if (bill.getPayTime() != null)
+            throw new DoPaymentFailException("Hóa đơn này đã thanh toán không thể thanh toán lại");
+
         List<BillDetail> billDetails = bills.getBillDetails();
         long total = 0;
-        for (BillDetail bd : billDetails) {
-            if (bd.getDoneQuantity() != bd.getQuantity()) {
+        for (BillDetail billDetail : billDetails) {
+            if (billDetail.getDoneQuantity() != billDetail.getQuantity())
                 throw new DoPaymentFailException("Có món chưa ra hết không thể tính tiền, kiểm tra lại hoặc xóa món");
-            }
-            bd.setPricePerUnit(bd.getFood().getPrice());
-            total += bd.getFood().getPrice() * bd.getQuantity();
+            billDetail.setPricePerUnit(billDetail.getFood().getPrice());
+            total += billDetail.getFood().getPrice() * billDetail.getQuantity();
         }
         Staff staff = staffRepository.findAvailableById(staffId)
-                .orElseThrow(() -> new StaffNotFoundException("Không thể chọn nhân viên dã xóa"));
+                .orElseThrow(() -> new StaffNotFoundException("Không thể chọn nhân viên đã xóa"));
 
         bills.setPayTime(LocalDateTime.now());
         bills.setDiscount(bill.getDiscount());
@@ -136,7 +138,7 @@ public class BillServiceImpl implements BillService {
         bills.setLastPrice(total + bill.getSurcharge() - bill.getDiscount());
         bills.setStaff(staff);
 //        bills.setAppTable(bills.getAppTable().getParent()==null);
-        //tach ban chua song
+        //tach ban chua xong
         return billRepository.save(bills);
     }
 
@@ -148,16 +150,12 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public void delete(Integer id) {
-        Bill bills = billRepository.getOne(id);
+    public void delete(String id) {
+        Bill bills = getById(id);
         for (BillDetail billDetail : bills.getBillDetails()) {
-            if (billDetail.getDoneQuantity() != 0) {
-                throw new DeleteBillFailException("Món được nấu xong không thể xóa bill và bill detail này");
-            }
-            billDetailRepository.deleteById(billDetail.getId());
+            if (billDetail.getDoneQuantity() != 0)
+                throw new BillUpdateFailException("Món được nấu xong không thể xóa bill và bill detail này");
         }
         billRepository.delete(bills);
     }
-
-
 }

@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -25,10 +26,12 @@ public class BillDetail {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bill_id")
     @JsonIgnore
     private Bill bill;
 
     @ManyToOne
+    @JoinColumn(name = "food_id")
     private Food food;
 
     private int quantity;

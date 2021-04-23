@@ -1,12 +1,9 @@
 package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.AuthInfoDTO;
-import com.codegym.restaurant.exception.BillNotFoundException;
+import com.codegym.restaurant.exception.BillDetailNotFoundException;
 import com.codegym.restaurant.exception.IdNotMatchException;
-import com.codegym.restaurant.exception.InvalidScheduleException;
 import com.codegym.restaurant.model.bussiness.Bill;
-import com.codegym.restaurant.model.hr.Schedule;
-import com.codegym.restaurant.service.BillDetailService;
 import com.codegym.restaurant.service.BillService;
 import com.codegym.restaurant.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,24 +46,24 @@ public class BillController {
     public ResponseEntity<?> createBIll(@Valid @RequestBody Bill bill, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        return new ResponseEntity<>(billService.create(bill), HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(billService.create(bill), HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            throw new BillDetailNotFoundException("Một hóa đơn không thể có 2 món trùng nhau");
+        }
     }
 
-    @PutMapping("{id}/payment")
+    @PostMapping("{id}/payment")
     public ResponseEntity<?> doPayment(@Valid @RequestBody Bill bill,
                                        BindingResult result,
-                                       @PathVariable(value = "id")String id,
+                                       @PathVariable(value = "id") String id,
                                        Principal principal){
         AuthInfoDTO infoDTO = appUtils.extractUserInfoFromToken(principal);
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
         if (!bill.getId().equals(id))
             throw new IdNotMatchException("Id không trùng hợp");
-        try {
-            return new ResponseEntity<>(billService.doPayment(bill, infoDTO.getId()), HttpStatus.CREATED);
-        }catch (DataIntegrityViolationException e){
-            throw new BillNotFoundException("có lỗi không thể tính tiền, xin hãy kiểm tra lại ");
-        }
+        return new ResponseEntity<>(billService.doPayment(bill, infoDTO.getId()), HttpStatus.CREATED);
     }
 
 
@@ -82,12 +79,12 @@ public class BillController {
         try {
             return new ResponseEntity<>(billService.update(bill), HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
-            throw new BillNotFoundException("Trong 1 thời gian không thể có 2 bill giống nhau");
+            throw new BillDetailNotFoundException("Trong 1 thời gian không thể có 2 bill giống nhau");
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<?> delete(@PathVariable(value = "id") String id) {
         billService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

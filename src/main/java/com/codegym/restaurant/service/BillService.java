@@ -13,7 +13,7 @@ public interface BillService {
     Bill create(Bill bill);
     Bill ChangeTable(Integer id);
     Bill update(Bill bill);
-    void delete(Integer id);
+    void delete(String id);
     Bill doPayment(Bill bill,Integer staffId);
     BillDetail processBillDoneQuantity(String idBill,Integer foodId,Integer processQuantity);
 }
