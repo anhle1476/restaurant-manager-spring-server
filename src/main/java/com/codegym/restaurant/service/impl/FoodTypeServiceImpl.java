@@ -54,12 +54,10 @@ public class FoodTypeServiceImpl implements FoodTypeService {
     public void delete(Integer id) {
         FoodType foodType = getById(id);
         List<Food> foods = foodRepository.findFoodByFoodTypeId(id);
-        if (foods == null) {
-            foodType.setDeleted(true);
-            foodTypeRepository.save(foodType);
-        }else {
+        if (!foods.isEmpty() )
             throw new FoodTypeDeleteFailedException("Trong menu vẫn còn món của loại này không xóa được  ");
-        }
+        foodType.setDeleted(true);
+        foodTypeRepository.save(foodType);
     }
 
     @Override

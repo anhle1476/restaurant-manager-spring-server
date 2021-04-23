@@ -2,6 +2,9 @@ package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.ExceptionResponseDTO;
 
+import com.codegym.restaurant.exception.BillNotFoundException;
+import com.codegym.restaurant.exception.DeleteBillFailException;
+import com.codegym.restaurant.exception.DoPaymentFailException;
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.FoodNotFoundException;
 import com.codegym.restaurant.exception.FoodTypeDeleteFailedException;
@@ -92,5 +95,19 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodTypeDeleteFailedException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
-
+    @ExceptionHandler(value = BillNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleBillNotFoundException(BillNotFoundException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), BillNotFoundException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(value = DeleteBillFailException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleDeleteBillFailException(DeleteBillFailException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), DeleteBillFailException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(value = DoPaymentFailException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleDoPaymentFailException(DoPaymentFailException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), DoPaymentFailException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }

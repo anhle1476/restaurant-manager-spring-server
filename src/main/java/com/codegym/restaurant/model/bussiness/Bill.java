@@ -2,25 +2,31 @@ package com.codegym.restaurant.model.bussiness;
 
 import com.codegym.restaurant.model.hr.Staff;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
 public class Bill {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
     @Column(updatable = false)
     private LocalDateTime startTime;
@@ -32,19 +38,22 @@ public class Bill {
     @ManyToOne
     private Staff staff;
 
+    @Min(value = 0,message = "surcharge không được nhập số âm")
     private long surcharge;
 
+    @Min(value = 0,message = "discount không được nhập số âm")
     private long discount;
 
+    @Pattern(regexp = "^[\\pL 0-9()_:-]{2,50}$", message = "Tên món ăn phải chứa từ 4-50 ký tự và không có ký tự đặc biệt")
     private String discountDescription;
 
     @ManyToOne
+    @NotNull(message = "Bàn không được để trống")
     private AppTable appTable;
 
-    @OneToMany(mappedBy = "bill", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "bill", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<BillDetail> billDetails;
 
-    private boolean deleted;
 
     @PrePersist
     protected void onPrePersist() {
@@ -65,7 +74,6 @@ public class Bill {
                 ", discount=" + discount +
                 ", discountDescription='" + discountDescription + '\'' +
                 ", appTable=" + appTable +
-                ", deleted=" + deleted +
                 '}';
     }
 }
