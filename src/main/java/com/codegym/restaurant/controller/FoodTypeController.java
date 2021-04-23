@@ -1,13 +1,13 @@
 package com.codegym.restaurant.controller;
 
+import com.codegym.restaurant.exception.FoodTypeNameExistsException;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.model.bussiness.Food;
 import com.codegym.restaurant.model.bussiness.FoodType;
-import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.service.FoodTypeService;
 import com.codegym.restaurant.utils.AppUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -44,10 +44,15 @@ public class FoodTypeController {
     public ResponseEntity<?> createFoodType(@Valid @RequestBody FoodType foodType, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        return new ResponseEntity<>(foodTypeService.create(foodType), HttpStatus.CREATED);
+
+        try {
+            return new ResponseEntity<>(foodTypeService.create(foodType), HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            throw new FoodTypeNameExistsException("Tên loại món đã tồn tại");
+        }
     }
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateRole(
+    public ResponseEntity<?> updateFoodType(
             @PathVariable(value = "id") Integer id,
             @Valid @RequestBody FoodType foodType,
             BindingResult result) {
@@ -55,20 +60,27 @@ public class FoodTypeController {
             return appUtils.mapErrorToResponse(result);
         if (!foodType.getId().equals(id))
             throw new IdNotMatchException("Id không trùng khớp");
-        return new ResponseEntity<>(foodTypeService.update(foodType), HttpStatus.CREATED);
+
+        try {
+            return new ResponseEntity<>(foodTypeService.update(foodType), HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            throw new FoodTypeNameExistsException("Tên loại món đã tồn tại");
+        }
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRole(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<?> deleteFoodType(@PathVariable(value = "id") Integer id) {
         foodTypeService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
     @PostMapping("/{id}/restore")
     public ResponseEntity<FoodType> restore(@PathVariable(value = "id") Integer id) {
         foodTypeService.restore(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @GetMapping("/{id}/foods")
-    public ResponseEntity<List<Food>> AllStaffsOfRoleId(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<List<Food>> findAllFoodByFoodType(@PathVariable(value = "id") Integer id) {
         return new ResponseEntity<>(foodTypeService.findAllFoodByFoodType(id), HttpStatus.OK);
     }
 }

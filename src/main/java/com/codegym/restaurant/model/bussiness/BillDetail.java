@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
@@ -41,7 +40,6 @@ public class BillDetail {
     private long pricePerUnit;
 
     private LocalDateTime lastOrderTime;
-
 
     public void resetOrderTime() {
         lastOrderTime = LocalDateTime.now();

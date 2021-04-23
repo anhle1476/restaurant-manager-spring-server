@@ -21,8 +21,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(uniqueConstraints=
-@UniqueConstraint(columnNames = {"date", "shift_id"}))
+@Table(uniqueConstraints= @UniqueConstraint(columnNames = {"date", "shift_id"}))
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

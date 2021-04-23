@@ -27,10 +27,13 @@ import java.util.stream.Collectors;
 public class BillServiceImpl implements BillService {
     @Autowired
     private BillRepository billRepository;
+
     @Autowired
     private DateUtils dateUtils;
+
     @Autowired
     private BillDetailRepository billDetailRepository;
+
     @Autowired
     private StaffRepository staffRepository;
 

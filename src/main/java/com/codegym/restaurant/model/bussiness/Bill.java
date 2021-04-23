@@ -22,7 +22,6 @@ import java.util.List;
 @Entity
 @Data
 public class Bill {
-
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -53,7 +52,6 @@ public class Bill {
 
     @OneToMany(mappedBy = "bill", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<BillDetail> billDetails;
-
 
     @PrePersist
     protected void onPrePersist() {

@@ -23,6 +23,8 @@ public class SalaryDetail {
     @ManyToOne
     private Staff staff;
 
+    private long currentSalaryPerShift;
+
     private int numberOfShift;
 
     private LocalDate firstDateOfMonth;
@@ -36,11 +38,20 @@ public class SalaryDetail {
 
     private boolean deleted;
 
+    public void addNumberOfShift(int amount) {
+        this.numberOfShift += amount;
+    }
+
+    public void addOvertimeHours(float amount) {
+        this.totalOvertimeHours += amount;
+    }
+
     @Override
     public String toString() {
         return "SalaryDetail{" +
                 "id=" + id +
                 ", staff=" + staff +
+                ", currentSalaryPerShift=" + currentSalaryPerShift +
                 ", numberOfShift=" + numberOfShift +
                 ", firstDateOfMonth=" + firstDateOfMonth +
                 ", totalOvertimeHours=" + totalOvertimeHours +

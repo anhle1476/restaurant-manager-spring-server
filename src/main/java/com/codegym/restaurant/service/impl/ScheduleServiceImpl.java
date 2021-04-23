@@ -66,7 +66,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         scheduleDetailRepository.saveAll(scheduleDetails);
 
         // TODO: goi service Salary, dung salaryMap de cap nhap
-        salaryDetailService.updateSalaryWhenScheduleChange(schedule.getDate(), salaryMap);
+        salaryDetailService.updateSalaryWhenScheduleChanged(schedule.getDate(), salaryMap);
         return saved;
     }
 
@@ -120,7 +120,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         // TODO: goi service Salary, dung salaryMap de cap nhap
-        salaryDetailService.updateSalaryWhenScheduleChange(schedule.getDate(), salaryMap);
+        salaryDetailService.updateSalaryWhenScheduleChanged(schedule.getDate(), salaryMap);
         return scheduleRepository.save(found);
     }
 
@@ -137,15 +137,18 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         // TODO: goi service Salary, dung salaryMap de cap nhap
-        salaryDetailService.updateSalaryWhenScheduleChange(schedule.getDate(), salaryMap);
+        salaryDetailService.updateSalaryWhenScheduleChanged(schedule.getDate(), salaryMap);
         scheduleRepository.deleteById(id);
     }
 
     public Map<LocalDate, List<Schedule>> findSchedulesOfMonth(String yearMonth) {
         LocalDate firstDate = dateUtils.getFirstDateOfMonth(yearMonth);
         LocalDate endDate = dateUtils.getLastDateOfMonth(yearMonth);
+
         List<Schedule> scheduleListOfMonth = scheduleRepository.scheduleOfMonth(firstDate, endDate);
+
         Map<LocalDate, List<Schedule>> schedulesMonth = new TreeMap<>();
+
         for (Schedule currentSchedule : scheduleListOfMonth) {
             LocalDate currentDate = currentSchedule.getDate();
             List<Schedule> schedules = schedulesMonth.get(currentDate);

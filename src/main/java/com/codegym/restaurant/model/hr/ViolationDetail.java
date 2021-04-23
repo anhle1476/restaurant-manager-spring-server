@@ -30,6 +30,14 @@ public class ViolationDetail {
 
     private boolean deleted;
 
+    public void increaseNumberOfViolations() {
+        this.numberOfViolations++;
+    }
+
+    public void decreaseNumberOfViolations() {
+        this.numberOfViolations--;
+    }
+
     @Override
     public String toString() {
         return "ViolationDetail{" +

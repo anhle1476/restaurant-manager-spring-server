@@ -37,8 +37,6 @@ public class ScheduleDetail {
 
     private float overtimeHours;
 
-    private boolean deleted;
-
     @Override
     public String toString() {
         return "ScheduleDetail{" +
@@ -46,7 +44,6 @@ public class ScheduleDetail {
                 ", staff=" + staff +
                 ", violation=" + violation +
                 ", overtimeHours=" + overtimeHours +
-                ", deleted=" + deleted +
                 '}';
     }
 }
