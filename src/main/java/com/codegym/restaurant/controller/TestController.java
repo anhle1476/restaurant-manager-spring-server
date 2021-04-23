@@ -29,7 +29,7 @@ public class TestController {
     @GetMapping
     public ResponseEntity<?> testResponse(Principal principal) {
         AuthInfoDTO infoDTO = appUtils.extractUserInfoFromToken(principal);
-
+        infoDTO.getId();
         return new ResponseEntity<>("hello " + principal.getName(), HttpStatus.OK);
     }
 

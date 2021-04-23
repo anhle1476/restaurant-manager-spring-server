@@ -8,46 +8,45 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Table(uniqueConstraints=
+@UniqueConstraint(columnNames = {"bill_id", "food_id"}))
 public class BillDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bill_id")
     @JsonIgnore
     private Bill bill;
 
     @ManyToOne
+    @JoinColumn(name = "food_id")
     private Food food;
 
     private int quantity;
 
     private int doneQuantity;
 
-    private Long pricePerUnit;
+    private long pricePerUnit;
 
     private LocalDateTime lastOrderTime;
 
-    private boolean deleted;
-
-    private void resetOrderTime() {
+    public void resetOrderTime() {
         lastOrderTime = LocalDateTime.now();
     }
 
     @PrePersist
     protected void onPrePersist() {
-        resetOrderTime();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
         resetOrderTime();
     }
 
@@ -60,7 +59,6 @@ public class BillDetail {
                 ", doneQuantity=" + doneQuantity +
                 ", pricePerUnit=" + pricePerUnit +
                 ", lastOrderTime=" + lastOrderTime +
-                ", deleted=" + deleted +
                 '}';
     }
 }
