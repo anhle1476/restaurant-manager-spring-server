@@ -31,10 +31,12 @@ public class ShiftController {
     private ShiftServiceImpl shiftService;
 
     @GetMapping
-    public ResponseEntity<List<Shift>> show(@RequestParam(name = "deleted", required = false) String deleted) {
-        List<Shift> shiftList = deleted == null || !deleted.equals("true")
-                ? shiftService.getAll()
-                : shiftService.getAllDeleted();
+    public ResponseEntity<List<Shift>> show(@RequestParam(name = "deleted", defaultValue = "false") String deleted) {
+        List<Shift> shiftList = deleted.equals("both")
+                ? shiftService.getAllWithBothDeletedStatus()
+                : deleted.equals("true")
+                ? shiftService.getAllDeleted()
+                : shiftService.getAll();
         return new ResponseEntity<>(shiftList, HttpStatus.OK);
     }
 
