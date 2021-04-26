@@ -19,6 +19,7 @@ import java.util.List;
 public class FoodTypeServiceImpl implements FoodTypeService {
     @Autowired
     private FoodTypeRepository foodTypeRepository;
+
     @Autowired
     private FoodRepository foodRepository;
 

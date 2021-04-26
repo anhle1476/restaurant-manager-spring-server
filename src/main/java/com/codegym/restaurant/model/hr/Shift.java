@@ -9,11 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -23,8 +20,7 @@ public class Shift {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Pattern(regexp = "^[\\pL 0-9():-]{5,30}$"
-            , message = "Tên ca phải chứa từ 5-30 ký tự.")
+    @Pattern(regexp = "^[\\pL 0-9():-]{1,30}$", message = "Tên ca phải chứa từ 1-30 ký tự, bao gồm chữ, số hoặc các ký tự ():-")
     @NotBlank(message = "Tên ca không được trống")
     @Column(name = "shift_name", unique = true)
     private String name;

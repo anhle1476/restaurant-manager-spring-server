@@ -1,6 +1,5 @@
 package com.codegym.restaurant.service.impl;
 
-import com.cloudinary.utils.ObjectUtils;
 import com.codegym.restaurant.dto.FoodFormDTO;
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.FoodImageUploadFailedException;

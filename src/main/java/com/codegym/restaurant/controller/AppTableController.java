@@ -1,11 +1,14 @@
 package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.TableGroupingDTO;
+import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.exception.InvalidDateInputException;
+import com.codegym.restaurant.exception.AppTableNameExistsException;
 import com.codegym.restaurant.model.bussiness.AppTable;
-import com.codegym.restaurant.service.impl.AppTableServiceImpl;
+import com.codegym.restaurant.service.AppTableService;
 import com.codegym.restaurant.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -26,7 +29,7 @@ import java.util.List;
 @RequestMapping("api/v1/tables")
 public class AppTableController {
     @Autowired
-    private AppTableServiceImpl appTableService;
+    private AppTableService appTableService;
 
     @Autowired
     private AppUtils appUtils;
@@ -39,12 +42,21 @@ public class AppTableController {
         return new ResponseEntity<>(appTableList, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    private ResponseEntity<AppTable> getTableById(@PathVariable(value = "id") Integer id) {
+        return new ResponseEntity<>(appTableService.getById(id), HttpStatus.OK);
+    }
+
     @PostMapping
     private ResponseEntity<?> createAppTable(@Valid @RequestBody AppTable appTable, BindingResult result) {
-        if (result.hasErrors()) {
+        if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
+
+        try {
+            return new ResponseEntity<>(appTableService.create(appTable), HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppTableNameExistsException("Tên bàn này đã tồn tại");
         }
-        return new ResponseEntity<>(appTableService.create(appTable), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -53,13 +65,17 @@ public class AppTableController {
             BindingResult result,
             @PathVariable(value = "id") Integer id
     ) {
-        if (result.hasErrors()) {
+        if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        }
-        if (!appTable.getId().equals(id)) {
+
+        if (!appTable.getId().equals(id))
             throw new InvalidDateInputException("Id không trùng khớp");
+
+        try {
+            return new ResponseEntity<>(appTableService.update(appTable), HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppTableNameExistsException("Tên bàn này đã tồn tại");
         }
-        return new ResponseEntity<>(appTableService.update(appTable), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -77,27 +93,18 @@ public class AppTableController {
     @PostMapping("/{id}/grouping")
     private ResponseEntity<?> groupingTable(@Valid @RequestBody TableGroupingDTO tableGroupingDTO, BindingResult result,
                                             @PathVariable(value = "id") Integer id) {
-        if (result.hasErrors()) {
+        if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        }
-        if (!tableGroupingDTO.getParent().equals(id)) {
-            return new ResponseEntity<>(appTableService.groupingTables(tableGroupingDTO), HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(appTableService.groupingTables(tableGroupingDTO), HttpStatus.OK);
-        }
+
+        if (!tableGroupingDTO.getParent().equals(id))
+            throw new IdNotMatchException("Id bàn chính không khớp");
+
+        return new ResponseEntity<>(appTableService.groupingTables(tableGroupingDTO), HttpStatus.OK);
     }
 
 
     @PostMapping("/{id}/separate")
-    private ResponseEntity<?> separateTable(@Valid @RequestBody TableGroupingDTO tableGroupingDTO, BindingResult result,
-                                            @PathVariable(value = "id") Integer id) {
-        if (result.hasErrors()) {
-            return appUtils.mapErrorToResponse(result);
-        }
-        if (!tableGroupingDTO.getParent().equals(id)) {
-            return new ResponseEntity<>(appTableService.groupingTables(tableGroupingDTO), HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(appTableService.separateTables(tableGroupingDTO), HttpStatus.OK);
-        }
+    private ResponseEntity<?> separateTable(@PathVariable(value = "id") Integer id) {
+        return new ResponseEntity<>(appTableService.separateTables(id), HttpStatus.OK);
     }
 }

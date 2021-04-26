@@ -42,7 +42,9 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     public Area update(Area area) {
-        return areaRepository.save(area);
+        Area found = getById(area.getId());
+        found.setName(area.getName());
+        return areaRepository.save(found);
     }
 
     @Override
