@@ -2,6 +2,7 @@ package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.ExceptionResponseDTO;
 import com.codegym.restaurant.exception.AppTableNotFoundException;
+import com.codegym.restaurant.exception.AreaNotFoundException;
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.exception.InvalidDateInputException;
@@ -85,6 +86,13 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
     @ExceptionHandler(value = AppTableNotFoundException.class)
     public ResponseEntity<ExceptionResponseDTO> handleAppTableNotFoundException(AppTableNotFoundException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), AppTableNotFoundException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND); //
+    }
+
+
+    @ExceptionHandler(value = AreaNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleAreaNotFoundException(AreaNotFoundException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), AreaNotFoundException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND); //
     }
 }

@@ -73,20 +73,15 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Schedule update(Schedule schedule) {
         Schedule found = getById(schedule.getId());
-
         Map<Integer, SalaryDifferenceDTO> salaryMap = new HashMap<>();
-
         // map theo ID nhan vien cap nhat
         Map<Integer, ScheduleDetail> staffDetailMap = schedule.getScheduleDetails()
                 .stream()
                 .collect(Collectors.toMap(sd -> sd.getStaff().getId(), Function.identity()));
-
         // list Details goc & list chuan bi xoa
         List<ScheduleDetail> originalDetails = found.getScheduleDetails();
-
         List<ScheduleDetail> deletedDetails = new ArrayList<>();
-
-        for (ScheduleDetail original : originalDetails) {
+         for (ScheduleDetail original : originalDetails) {
             Integer staffId = original.getStaff().getId(); //idStaff old
             // lich lam viec moi cua nhan vien
             ScheduleDetail newSchedule = staffDetailMap.get(staffId);  //so sanh va tim kiem kiem tra co hay khoong
@@ -99,7 +94,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 // cap nhat lich lam viec cua nhan vien va xoa doi tuong trong map
                 dto = getSalaryDifference(original, newSchedule);
                 dto.setNewViolation(newSchedule.getViolation());
-
                 original.setOvertimeHours(newSchedule.getOvertimeHours());
                 original.setViolation(newSchedule.getViolation());
                 staffDetailMap.remove(staffId);  //cap nhat song thi xoa luon trong mapNew
@@ -110,13 +104,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         // doi tuong trong list delete -> xoa
         scheduleDetailRepository.deleteAll(deletedDetails);
         originalDetails.removeAll(deletedDetails);
+
         // doi tuong con lai trong map la doi tuong moi
         Collection<ScheduleDetail> newDetails = staffDetailMap.values();
         if (newDetails.size() > 0) {
             for (ScheduleDetail sd : newDetails) {
                 sd.setSchedule(found);
                 originalDetails.add(sd);
-
                 Integer staffId = sd.getStaff().getId();
                 SalaryDifferenceDTO dto = getSalaryDifference(null, sd);
                 salaryMap.put(staffId, dto);
@@ -172,13 +166,11 @@ public class ScheduleServiceImpl implements ScheduleService {
             dto.setOvertimeHours(newSchedule.getOvertimeHours());
             dto.setNewViolation(newSchedule.getViolation());
         }
-
         if (oldSchedule != null) {
             dto.setNumberOfShift(dto.getNumberOfShift() - 1);
             dto.setOvertimeHours(dto.getOvertimeHours() - oldSchedule.getOvertimeHours());
             dto.setOldViolation(oldSchedule.getViolation());
         }
-
         return dto;
     }
 }

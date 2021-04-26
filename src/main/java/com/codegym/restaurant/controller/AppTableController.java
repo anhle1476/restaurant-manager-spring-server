@@ -1,5 +1,6 @@
 package com.codegym.restaurant.controller;
 
+import com.codegym.restaurant.dto.TableGroupingDTO;
 import com.codegym.restaurant.exception.InvalidDateInputException;
 import com.codegym.restaurant.model.bussiness.AppTable;
 import com.codegym.restaurant.service.impl.AppTableServiceImpl;
@@ -64,12 +65,39 @@ public class AppTableController {
     @DeleteMapping("/{id}")
     private ResponseEntity<?> deletedAppTable(@PathVariable(value = "id") Integer id) {
         appTableService.delete(id);
-        return new ResponseEntity<>( HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}")
     private ResponseEntity<?> restoreAppTable(@PathVariable(value = "id") Integer id) {
         appTableService.restore(id);
-        return new ResponseEntity<>( HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{id}/grouping")
+    private ResponseEntity<?> groupingTable(@Valid @RequestBody TableGroupingDTO tableGroupingDTO, BindingResult result,
+                                            @PathVariable(value = "id") Integer id) {
+        if (result.hasErrors()) {
+            return appUtils.mapErrorToResponse(result);
+        }
+        if (!tableGroupingDTO.getParent().equals(id)) {
+            return new ResponseEntity<>(appTableService.groupingTables(tableGroupingDTO), HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(appTableService.groupingTables(tableGroupingDTO), HttpStatus.OK);
+        }
+    }
+
+
+    @PostMapping("/{id}/separate")
+    private ResponseEntity<?> separateTable(@Valid @RequestBody TableGroupingDTO tableGroupingDTO, BindingResult result,
+                                            @PathVariable(value = "id") Integer id) {
+        if (result.hasErrors()) {
+            return appUtils.mapErrorToResponse(result);
+        }
+        if (!tableGroupingDTO.getParent().equals(id)) {
+            return new ResponseEntity<>(appTableService.groupingTables(tableGroupingDTO), HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(appTableService.separateTables(tableGroupingDTO), HttpStatus.OK);
+        }
     }
 }
