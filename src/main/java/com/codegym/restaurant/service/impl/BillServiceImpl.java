@@ -15,7 +15,7 @@ import com.codegym.restaurant.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,7 +38,7 @@ public class BillServiceImpl implements BillService {
     private StaffRepository staffRepository;
 
     @Override
-    public List<Bill> getAll(LocalDateTime firstTime, LocalDateTime lastTime) {
+    public List<Bill> getAll(ZonedDateTime firstTime, ZonedDateTime lastTime) {
         return billRepository.findBillByMonthOrDate(firstTime, lastTime);
     }
 
@@ -93,7 +93,7 @@ public class BillServiceImpl implements BillService {
                 // case 2: bill moi co ton tai mon -> cap nhat
                 // check 1: tang them so luong cua mon -> cap nhat lai thoi gian order cuoi cung
                 if (newBillDetail.getQuantity() > oldBillDetail.getQuantity())
-                    oldBillDetail.setLastOrderTime(LocalDateTime.now());
+                    oldBillDetail.setLastOrderTime(dateUtils.now());
                 // check 2: so luong moi < so luong da lam xong -> quang loi
                 if (newBillDetail.getQuantity() < oldBillDetail.getDoneQuantity())
                     throw new BillUpdateFailException("Không thể giảm số lượng của món đã nấu xong");
@@ -134,7 +134,7 @@ public class BillServiceImpl implements BillService {
         Staff staff = staffRepository.findAvailableById(staffId)
                 .orElseThrow(() -> new StaffNotFoundException("Không thể chọn nhân viên đã xóa"));
 
-        bills.setPayTime(LocalDateTime.now());
+        bills.setPayTime(dateUtils.now());
         bills.setDiscount(bill.getDiscount());
         bills.setSurcharge(bill.getSurcharge());
         bills.setDiscountDescription(bill.getDiscountDescription());

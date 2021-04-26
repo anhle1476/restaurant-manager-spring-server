@@ -1,19 +1,26 @@
 package com.codegym.restaurant.utils;
 
 import com.codegym.restaurant.exception.InvalidDateInputException;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Component
 public class DateUtils {
+    public static final ZoneId TIME_ZONE = ZoneId.of("GMT+07:00");
+
+    public LocalDate getCurrentDate() {
+        return now().toLocalDate();
+    }
+
+    public ZonedDateTime now() {
+        return ZonedDateTime.now(TIME_ZONE);
+    }
+
     public LocalDate getFirstDateOfMonth(LocalDate date) {
         return LocalDate.of(date.getYear(), date.getMonth(), 1);
     }
@@ -34,22 +41,6 @@ public class DateUtils {
         }
     }
 
-//    public LocalDateTime getStartDate(LocalDate dateStr) {
-//        try {
-//            return startOfDate(dateStr);
-//        } catch (Exception e) {
-//            throw new InvalidDateInputException("Giờ không đúng định dạng");
-//        }
-//    }
-//
-//    public LocalDateTime getEndDate(LocalDate dateStr) {
-//        try {
-//            return endOfDate(dateStr);
-//        } catch (Exception e) {
-//            throw new InvalidDateInputException("Giờ không đúng định dạng");
-//        }
-//    }
-
     private YearMonth parseYearMonth(String dateStr) {
         String[] dateParts = dateStr.split("-");
         int year = Integer.parseInt(dateParts[0]);
@@ -57,13 +48,13 @@ public class DateUtils {
         return YearMonth.of(year, month);
     }
 
-    public LocalDateTime startOfDate(LocalDate date) {
-        return date.atStartOfDay();
+    public ZonedDateTime startOfDate(LocalDate date) {
+        return date.atStartOfDay(TIME_ZONE);
     }
 
 
-    public LocalDateTime endOfDate(LocalDate date) {
-        return date.atTime(LocalTime.MAX);
+    public ZonedDateTime endOfDate(LocalDate date) {
+        return date.atTime(LocalTime.MAX).atZone(TIME_ZONE);
     }
 
 }

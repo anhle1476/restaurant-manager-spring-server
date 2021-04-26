@@ -3,11 +3,11 @@ package com.codegym.restaurant.service;
 import com.codegym.restaurant.model.bussiness.Bill;
 import com.codegym.restaurant.model.bussiness.BillDetail;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface BillService {
-    List<Bill> getAll(LocalDateTime firstTime, LocalDateTime lastTime);
+    List<Bill> getAll(ZonedDateTime firstTime, ZonedDateTime lastTime);
     List<Bill> getAllBillPayTimeIsNull();
     Bill getById(String id);
     Bill create(Bill bill);

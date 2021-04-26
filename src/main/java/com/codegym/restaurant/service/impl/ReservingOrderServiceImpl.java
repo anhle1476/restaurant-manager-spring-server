@@ -11,14 +11,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 
 @Service
@@ -80,21 +75,8 @@ public class ReservingOrderServiceImpl implements ReservingService {
 
     @Override
     public List<ReservingOrder> findReservingOrdersBy(LocalDate dateOrder) {
-        LocalDateTime startTimeDate = dateUtils.startOfDate(dateOrder);
-        LocalDateTime endTimeDate = dateUtils.endOfDate(dateOrder);
-        List<ReservingOrder> orderList = reservingRepository.findReservingOrdersBy(startTimeDate, endTimeDate);
-        return orderList;
+        ZonedDateTime startTimeDate = dateUtils.startOfDate(dateOrder);
+        ZonedDateTime endTimeDate = dateUtils.endOfDate(dateOrder);
+        return reservingRepository.findReservingOrdersBy(startTimeDate, endTimeDate);
     }
-
-//    @Override
-//    public ReservingOrder cancelOrder(ReservingOrder reservingOrder) {
-//        LocalDateTime timeOrder = reservingOrder.getReservingTime();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
-//        String formatDateTime = timeOrder.format(formatter);
-//        String[] timeParse = formatDateTime.split(" ");
-//        int hours = Integer.parseInt(timeParse[1]);
-//        int overTime = hours + 2;
-//        if ()
-//            return null;
-//    }
 }
