@@ -8,4 +8,8 @@ import java.util.List;
 public interface AppTableService extends BaseService<AppTable, Integer> {
 
     List<AppTable> groupingTables(TableGroupingDTO tableGroupingDTO);
+
+    List<AppTable> separateTables(Integer parentTableId);
+
+
 }

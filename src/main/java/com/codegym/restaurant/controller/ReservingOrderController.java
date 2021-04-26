@@ -42,7 +42,6 @@ public class ReservingOrderController {
         reservingOrderList = deleted == null || !deleted.equals("true")
                 ? reservingOrderService.getAll()
                 : reservingOrderService.getAllDeleted();
-
         return new ResponseEntity<>(reservingOrderList, HttpStatus.OK);
     }
 

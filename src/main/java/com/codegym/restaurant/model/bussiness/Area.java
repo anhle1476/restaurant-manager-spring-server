@@ -22,7 +22,7 @@ public class Area {
 
     @Pattern(regexp = "^[\\pL 0-9.():-]{1,25}$", message = "Tên Khu vực phải chứa từ 1-25 ký tự và không có ký tự đặc biệt")
     @NotBlank(message = "Tên khu vực không được để trống")
-    @Column(name = "area_name")
+    @Column(name = "area_name", unique = true)
     private String name;
 
     @OneToMany(mappedBy = "area")

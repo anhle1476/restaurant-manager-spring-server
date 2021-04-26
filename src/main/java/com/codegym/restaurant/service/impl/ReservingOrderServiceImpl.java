@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,7 @@ public class ReservingOrderServiceImpl implements ReservingService {
     @Override
     public void delete(Integer integer) {
         ReservingOrder reservingOrder = getById(integer);
+
         reservingOrder.setDeleted(true);
         reservingRepository.save(reservingOrder);
     }
@@ -81,16 +83,18 @@ public class ReservingOrderServiceImpl implements ReservingService {
         LocalDateTime startTimeDate = dateUtils.startOfDate(dateOrder);
         LocalDateTime endTimeDate = dateUtils.endOfDate(dateOrder);
         List<ReservingOrder> orderList = reservingRepository.findReservingOrdersBy(startTimeDate, endTimeDate);
-//        Map<LocalDateTime, List<ReservingOrder>> localDateTimeListMap = new TreeMap<>();
-//        for (ReservingOrder currentReserving : orderList) {
-//            LocalDateTime currentTime = currentReserving.getReservingTime();
-//            List<ReservingOrder> reservingOrderList = localDateTimeListMap.get(currentTime);
-//            if (reservingOrderList == null) {
-//                reservingOrderList = new ArrayList<>();
-//                reservingOrderList.add(currentReserving);
-//                localDateTimeListMap.put(currentTime, reservingOrderList);
-//            }
-//        }
         return orderList;
     }
+
+//    @Override
+//    public ReservingOrder cancelOrder(ReservingOrder reservingOrder) {
+//        LocalDateTime timeOrder = reservingOrder.getReservingTime();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+//        String formatDateTime = timeOrder.format(formatter);
+//        String[] timeParse = formatDateTime.split(" ");
+//        int hours = Integer.parseInt(timeParse[1]);
+//        int overTime = hours + 2;
+//        if ()
+//            return null;
+//    }
 }
