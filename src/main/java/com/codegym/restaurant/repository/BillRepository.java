@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Repository
@@ -14,7 +14,7 @@ public interface BillRepository extends JpaRepository<Bill,String> {
     List<Bill> findBillByUUID(String id);
 
     @Query("SELECT b from Bill b where b.payTime >= :firstTime and b.payTime <= :lastTime ")
-    List<Bill> findBillByMonthOrDate(LocalDateTime firstTime, LocalDateTime lastTime);
+    List<Bill> findBillByMonthOrDate(ZonedDateTime firstTime, ZonedDateTime lastTime);
 
     @Query("SELECT b from Bill b where b.payTime is null")
     List<Bill> findBillByPayTimeIsNull();

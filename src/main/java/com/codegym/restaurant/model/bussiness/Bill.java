@@ -1,6 +1,7 @@
 package com.codegym.restaurant.model.bussiness;
 
 import com.codegym.restaurant.model.hr.Staff;
+import com.codegym.restaurant.utils.DateUtils;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -16,7 +17,7 @@ import javax.persistence.PrePersist;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
@@ -28,9 +29,9 @@ public class Bill {
     private String id;
 
     @Column(updatable = false)
-    private LocalDateTime startTime;
+    private ZonedDateTime startTime;
 
-    private LocalDateTime payTime;
+    private ZonedDateTime payTime;
 
     private long lastPrice;
 
@@ -57,7 +58,7 @@ public class Bill {
     protected void onPrePersist() {
         if (appTable.getParent() != null)
             throw new RuntimeException("Không thể đặt order cho bàn phụ được ghép");
-        this.startTime = LocalDateTime.now();
+        this.startTime = ZonedDateTime.now(DateUtils.TIME_ZONE);
     }
 
     @Override

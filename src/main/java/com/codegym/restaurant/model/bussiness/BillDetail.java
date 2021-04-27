@@ -1,5 +1,6 @@
 package com.codegym.restaurant.model.bussiness;
 
+import com.codegym.restaurant.utils.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -13,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Data
@@ -39,10 +40,10 @@ public class BillDetail {
 
     private long pricePerUnit;
 
-    private LocalDateTime lastOrderTime;
+    private ZonedDateTime lastOrderTime;
 
     public void resetOrderTime() {
-        lastOrderTime = LocalDateTime.now();
+        lastOrderTime = ZonedDateTime.now(DateUtils.TIME_ZONE);
     }
 
     @PrePersist

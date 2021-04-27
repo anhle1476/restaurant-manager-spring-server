@@ -13,7 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
@@ -24,7 +24,7 @@ public class ReservingOrder {
     private Integer id;
 
     @NotNull(message = "Ngày đặt bàn không được để trống")
-    private LocalDateTime reservingTime;
+    private ZonedDateTime reservingTime;
 
     @Pattern(regexp = "^[\\pL ]{4,50}$", message = "Tên khách hàng phải chứa từ 4-50 ký tự và không có ký tự đặc biệt")
     @NotBlank(message = "Họ và tên khách hàng không được trống")

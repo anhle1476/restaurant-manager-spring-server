@@ -1,6 +1,7 @@
 package com.codegym.restaurant.service.impl;
 
 import com.codegym.restaurant.dto.TableGroupingDTO;
+import com.codegym.restaurant.exception.AppTableNotAParentException;
 import com.codegym.restaurant.exception.AppTableNotFoundException;
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.model.bussiness.AppTable;
@@ -12,13 +13,13 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
 public class AppTableServiceImpl implements AppTableService {
     @Autowired
     private AppTableRepository appTableRepository;
-
 
     @Override
     public List<AppTable> getAll() {
@@ -43,7 +44,10 @@ public class AppTableServiceImpl implements AppTableService {
 
     @Override
     public AppTable update(AppTable appTable) {
-        return appTableRepository.save(appTable);
+        AppTable found = getById(appTable.getId());
+        found.setName(appTable.getName());
+        found.setArea(appTable.getArea());
+        return appTableRepository.save(found);
     }
 
     @Override
@@ -66,11 +70,64 @@ public class AppTableServiceImpl implements AppTableService {
 
     @Override
     public List<AppTable> groupingTables(TableGroupingDTO tableGroupingDTO) {
-        List<AppTable> appTableList = new ArrayList<>();
-
+        // lay ban chinh, kiem tra ban chinh co dang duoc ghep khong
         AppTable appTableParent = getById(tableGroupingDTO.getParent());
+        if (appTableParent.getParent() != null)
+            throw new AppTableNotFoundException("Bàn này đã được ghép");
 
+        // lay danh sach ban con hien tai va ID ban con moi
+        Set<Integer> newGroupIdSet = tableGroupingDTO.getChildren();
+        List<AppTable> currentChildren = appTableParent.getChildren();
 
-        return appTableList;
+        // duyet qua danh sach ban con hien tai
+        List<AppTable> removeFromGroupTables = new ArrayList<>();
+        for (AppTable currentChild : currentChildren) {
+            boolean isExistsInNewGroup = newGroupIdSet.contains(currentChild.getId());
+            if (isExistsInNewGroup) {
+                // neu ban ton tai trong group moi -> xoa khoi set ban moi
+                newGroupIdSet.remove(currentChild.getId());
+            } else {
+                // neu ban khong ton tai trong group moi -> chuan bi xoa ban cu khoi list
+                removeFromGroupTables.add(currentChild);
+                currentChild.setParent(null);
+            }
+        }
+        // xoa cac ban da bi loai khoi group moi
+        currentChildren.removeAll(removeFromGroupTables);
+        appTableRepository.saveAll(removeFromGroupTables);
+
+        // cac ban con lai trong set la ban moi -> luu vao list ban con
+        if (!newGroupIdSet.isEmpty()) {
+            List<AppTable> newTableList = appTableRepository.findAllById(newGroupIdSet);
+            for (AppTable newTables : newTableList) {
+                if (isTableInGroup(newTables))
+                    throw new AppTableNotFoundException("Bàn đã được ghép, không thể ghép với bàn khác");
+                newTables.setParent(appTableParent);
+            }
+            currentChildren.addAll(newTableList);
+            appTableRepository.saveAll(newTableList);
+        }
+        appTableRepository.save(appTableParent);
+        return getAll();
+    }
+
+    @Override
+    public List<AppTable> separateTables(Integer parentTableId) {
+        AppTable parentTable = getById(parentTableId);
+        List<AppTable> childrenTables = parentTable.getChildren();
+        if (childrenTables.isEmpty())
+            throw new AppTableNotAParentException("Không thể tách bàn không phải là bàn chính");
+        for (AppTable children : childrenTables) {
+            children.setParent(null);
+        }
+        childrenTables.clear();
+        appTableRepository.save(parentTable);
+        return getAll();
+    }
+
+    public boolean isTableInGroup(AppTable table) {
+        List<AppTable> children = table.getChildren();
+        boolean isParentTable = children != null && !children.isEmpty();
+        return table.getParent() != null || isParentTable;
     }
 }

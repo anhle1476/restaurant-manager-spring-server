@@ -1,10 +1,10 @@
 package com.codegym.restaurant.dto;
 
 import lombok.Data;
-import java.util.List;
+import java.util.Set;
 
 @Data
 public class TableGroupingDTO {
     private Integer parent;
-    private List<Integer> children;
+    private Set<Integer> children;
 }

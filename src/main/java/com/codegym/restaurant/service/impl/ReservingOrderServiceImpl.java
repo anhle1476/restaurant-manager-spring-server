@@ -11,13 +11,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 
 @Service
@@ -60,6 +55,7 @@ public class ReservingOrderServiceImpl implements ReservingService {
     @Override
     public void delete(Integer integer) {
         ReservingOrder reservingOrder = getById(integer);
+
         reservingOrder.setDeleted(true);
         reservingRepository.save(reservingOrder);
     }
@@ -78,19 +74,14 @@ public class ReservingOrderServiceImpl implements ReservingService {
 
     @Override
     public List<ReservingOrder> findReservingOrdersBy(LocalDate dateOrder) {
-        LocalDateTime startTimeDate = dateUtils.startOfDate(dateOrder);
-        LocalDateTime endTimeDate = dateUtils.endOfDate(dateOrder);
-        List<ReservingOrder> orderList = reservingRepository.findReservingOrdersBy(startTimeDate, endTimeDate);
-//        Map<LocalDateTime, List<ReservingOrder>> localDateTimeListMap = new TreeMap<>();
-//        for (ReservingOrder currentReserving : orderList) {
-//            LocalDateTime currentTime = currentReserving.getReservingTime();
-//            List<ReservingOrder> reservingOrderList = localDateTimeListMap.get(currentTime);
-//            if (reservingOrderList == null) {
-//                reservingOrderList = new ArrayList<>();
-//                reservingOrderList.add(currentReserving);
-//                localDateTimeListMap.put(currentTime, reservingOrderList);
-//            }
-//        }
-        return orderList;
+        ZonedDateTime startTimeDate = dateUtils.startOfDate(dateOrder);
+        ZonedDateTime endTimeDate = dateUtils.endOfDate(dateOrder);
+        return reservingRepository.findReservingOrdersBy(startTimeDate, endTimeDate);
+    }
+
+    @Override
+    public void autoDeletedOverTime() {
+        ZonedDateTime time = dateUtils.now().minusHours(2);
+        reservingRepository.autoDeletedOrderOverTime(time);
     }
 }

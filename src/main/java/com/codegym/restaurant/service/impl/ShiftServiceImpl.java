@@ -28,6 +28,11 @@ public class ShiftServiceImpl implements ShiftService {
     }
 
     @Override
+    public List<Shift> getAllWithBothDeletedStatus() {
+        return shiftRepository.findAll();
+    }
+
+    @Override
     public Shift getById(Integer integer) {
         return shiftRepository.findAvailableById(integer)
                 .orElseThrow(() -> new ShiftNotFoundException("Ca làm việc không tồn tại"));
@@ -59,4 +64,5 @@ public class ShiftServiceImpl implements ShiftService {
         shift.setDeleted(false);
         shiftRepository.save(shift);
     }
+
 }

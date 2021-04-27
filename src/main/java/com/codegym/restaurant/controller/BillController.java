@@ -4,6 +4,7 @@ import com.codegym.restaurant.dto.AuthInfoDTO;
 import com.codegym.restaurant.dto.ProcessFoodDTO;
 import com.codegym.restaurant.exception.BillDetailNotFoundException;
 import com.codegym.restaurant.exception.IdNotMatchException;
+import com.codegym.restaurant.exception.InvalidDateInputException;
 import com.codegym.restaurant.model.bussiness.Bill;
 import com.codegym.restaurant.service.BillService;
 import com.codegym.restaurant.utils.AppUtils;
@@ -14,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,6 +41,7 @@ public class BillController {
     public  ResponseEntity<?> findByUUID(@PathVariable(value = "id") String id) {
     return new ResponseEntity<>(billService.getById(id),HttpStatus.OK);
     }
+
     @GetMapping
     public ResponseEntity<List<Bill>> getAllBills(
             @RequestParam(name = "month", required = false) String month,
@@ -52,11 +53,11 @@ public class BillController {
             return new ResponseEntity<>(billService.getAllBillOfDate(date), HttpStatus.OK);
         if (search != null)
             return new ResponseEntity<>(billService.findBillByUUID(search),HttpStatus.OK);
-        return new ResponseEntity<>(billService.getAllBillPayTimeIsNull(), HttpStatus.OK);
+        return new ResponseEntity<>(billService.getAllCurrentBills(), HttpStatus.OK);
     }
     @GetMapping("/by-table")
-    public ResponseEntity<Map<Integer,Bill>> listBillByTableId(){
-        return new  ResponseEntity<>(billService.listBillByTableId(),HttpStatus.OK);
+    public ResponseEntity<Map<Integer,Bill>> mapBillByTableId(){
+        return new  ResponseEntity<>(billService.mapBillByTableId(),HttpStatus.OK);
     }
 
     @GetMapping("/report")
@@ -64,13 +65,16 @@ public class BillController {
         return new ResponseEntity<>(billService.monthReport(month),HttpStatus.OK);
     }
 
-    @GetMapping("/total-income?month={yyyy-MM}")
-    public ResponseEntity<?> TotalProceedsInTheMonth(@PathVariable("yyyy-MM") String parameter){
-        return new ResponseEntity<>(billService.totalProceedsInTheMonth(parameter), HttpStatus.OK);
-    }
-    @GetMapping("/total-income?date={yyyy-MM-dd}")
-    public ResponseEntity<?> TotalProceedsInTheDate(@PathVariable("yyyy-MM-dd") String parameter){
-        return new ResponseEntity<>(billService.totalProceedsInTheDate(parameter), HttpStatus.OK);
+    @GetMapping("/income")
+    public ResponseEntity<?> getTotalIncome(
+            @RequestParam(value = "month", required = false) String month,
+            @RequestParam(value = "date", required = false) String date
+    ){
+        if (month != null)
+            return new ResponseEntity<>(billService.totalProceedsInTheMonth(month), HttpStatus.OK);
+        if (date != null)
+            return new ResponseEntity<>(billService.totalProceedsInTheDate(date), HttpStatus.OK);
+        throw new InvalidDateInputException("Ngày tháng yêu cầu không hợp lệ");
     }
 
     @PostMapping

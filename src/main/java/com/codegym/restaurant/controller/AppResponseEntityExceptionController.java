@@ -2,11 +2,14 @@ package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.ExceptionResponseDTO;
 
+import com.codegym.restaurant.exception.AppTableNotAParentException;
+import com.codegym.restaurant.exception.AreaNameExistsException;
 import com.codegym.restaurant.exception.BillDetailCantUpdateException;
 import com.codegym.restaurant.exception.BillDetailNotFoundException;
 import com.codegym.restaurant.exception.BillUpdateFailException;
 import com.codegym.restaurant.exception.DoPaymentFailException;
 import com.codegym.restaurant.exception.AppTableNotFoundException;
+import com.codegym.restaurant.exception.AreaNotFoundException;
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.FoodImageUploadFailedException;
 import com.codegym.restaurant.exception.FoodNameExistsException;
@@ -23,6 +26,7 @@ import com.codegym.restaurant.exception.SalaryDetailNotFoundException;
 import com.codegym.restaurant.exception.ScheduleNotFoundException;
 import com.codegym.restaurant.exception.ShiftNotFoundException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
+import com.codegym.restaurant.exception.AppTableNameExistsException;
 import com.codegym.restaurant.exception.ViolationNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -118,6 +122,18 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = AppTableNameExistsException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleAppTableNameExistsException(AppTableNameExistsException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), AppTableNameExistsException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = AppTableNotAParentException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleAppTableNotAParentException(AppTableNotAParentException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), AppTableNotAParentException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = FoodImageUploadFailedException.class)
     public ResponseEntity<ExceptionResponseDTO> handleFoodImageUploadFailedException(FoodImageUploadFailedException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), FoodImageUploadFailedException.ERROR_CODE);
@@ -161,6 +177,18 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
     public ResponseEntity<ExceptionResponseDTO> handleSalaryDetailNotFoundException(SalaryDetailNotFoundException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), SalaryDetailNotFoundException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = AreaNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleAreaNotFoundException(AreaNotFoundException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), AreaNotFoundException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = AreaNameExistsException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleAreaNameExistsException(AreaNameExistsException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), AreaNameExistsException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(value = BillDetailCantUpdateException.class)
     public ResponseEntity<ExceptionResponseDTO> handleBillDetailCantUpdateException(BillDetailCantUpdateException ex) {

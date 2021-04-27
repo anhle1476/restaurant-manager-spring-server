@@ -215,6 +215,6 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
     }
 
     private LocalDate getFirstDateOfCurrentMonth() {
-        return dateUtils.getFirstDateOfMonth(LocalDate.now());
+        return dateUtils.getFirstDateOfMonth(dateUtils.getCurrentDate());
     }
 }

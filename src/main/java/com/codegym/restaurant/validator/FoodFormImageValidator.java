@@ -17,7 +17,10 @@ public class FoodFormImageValidator implements Validator {
     public static final List<String> CONTENT_TYPE_CHECKLIST = Arrays.asList(
             IMAGE_JPEG.getMimeType(),
             IMAGE_PNG.getMimeType(),
-            IMAGE_GIF.getMimeType());
+            IMAGE_GIF.getMimeType(),
+            IMAGE_BMP.getMimeType(),
+            IMAGE_SVG.getMimeType(),
+            IMAGE_WEBP.getMimeType());
     @Override
     public boolean supports(Class<?> clazz) {
         return FoodFormDTO.class.equals(clazz);
@@ -41,9 +44,9 @@ public class FoodFormImageValidator implements Validator {
             return;
         }
 
-        // case 2: co hinh anh nhung khong dung dinh dang (JPEG, PNG, GIF) -> FAILED
+        // case 2: co file nhung khong dung dinh dang hinh anh -> FAILED
         if (!CONTENT_TYPE_CHECKLIST.contains(image.getContentType())) {
-            errors.rejectValue("image",null, "Chỉ chấp nhận hình ành với định dạng JPEG, PNG hoặc GIF");
+            errors.rejectValue("image",null, "Định dạng hình ảnh không hỗ trợ");
         }
     }
 }
