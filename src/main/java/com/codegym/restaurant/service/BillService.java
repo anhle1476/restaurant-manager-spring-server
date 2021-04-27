@@ -1,13 +1,19 @@
 package com.codegym.restaurant.service;
 
+import com.codegym.restaurant.dto.MonthReportDTO;
+import com.codegym.restaurant.dto.ProcessFoodDTO;
 import com.codegym.restaurant.model.bussiness.Bill;
 import com.codegym.restaurant.model.bussiness.BillDetail;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface BillService {
-    List<Bill> getAll(LocalDateTime firstTime, LocalDateTime lastTime);
+    List<Bill> findBillByUUID(String id);
+    List<Bill> getAllBillOfMonth(String monthAndYear);
+    List<Bill> getAllBillOfDate(String date);
     List<Bill> getAllBillPayTimeIsNull();
     Bill getById(String id);
     Bill create(Bill bill);
@@ -15,5 +21,9 @@ public interface BillService {
     Bill update(Bill bill);
     void delete(String id);
     Bill doPayment(Bill bill,Integer staffId);
-    BillDetail processBillDoneQuantity(String idBill,Integer foodId,Integer processQuantity);
+    void processBillDoneQuantity(ProcessFoodDTO processFoodDTO);
+    Long totalProceedsInTheMonth(String monthOfYear);
+    Long totalProceedsInTheDate(String dateOfMonth);
+    MonthReportDTO monthReport(String month);
+    Map<Integer,Bill> listBillByTableId();
 }

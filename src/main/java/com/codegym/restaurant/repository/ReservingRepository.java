@@ -2,6 +2,7 @@ package com.codegym.restaurant.repository;
 
 import com.codegym.restaurant.model.bussiness.ReservingOrder;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

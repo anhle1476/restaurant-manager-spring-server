@@ -2,6 +2,7 @@ package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.ExceptionResponseDTO;
 
+import com.codegym.restaurant.exception.BillDetailCantUpdateException;
 import com.codegym.restaurant.exception.BillDetailNotFoundException;
 import com.codegym.restaurant.exception.BillUpdateFailException;
 import com.codegym.restaurant.exception.DoPaymentFailException;
@@ -160,5 +161,10 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
     public ResponseEntity<ExceptionResponseDTO> handleSalaryDetailNotFoundException(SalaryDetailNotFoundException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), SalaryDetailNotFoundException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(value = BillDetailCantUpdateException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleBillDetailCantUpdateException(BillDetailCantUpdateException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), BillDetailCantUpdateException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
