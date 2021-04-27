@@ -1,7 +1,6 @@
 package com.codegym.restaurant.utils;
 
 import com.codegym.restaurant.exception.InvalidDateInputException;
-import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -61,6 +60,9 @@ public class DateUtils {
         return date.atStartOfDay(TIME_ZONE);
     }
 
+    public LocalDate firstDateOfCurrentMonth() {
+        return getFirstDateOfMonth(getCurrentDate());
+    }
 
     public ZonedDateTime endOfDate(LocalDate date) {
         return date.atTime(LocalTime.MAX).atZone(TIME_ZONE);

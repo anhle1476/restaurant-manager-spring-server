@@ -127,7 +127,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 
     @Override
     public void updateSalaryDetailsWhenStaffSalaryChanged(Staff staff) {
-        LocalDate firstDateOfMonth = getFirstDateOfCurrentMonth();
+        LocalDate firstDateOfMonth = dateUtils.firstDateOfCurrentMonth();
         List<SalaryDetail> salaryDetails = salaryDetailRepository.findSalaryDetailsOfStaffFromThisMonth(staff.getId(), firstDateOfMonth);
         updateSalaryPerShiftAndTotalSalary(salaryDetails);
         salaryDetailRepository.saveAll(salaryDetails);
@@ -138,7 +138,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
         Integer updatedId = violation.getId();
         int updatedFinesPercent = violation.getFinesPercent();
         // tim tat ca salaryDetails tu thang nay tro ve sau
-        LocalDate firstDateOfMonth = getFirstDateOfCurrentMonth();
+        LocalDate firstDateOfMonth = dateUtils.firstDateOfCurrentMonth();
         List<SalaryDetail> salaryDetails = salaryDetailRepository.findSalaryDetailsFromThisMonth(firstDateOfMonth);
         for (SalaryDetail salaryDetail : salaryDetails) {
             List<ViolationDetail> violationDetails = salaryDetail.getViolationDetails();
@@ -209,12 +209,9 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 
         float totalFinesPercent = 0;
         for (ViolationDetail violationDetail : violationDetails) {
-            totalFinesPercent = violationDetail.getNumberOfViolations() * ((float) violationDetail.getFinesPercent() / 100);
+            totalFinesPercent += violationDetail.getNumberOfViolations() * ((float) violationDetail.getFinesPercent() / 100);
         }
         return totalFinesPercent;
     }
 
-    private LocalDate getFirstDateOfCurrentMonth() {
-        return dateUtils.getFirstDateOfMonth(dateUtils.getCurrentDate());
-    }
 }
