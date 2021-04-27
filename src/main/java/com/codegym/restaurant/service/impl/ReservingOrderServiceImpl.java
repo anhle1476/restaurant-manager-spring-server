@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -79,4 +80,12 @@ public class ReservingOrderServiceImpl implements ReservingService {
         ZonedDateTime endTimeDate = dateUtils.endOfDate(dateOrder);
         return reservingRepository.findReservingOrdersBy(startTimeDate, endTimeDate);
     }
+
+    @Override
+    public void autoDeletedOverTime() {
+        ZonedDateTime time = dateUtils.now().minusHours(2);
+        reservingRepository.autoDeletedOrderOverTime(time);
+    }
+
+
 }

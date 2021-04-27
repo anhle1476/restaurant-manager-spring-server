@@ -9,4 +9,5 @@ public interface ReservingService extends BaseService<ReservingOrder, Integer> {
 
   List<ReservingOrder> findReservingOrdersBy(LocalDate dateOrder);
 
+void autoDeletedOverTime();
 }
