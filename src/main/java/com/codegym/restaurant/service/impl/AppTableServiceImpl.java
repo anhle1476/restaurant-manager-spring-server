@@ -100,9 +100,7 @@ public class AppTableServiceImpl implements AppTableService {
         if (!newGroupIdSet.isEmpty()) {
             List<AppTable> newTableList = appTableRepository.findAllById(newGroupIdSet);
             for (AppTable newTables : newTableList) {
-                List<AppTable> newTablesChildren = newTables.getChildren();
-                boolean isParentTable = newTablesChildren != null && !newTablesChildren.isEmpty();
-                if (newTables.getParent() != null || isParentTable)
+                if (isTableInGroup(newTables))
                     throw new AppTableNotFoundException("Bàn đã được ghép, không thể ghép với bàn khác");
                 newTables.setParent(appTableParent);
             }
@@ -125,5 +123,11 @@ public class AppTableServiceImpl implements AppTableService {
         childrenTables.clear();
         appTableRepository.save(parentTable);
         return getAll();
+    }
+
+    public boolean isTableInGroup(AppTable table) {
+        List<AppTable> children = table.getChildren();
+        boolean isParentTable = children != null && !children.isEmpty();
+        return table.getParent() != null || isParentTable;
     }
 }

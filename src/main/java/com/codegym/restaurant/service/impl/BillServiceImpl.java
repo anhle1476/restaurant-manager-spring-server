@@ -1,11 +1,15 @@
 package com.codegym.restaurant.service.impl;
 
+import com.codegym.restaurant.dto.MonthReportDTO;
+import com.codegym.restaurant.dto.ProcessFoodDTO;
+import com.codegym.restaurant.exception.BillDetailCantUpdateException;
 import com.codegym.restaurant.exception.BillDetailNotFoundException;
 import com.codegym.restaurant.exception.BillUpdateFailException;
 import com.codegym.restaurant.exception.DoPaymentFailException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
 import com.codegym.restaurant.model.bussiness.Bill;
 import com.codegym.restaurant.model.bussiness.BillDetail;
+import com.codegym.restaurant.model.bussiness.Food;
 import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.repository.BillDetailRepository;
 import com.codegym.restaurant.repository.BillRepository;
@@ -16,14 +20,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class BillServiceImpl implements BillService {
     @Autowired
     private BillRepository billRepository;
@@ -38,12 +47,75 @@ public class BillServiceImpl implements BillService {
     private StaffRepository staffRepository;
 
     @Override
-    public List<Bill> getAll(ZonedDateTime firstTime, ZonedDateTime lastTime) {
-        return billRepository.findBillByMonthOrDate(firstTime, lastTime);
+    public List<Bill> findBillByUUID(String id) {
+        return billRepository.findBillByUUID(id);
     }
 
     @Override
-    public List<Bill> getAllBillPayTimeIsNull() {
+    public List<Bill> getAllBillOfMonth(String monthOfYear){
+        ZonedDateTime firstDateOfMonth = dateUtils.startOfMonth(monthOfYear);
+        ZonedDateTime endDateOfMonth = dateUtils.endOfMonth(monthOfYear);
+        return billRepository.findBillByMonthOrDate(firstDateOfMonth, endDateOfMonth);
+    }
+
+    @Override
+    public List<Bill> getAllBillOfDate(String date) {
+        LocalDate localDate = dateUtils.parseDate(date);
+        ZonedDateTime startOfDate = dateUtils.startOfDate(localDate);
+        ZonedDateTime endOfDate = dateUtils.endOfDate(localDate);
+        return billRepository.findBillByMonthOrDate(startOfDate, endOfDate);
+    }
+
+    @Override
+    public Long totalProceedsInTheMonth(String monthOfYear) {
+        return getSumOfBills(getAllBillOfMonth(monthOfYear));
+    }
+
+    @Override
+    public Long totalProceedsInTheDate(String dateOfMonth) {
+        return getSumOfBills(getAllBillOfDate(dateOfMonth));
+    }
+
+    private long getSumOfBills(List<Bill> bills) {
+        return bills.stream().mapToLong(Bill::getLastPrice).sum();
+    }
+
+    @Override
+    public MonthReportDTO monthReport(String month) {
+        MonthReportDTO monthReportDTO = new MonthReportDTO();
+        Map<LocalDate, Long> incomeByDate = new TreeMap<>();
+        Map<Food,Integer> foodQuantitySold = new HashMap<>();
+        List<Bill> billList = getAllBillOfMonth(month);
+        for (Bill bill : billList){
+            LocalDate date = bill.getPayTime().toLocalDate();
+            // cong don tong bill cua ngay trong map
+            incomeByDate.merge(date, bill.getLastPrice(), Long::sum);
+
+            for (BillDetail billDetail : bill.getBillDetails()){
+                Integer quantitySold = foodQuantitySold.get(billDetail.getFood());
+                if (quantitySold != null )
+                    foodQuantitySold.put(billDetail.getFood(),quantitySold + billDetail.getQuantity());
+                foodQuantitySold.put(billDetail.getFood(),billDetail.getQuantity());
+            }
+        }
+        monthReportDTO.setTotalOfMonth(totalProceedsInTheMonth(month));
+        monthReportDTO.setIncomeByDate(incomeByDate);
+        monthReportDTO.setFoodQuantitySold(foodQuantitySold);
+        return monthReportDTO;
+    }
+
+    @Override
+    public Map<Integer, Bill> mapBillByTableId() {
+        Map<Integer,Bill> billMapByTableId = new TreeMap<>();
+        List<Bill> currentBills = getAllCurrentBills();
+        for (Bill bill : currentBills){
+            billMapByTableId.put(bill.getAppTable().getId(),bill);
+        }
+        return billMapByTableId;
+    }
+
+    @Override
+    public List<Bill> getAllCurrentBills() {
         return billRepository.findBillByPayTimeIsNull();
     }
 
@@ -54,7 +126,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Bill ChangeTable(Integer id) {
+    public Bill changeTable(Integer id) {
         return null;
     }
 
@@ -62,7 +134,7 @@ public class BillServiceImpl implements BillService {
     public Bill create(Bill bill) {
         Bill currentBill = billRepository.checkBillByAppTableAndPayTime(bill.getAppTable().getId());
         if (currentBill != null)
-            throw new BillDetailNotFoundException("Không thể tạo bill ở bàn này vì bàn này đã co bill");
+            throw new BillDetailNotFoundException("Bàn đã có sẵn hóa đơn, không thể tạo mới");
         Bill saved = billRepository.save(bill);
         List<BillDetail> billDetails = bill.getBillDetails();
         for (BillDetail billDetail : billDetails) {
@@ -119,11 +191,11 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Bill doPayment(Bill bill, Integer staffId) {
-        Bill bills = getById(bill.getId());
+        Bill paymentBill = getById(bill.getId());
         if (bill.getPayTime() != null)
             throw new DoPaymentFailException("Hóa đơn này đã thanh toán không thể thanh toán lại");
 
-        List<BillDetail> billDetails = bills.getBillDetails();
+        List<BillDetail> billDetails = paymentBill.getBillDetails();
         long total = 0;
         for (BillDetail billDetail : billDetails) {
             if (billDetail.getDoneQuantity() != billDetail.getQuantity())
@@ -131,34 +203,43 @@ public class BillServiceImpl implements BillService {
             billDetail.setPricePerUnit(billDetail.getFood().getPrice());
             total += billDetail.getFood().getPrice() * billDetail.getQuantity();
         }
+        billDetailRepository.saveAll(billDetails);
+
         Staff staff = staffRepository.findAvailableById(staffId)
                 .orElseThrow(() -> new StaffNotFoundException("Không thể chọn nhân viên đã xóa"));
 
-        bills.setPayTime(dateUtils.now());
-        bills.setDiscount(bill.getDiscount());
-        bills.setSurcharge(bill.getSurcharge());
-        bills.setDiscountDescription(bill.getDiscountDescription());
-        bills.setLastPrice(total + bill.getSurcharge() - bill.getDiscount());
-        bills.setStaff(staff);
+        paymentBill.setPayTime(dateUtils.now());
+        paymentBill.setDiscount(bill.getDiscount());
+        paymentBill.setSurcharge(bill.getSurcharge());
+        paymentBill.setDiscountDescription(bill.getDiscountDescription());
+        paymentBill.setLastPrice(total + bill.getSurcharge() - bill.getDiscount());
+        paymentBill.setStaff(staff);
 //        bills.setAppTable(bills.getAppTable().getParent()==null);
-        //tach ban chua xong
-        return billRepository.save(bills);
+        // TODO:  TACH BAN
+        return billRepository.save(paymentBill);
     }
 
     @Override
-    public BillDetail processBillDoneQuantity(String idBill, Integer foodId, Integer processQuantity) {
-
-
-        return null;
+    public void processBillDoneQuantity(ProcessFoodDTO processFoodDTO) {
+        BillDetail billDetail = billDetailRepository.findBillDetailByBillIdAndFoodId(processFoodDTO.getBillId(),processFoodDTO.getFoodId())
+                .orElseThrow(() -> new BillUpdateFailException("Không tồn tại món trong hóa đơn này"));
+        int doneQuantityResult = billDetail.getDoneQuantity() + processFoodDTO.getProcessQuantity();
+        if (doneQuantityResult > billDetail.getQuantity())
+            throw new BillDetailCantUpdateException("Số lượng món hoàn thành không thể lớn hơn số lượng món được đặt");
+        billDetail.setDoneQuantity(doneQuantityResult);
+        billDetailRepository.save(billDetail);
     }
+
 
     @Override
     public void delete(String id) {
-        Bill bills = getById(id);
-        for (BillDetail billDetail : bills.getBillDetails()) {
-            if (billDetail.getDoneQuantity() != 0)
-                throw new BillUpdateFailException("Món được nấu xong không thể xóa bill và bill detail này");
+        Bill bill = getById(id);
+        for (BillDetail billDetail : bill.getBillDetails()) {
+            if ( billDetail.getDoneQuantity() != billDetail.getQuantity())
+                throw new BillUpdateFailException("Không thể xóa hóa đơn đã ra món");
         }
-        billRepository.delete(bills);
+        // TODO: TACH BAN
+        billRepository.delete(bill);
     }
+
 }

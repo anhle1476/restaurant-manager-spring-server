@@ -36,7 +36,7 @@ public class AppTableController {
 
     @GetMapping
     private ResponseEntity<List<AppTable>> listTable(@RequestParam(value = "deleted", required = false) String deleted) {
-        List<AppTable> appTableList = deleted == null || deleted.equals("true")
+        List<AppTable> appTableList = deleted == null || !deleted.equals("true")
                 ? appTableService.getAll()
                 : appTableService.getAllDeleted();
         return new ResponseEntity<>(appTableList, HttpStatus.OK);

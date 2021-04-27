@@ -4,6 +4,7 @@ import com.codegym.restaurant.dto.ExceptionResponseDTO;
 
 import com.codegym.restaurant.exception.AppTableNotAParentException;
 import com.codegym.restaurant.exception.AreaNameExistsException;
+import com.codegym.restaurant.exception.BillDetailCantUpdateException;
 import com.codegym.restaurant.exception.BillDetailNotFoundException;
 import com.codegym.restaurant.exception.BillUpdateFailException;
 import com.codegym.restaurant.exception.DoPaymentFailException;
@@ -187,6 +188,11 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
     @ExceptionHandler(value = AreaNameExistsException.class)
     public ResponseEntity<ExceptionResponseDTO> handleAreaNameExistsException(AreaNameExistsException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), AreaNameExistsException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(value = BillDetailCantUpdateException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleBillDetailCantUpdateException(BillDetailCantUpdateException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), BillDetailCantUpdateException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
