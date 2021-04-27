@@ -84,7 +84,7 @@ public class AppTableController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/restore")
     private ResponseEntity<?> restoreAppTable(@PathVariable(value = "id") Integer id) {
         appTableService.restore(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

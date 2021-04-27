@@ -35,7 +35,7 @@ public class ReservingOrderController {
     private ResponseEntity<List<ReservingOrder>> listReservingOrder(
             @RequestParam(value = "deleted", required = false) String deleted,
             @RequestParam(value = "date", required = false) LocalDate date) {
-       reservingOrderService.autoDeletedOverTime();
+        reservingOrderService.autoDeletedOverTime();
         List<ReservingOrder> reservingOrderList;
         if (date != null) {
             return new ResponseEntity<>(reservingOrderService.findReservingOrdersBy(date), HttpStatus.OK);

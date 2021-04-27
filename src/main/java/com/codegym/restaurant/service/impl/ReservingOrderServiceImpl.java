@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -86,6 +84,4 @@ public class ReservingOrderServiceImpl implements ReservingService {
         ZonedDateTime time = dateUtils.now().minusHours(2);
         reservingRepository.autoDeletedOrderOverTime(time);
     }
-
-
 }

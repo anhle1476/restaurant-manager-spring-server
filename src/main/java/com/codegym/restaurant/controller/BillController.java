@@ -32,13 +32,14 @@ public class BillController {
 
     @Autowired
     private AppUtils appUtils;
-    @GetMapping("/id")
+
+    @GetMapping("/{id}")
     public  ResponseEntity<?> fineByUUID(@PathVariable(value = "id") String id) {
     return new ResponseEntity<>(billService.getById(id),HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<Bill>> showBillPayTimeIsNull() {
+    public ResponseEntity<List<Bill>> getAllCurrentBills() {
         return new ResponseEntity<>(billService.getAllBillPayTimeIsNull(), HttpStatus.OK);
     }
 
@@ -53,7 +54,7 @@ public class BillController {
         }
     }
 
-    @PostMapping("{id}/payment")
+    @PostMapping("/{id}/payment")
     public ResponseEntity<?> doPayment(@Valid @RequestBody Bill bill,
                                        BindingResult result,
                                        @PathVariable(value = "id") String id,

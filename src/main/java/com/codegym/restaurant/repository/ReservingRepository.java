@@ -13,6 +13,6 @@ public interface ReservingRepository extends JpaSoftDeleteRepository<ReservingOr
     List<ReservingOrder> findReservingOrdersBy(ZonedDateTime startOfDate, ZonedDateTime endOfDate);
 
     @Modifying
-    @Query("update ReservingOrder s Set s.deleted = true where s.reservingTime < :overTime")
+    @Query("update ReservingOrder s set s.deleted = true where s.reservingTime < :overTime")
     void autoDeletedOrderOverTime(ZonedDateTime overTime);
 }
