@@ -7,6 +7,7 @@ import com.codegym.restaurant.exception.BillDetailNotFoundException;
 import com.codegym.restaurant.exception.BillUpdateFailException;
 import com.codegym.restaurant.exception.DoPaymentFailException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
+import com.codegym.restaurant.model.bussiness.AppTable;
 import com.codegym.restaurant.model.bussiness.Bill;
 import com.codegym.restaurant.model.bussiness.BillDetail;
 import com.codegym.restaurant.model.bussiness.Food;
@@ -14,6 +15,7 @@ import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.repository.BillDetailRepository;
 import com.codegym.restaurant.repository.BillRepository;
 import com.codegym.restaurant.repository.StaffRepository;
+import com.codegym.restaurant.service.AppTableService;
 import com.codegym.restaurant.service.BillService;
 import com.codegym.restaurant.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,9 @@ public class BillServiceImpl implements BillService {
 
     @Autowired
     private StaffRepository staffRepository;
+
+    @Autowired
+    private AppTableService appTableService;
 
     @Override
     public List<Bill> findBillByUUID(String id) {
@@ -132,9 +137,12 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Bill create(Bill bill) {
-        Bill currentBill = billRepository.checkBillByAppTableAndPayTime(bill.getAppTable().getId());
+        Integer tabledId = bill.getAppTable().getId();
+        Bill currentBill = billRepository.checkBillByAppTableAndPayTime(tabledId);
         if (currentBill != null)
             throw new BillDetailNotFoundException("Bàn đã có sẵn hóa đơn, không thể tạo mới");
+        AppTable table = appTableService.getById(tabledId);
+        bill.setAppTable(table.getParent() != null ? table.getParent() : table);
         Bill saved = billRepository.save(bill);
         List<BillDetail> billDetails = bill.getBillDetails();
         for (BillDetail billDetail : billDetails) {
@@ -214,8 +222,7 @@ public class BillServiceImpl implements BillService {
         paymentBill.setDiscountDescription(bill.getDiscountDescription());
         paymentBill.setLastPrice(total + bill.getSurcharge() - bill.getDiscount());
         paymentBill.setStaff(staff);
-//        bills.setAppTable(bills.getAppTable().getParent()==null);
-        // TODO:  TACH BAN
+        appTableService.doSeparatingTableGroup(paymentBill.getAppTable());
         return billRepository.save(paymentBill);
     }
 
@@ -238,7 +245,7 @@ public class BillServiceImpl implements BillService {
             if ( billDetail.getDoneQuantity() != billDetail.getQuantity())
                 throw new BillUpdateFailException("Không thể xóa hóa đơn đã ra món");
         }
-        // TODO: TACH BAN
+        appTableService.doSeparatingTableGroup(bill.getAppTable());
         billRepository.delete(bill);
     }
 

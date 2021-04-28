@@ -111,23 +111,30 @@ public class AppTableServiceImpl implements AppTableService {
         return getAll();
     }
 
-    @Override
-    public List<AppTable> separateTables(Integer parentTableId) {
-        AppTable parentTable = getById(parentTableId);
-        List<AppTable> childrenTables = parentTable.getChildren();
-        if (childrenTables.isEmpty())
-            throw new AppTableNotAParentException("Không thể tách bàn không phải là bàn chính");
-        for (AppTable children : childrenTables) {
-            children.setParent(null);
-        }
-        childrenTables.clear();
-        appTableRepository.save(parentTable);
-        return getAll();
-    }
-
-    public boolean isTableInGroup(AppTable table) {
+    private boolean isTableInGroup(AppTable table) {
         List<AppTable> children = table.getChildren();
         boolean isParentTable = children != null && !children.isEmpty();
         return table.getParent() != null || isParentTable;
+    }
+
+    @Override
+    public List<AppTable> separateTableById(Integer parentTableId) {
+        AppTable parentTable = getById(parentTableId);
+        doSeparatingTableGroup(parentTable);
+        return getAll();
+    }
+
+    @Override
+    public void doSeparatingTableGroup(AppTable table) {
+        if (table.getParent() != null)
+            throw new AppTableNotAParentException("Không thể tách bàn không phải là bàn chính");
+        List<AppTable> childrenTables = table.getChildren();
+        if (childrenTables != null && !childrenTables.isEmpty()) {
+            for (AppTable children : childrenTables) {
+                children.setParent(null);
+            }
+            childrenTables.clear();
+            appTableRepository.save(table);
+        }
     }
 }

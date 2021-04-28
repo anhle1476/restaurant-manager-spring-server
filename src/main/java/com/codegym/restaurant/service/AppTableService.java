@@ -9,7 +9,8 @@ public interface AppTableService extends BaseService<AppTable, Integer> {
 
     List<AppTable> groupingTables(TableGroupingDTO tableGroupingDTO);
 
-    List<AppTable> separateTables(Integer parentTableId);
+    List<AppTable> separateTableById(Integer parentTableId);
 
+    void doSeparatingTableGroup(AppTable table);
 
 }
