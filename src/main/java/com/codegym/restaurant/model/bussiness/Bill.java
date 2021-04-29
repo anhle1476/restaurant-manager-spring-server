@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class Bill {
     @Min(value = 0,message = "discount không được nhập số âm")
     private long discount;
 
-    @Pattern(regexp = "^[\\pL 0-9()_:-]{2,50}$", message = "Tên món ăn phải chứa từ 4-50 ký tự và không có ký tự đặc biệt")
+    @Size(max = 50, message = "Mô tả giảm giá phải chứa từ 0-50 ký tự")
     private String discountDescription;
 
     @ManyToOne

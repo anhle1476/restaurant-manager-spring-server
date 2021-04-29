@@ -242,7 +242,7 @@ public class BillServiceImpl implements BillService {
     public void delete(String id) {
         Bill bill = getById(id);
         for (BillDetail billDetail : bill.getBillDetails()) {
-            if ( billDetail.getDoneQuantity() != billDetail.getQuantity())
+            if ( billDetail.getDoneQuantity() != 0)
                 throw new BillUpdateFailException("Không thể xóa hóa đơn đã ra món");
         }
         appTableService.doSeparatingTableGroup(bill.getAppTable());
