@@ -4,7 +4,7 @@ import com.codegym.restaurant.dto.ExceptionResponseDTO;
 
 import com.codegym.restaurant.exception.AppTableNotAParentException;
 import com.codegym.restaurant.exception.AreaNameExistsException;
-import com.codegym.restaurant.exception.BillDetailCantUpdateException;
+import com.codegym.restaurant.exception.BillDetailUpdateFailedException;
 import com.codegym.restaurant.exception.BillDetailNotFoundException;
 import com.codegym.restaurant.exception.BillUpdateFailException;
 import com.codegym.restaurant.exception.DoPaymentFailException;
@@ -27,6 +27,7 @@ import com.codegym.restaurant.exception.ScheduleNotFoundException;
 import com.codegym.restaurant.exception.ShiftNotFoundException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
 import com.codegym.restaurant.exception.AppTableNameExistsException;
+import com.codegym.restaurant.exception.UpdatePasswordFailedException;
 import com.codegym.restaurant.exception.ViolationNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,12 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
     public ResponseEntity<ExceptionResponseDTO> handleStaffNotFoundException(StaffNotFoundException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), StaffNotFoundException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = UpdatePasswordFailedException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleUpdatePasswordFailedException(UpdatePasswordFailedException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), UpdatePasswordFailedException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = ShiftNotFoundException.class)
@@ -190,9 +197,9 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), AreaNameExistsException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(value = BillDetailCantUpdateException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleBillDetailCantUpdateException(BillDetailCantUpdateException ex) {
-        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), BillDetailCantUpdateException.ERROR_CODE);
+    @ExceptionHandler(value = BillDetailUpdateFailedException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleBillDetailUpdateFailedException(BillDetailUpdateFailedException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), BillDetailUpdateFailedException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

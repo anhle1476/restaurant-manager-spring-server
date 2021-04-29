@@ -2,7 +2,7 @@ package com.codegym.restaurant.service.impl;
 
 import com.codegym.restaurant.dto.MonthReportDTO;
 import com.codegym.restaurant.dto.ProcessFoodDTO;
-import com.codegym.restaurant.exception.BillDetailCantUpdateException;
+import com.codegym.restaurant.exception.BillDetailUpdateFailedException;
 import com.codegym.restaurant.exception.BillDetailNotFoundException;
 import com.codegym.restaurant.exception.BillUpdateFailException;
 import com.codegym.restaurant.exception.DoPaymentFailException;
@@ -232,7 +232,7 @@ public class BillServiceImpl implements BillService {
                 .orElseThrow(() -> new BillUpdateFailException("Không tồn tại món trong hóa đơn này"));
         int doneQuantityResult = billDetail.getDoneQuantity() + processFoodDTO.getProcessQuantity();
         if (doneQuantityResult > billDetail.getQuantity())
-            throw new BillDetailCantUpdateException("Số lượng món hoàn thành không thể lớn hơn số lượng món được đặt");
+            throw new BillDetailUpdateFailedException("Số lượng món hoàn thành không thể lớn hơn số lượng món được đặt");
         billDetail.setDoneQuantity(doneQuantityResult);
         billDetailRepository.save(billDetail);
     }
