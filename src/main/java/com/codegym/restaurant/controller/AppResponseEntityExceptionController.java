@@ -5,7 +5,8 @@ import com.codegym.restaurant.dto.ExceptionResponseDTO;
 import com.codegym.restaurant.exception.AppTableNotAParentException;
 import com.codegym.restaurant.exception.AreaNameExistsException;
 import com.codegym.restaurant.exception.BillDetailUpdateFailedException;
-import com.codegym.restaurant.exception.BillDetailNotFoundException;
+import com.codegym.restaurant.exception.BillNotFoundException;
+import com.codegym.restaurant.exception.BillInUsingTableException;
 import com.codegym.restaurant.exception.BillUpdateFailException;
 import com.codegym.restaurant.exception.DoPaymentFailException;
 import com.codegym.restaurant.exception.AppTableNotFoundException;
@@ -105,9 +106,9 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND); //
     }
 
-    @ExceptionHandler(value = BillDetailNotFoundException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleBillNotFoundException(BillDetailNotFoundException ex) {
-        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), BillDetailNotFoundException.ERROR_CODE);
+    @ExceptionHandler(value = BillNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleBillNotFoundException(BillNotFoundException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), BillNotFoundException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
@@ -197,9 +198,16 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), AreaNameExistsException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(value = BillDetailUpdateFailedException.class)
     public ResponseEntity<ExceptionResponseDTO> handleBillDetailUpdateFailedException(BillDetailUpdateFailedException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), BillDetailUpdateFailedException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = BillInUsingTableException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleBillInUsingTableException(BillInUsingTableException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), BillInUsingTableException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

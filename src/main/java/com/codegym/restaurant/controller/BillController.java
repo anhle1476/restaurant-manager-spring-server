@@ -2,7 +2,7 @@ package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.AuthInfoDTO;
 import com.codegym.restaurant.dto.ProcessFoodDTO;
-import com.codegym.restaurant.exception.BillDetailNotFoundException;
+import com.codegym.restaurant.exception.BillNotFoundException;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.exception.InvalidDateInputException;
 import com.codegym.restaurant.model.bussiness.Bill;
@@ -38,8 +38,8 @@ public class BillController {
     private AppUtils appUtils;
 
     @GetMapping("/{id}")
-    public  ResponseEntity<?> findByUUID(@PathVariable(value = "id") String id) {
-    return new ResponseEntity<>(billService.getById(id),HttpStatus.OK);
+    public ResponseEntity<?> findByUUID(@PathVariable(value = "id") String id) {
+        return new ResponseEntity<>(billService.getById(id), HttpStatus.OK);
     }
 
     @GetMapping
@@ -52,24 +52,25 @@ public class BillController {
         if (date != null)
             return new ResponseEntity<>(billService.getAllBillOfDate(date), HttpStatus.OK);
         if (search != null)
-            return new ResponseEntity<>(billService.findBillByUUID(search),HttpStatus.OK);
+            return new ResponseEntity<>(billService.findBillByUUID(search), HttpStatus.OK);
         return new ResponseEntity<>(billService.getAllCurrentBills(), HttpStatus.OK);
     }
+
     @GetMapping("/by-table")
-    public ResponseEntity<Map<Integer,Bill>> mapBillByTableId(){
-        return new  ResponseEntity<>(billService.mapBillByTableId(),HttpStatus.OK);
+    public ResponseEntity<Map<Integer, Bill>> mapBillByTableId() {
+        return new ResponseEntity<>(billService.mapBillByTableId(), HttpStatus.OK);
     }
 
     @GetMapping("/report")
-    public ResponseEntity<?> MonthReport(@RequestParam(name = "month",required = false) String month){
-        return new ResponseEntity<>(billService.monthReport(month),HttpStatus.OK);
+    public ResponseEntity<?> MonthReport(@RequestParam(name = "month", required = false) String month) {
+        return new ResponseEntity<>(billService.monthReport(month), HttpStatus.OK);
     }
 
     @GetMapping("/income")
     public ResponseEntity<?> getTotalIncome(
             @RequestParam(value = "month", required = false) String month,
             @RequestParam(value = "date", required = false) String date
-    ){
+    ) {
         if (month != null)
             return new ResponseEntity<>(billService.totalProceedsInTheMonth(month), HttpStatus.OK);
         if (date != null)
@@ -84,7 +85,7 @@ public class BillController {
         try {
             return new ResponseEntity<>(billService.create(bill), HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
-            throw new BillDetailNotFoundException("Một hóa đơn không thể có 2 món trùng nhau");
+            throw new BillNotFoundException("Một hóa đơn không thể có 2 món trùng nhau");
         }
     }
 
@@ -92,7 +93,7 @@ public class BillController {
     public ResponseEntity<?> doPayment(@Valid @RequestBody Bill bill,
                                        BindingResult result,
                                        @PathVariable(value = "id") String id,
-                                       Principal principal){
+                                       Principal principal) {
         AuthInfoDTO infoDTO = appUtils.extractUserInfoFromToken(principal);
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
@@ -104,14 +105,21 @@ public class BillController {
     @PostMapping("/{id}/process-food")
     public ResponseEntity<?> processBillDoneQuantity(@Valid @RequestBody ProcessFoodDTO processFoodDTO,
                                                      BindingResult result,
-                                                     @PathVariable(value = "id") String id){
+                                                     @PathVariable(value = "id") String id) {
 
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
         if (!processFoodDTO.getBillId().equals(id))
             throw new IdNotMatchException("Id không trùng hợp");
         billService.processBillDoneQuantity(processFoodDTO);
-        return new ResponseEntity<>( HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/{billId}/moving-to/{tableId}")
+    public ResponseEntity<Bill> changeTable(
+            @PathVariable(value = "billId") String billId,
+            @PathVariable(value = "tableId") Integer tableId) {
+        return new ResponseEntity<>(billService.changeTable(billId, tableId), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -126,7 +134,7 @@ public class BillController {
         try {
             return new ResponseEntity<>(billService.update(bill), HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
-            throw new BillDetailNotFoundException("Trong 1 thời gian không thể có 2 bill giống nhau");
+            throw new BillNotFoundException("Trong 1 thời gian không thể có 2 bill giống nhau");
         }
     }
 

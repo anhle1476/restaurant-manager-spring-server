@@ -15,7 +15,7 @@ public interface BillService {
     List<Bill> getAllCurrentBills();
     Bill getById(String id);
     Bill create(Bill bill);
-    Bill changeTable(Integer id);
+    Bill changeTable(String billId, Integer newTableId);
     Bill update(Bill bill);
     void delete(String id);
     Bill doPayment(Bill bill,Integer staffId);

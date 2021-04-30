@@ -22,7 +22,7 @@ import javax.crypto.SecretKey;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static com.codegym.restaurant.model.hr.RoleCode.*;
+import static com.codegym.restaurant.model.hr.RoleCode.ADMIN;
 
 @Configuration
 @EnableWebSecurity
@@ -43,9 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtUsernamePasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
                 .addFilterAfter(new JwtVerifierFilter(jwtConfig, secretKey), JwtUsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/register").permitAll()
+                .antMatchers("/", "/login", "/api/test/**").permitAll()
                 .antMatchers("/api/v1/staffs/**", "/api/v1/roles/**").hasAnyAuthority(ADMIN.name())
-                .antMatchers("/api/**").hasAnyAuthority(ADMIN.name(), CASHIER.name(), CHEF.name(), MISC.name())
                 .anyRequest()
                 .authenticated();
 

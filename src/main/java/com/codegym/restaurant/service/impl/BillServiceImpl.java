@@ -2,8 +2,10 @@ package com.codegym.restaurant.service.impl;
 
 import com.codegym.restaurant.dto.MonthReportDTO;
 import com.codegym.restaurant.dto.ProcessFoodDTO;
+import com.codegym.restaurant.exception.AppTableNotAParentException;
 import com.codegym.restaurant.exception.BillDetailUpdateFailedException;
-import com.codegym.restaurant.exception.BillDetailNotFoundException;
+import com.codegym.restaurant.exception.BillNotFoundException;
+import com.codegym.restaurant.exception.BillInUsingTableException;
 import com.codegym.restaurant.exception.BillUpdateFailException;
 import com.codegym.restaurant.exception.DoPaymentFailException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
@@ -127,20 +129,13 @@ public class BillServiceImpl implements BillService {
     @Override
     public Bill getById(String id) {
         return billRepository.findById(id)
-                .orElseThrow(() -> new BillDetailNotFoundException("Hóa đơn không tồn tại"));
-    }
-
-    @Override
-    public Bill changeTable(Integer id) {
-        return null;
+                .orElseThrow(() -> new BillNotFoundException("Hóa đơn không tồn tại"));
     }
 
     @Override
     public Bill create(Bill bill) {
         Integer tabledId = bill.getAppTable().getId();
-        Bill currentBill = billRepository.checkBillByAppTableAndPayTime(tabledId);
-        if (currentBill != null)
-            throw new BillDetailNotFoundException("Bàn đã có sẵn hóa đơn, không thể tạo mới");
+        checkTableInUse(tabledId);
         AppTable table = appTableService.getById(tabledId);
         bill.setAppTable(table.getParent() != null ? table.getParent() : table);
         Bill saved = billRepository.save(bill);
@@ -150,6 +145,18 @@ public class BillServiceImpl implements BillService {
         }
         billDetailRepository.saveAll(billDetails);
         return saved;
+    }
+
+    @Override
+    public Bill changeTable(String billId, Integer newTableId) {
+        checkTableInUse(newTableId);
+        Bill currentBill = billRepository.findBillByPayTimeIsNullAndId(billId)
+                .orElseThrow(() -> new BillNotFoundException("Hóa đơn không tồn tại hoặc đã được thanh toán"));
+        AppTable newTable = appTableService.getById(newTableId);
+        if (newTable.getParent() != null)
+            throw new AppTableNotAParentException("Không thể chuyển đến bàn đang gộp");
+        currentBill.setAppTable(newTable);
+        return billRepository.save(currentBill);
     }
 
     @Override
@@ -247,6 +254,12 @@ public class BillServiceImpl implements BillService {
         }
         appTableService.doSeparatingTableGroup(bill.getAppTable());
         billRepository.delete(bill);
+    }
+
+    private void checkTableInUse(Integer tabledId) {
+        boolean checkResult = billRepository.existsByPayTimeIsNullAndAppTableId(tabledId);
+        if (checkResult)
+            throw new BillInUsingTableException("Bàn đang được sử dụng");
     }
 
 }
