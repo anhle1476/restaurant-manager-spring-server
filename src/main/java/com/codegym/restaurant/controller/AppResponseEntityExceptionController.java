@@ -7,8 +7,8 @@ import com.codegym.restaurant.exception.AreaNameExistsException;
 import com.codegym.restaurant.exception.BillDetailUpdateFailedException;
 import com.codegym.restaurant.exception.BillNotFoundException;
 import com.codegym.restaurant.exception.BillInUsingTableException;
-import com.codegym.restaurant.exception.BillUpdateFailException;
-import com.codegym.restaurant.exception.DoPaymentFailException;
+import com.codegym.restaurant.exception.BillUpdateFailedException;
+import com.codegym.restaurant.exception.DoPaymentFailedException;
 import com.codegym.restaurant.exception.AppTableNotFoundException;
 import com.codegym.restaurant.exception.AreaNotFoundException;
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
@@ -112,15 +112,15 @@ public class AppResponseEntityExceptionController extends ResponseEntityExceptio
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = BillUpdateFailException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleDeleteBillFailException(BillUpdateFailException ex) {
-        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), BillUpdateFailException.ERROR_CODE);
+    @ExceptionHandler(value = BillUpdateFailedException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleDeleteBillFailException(BillUpdateFailedException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), BillUpdateFailedException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = DoPaymentFailException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleDoPaymentFailException(DoPaymentFailException ex) {
-        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), DoPaymentFailException.ERROR_CODE);
+    @ExceptionHandler(value = DoPaymentFailedException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleDoPaymentFailException(DoPaymentFailedException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), DoPaymentFailedException.ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 

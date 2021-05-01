@@ -38,10 +38,10 @@ public class Bill {
     @ManyToOne
     private Staff staff;
 
-    @Min(value = 0,message = "surcharge không được nhập số âm")
+    @Min(value = 0, message = "Phụ thu không được âm")
     private long surcharge;
 
-    @Min(value = 0,message = "discount không được nhập số âm")
+    @Min(value = 0, message = "Giảm giá không được âm")
     private long discount;
 
     @Size(max = 50, message = "Mô tả giảm giá phải chứa từ 0-50 ký tự")

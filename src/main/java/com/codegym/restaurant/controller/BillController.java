@@ -89,24 +89,31 @@ public class BillController {
         }
     }
 
-    @PostMapping("/{id}/payment")
-    public ResponseEntity<?> doPayment(@Valid @RequestBody Bill bill,
-                                       BindingResult result,
-                                       @PathVariable(value = "id") String id,
-                                       Principal principal) {
-        AuthInfoDTO infoDTO = appUtils.extractUserInfoFromToken(principal);
+    @PostMapping("/{billId}/prepare-payment")
+    public ResponseEntity<?> preparePayment(
+            @Valid @RequestBody Bill bill,
+            BindingResult result,
+            @PathVariable(value = "billId") String billId
+    ) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-        if (!bill.getId().equals(id))
+        if (!bill.getId().equals(billId))
             throw new IdNotMatchException("Id không trùng hợp");
-        return new ResponseEntity<>(billService.doPayment(bill, infoDTO.getId()), HttpStatus.CREATED);
+        return new ResponseEntity<>(billService.preparePayment(bill), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{billId}/payment")
+    public ResponseEntity<?> doPayment(@PathVariable(value = "billId") String billId, Principal principal) {
+        AuthInfoDTO infoDTO = appUtils.extractUserInfoFromToken(principal);
+        return new ResponseEntity<>(billService.doPayment(billId, infoDTO.getId()), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/process-food")
-    public ResponseEntity<?> processBillDoneQuantity(@Valid @RequestBody ProcessFoodDTO processFoodDTO,
-                                                     BindingResult result,
-                                                     @PathVariable(value = "id") String id) {
-
+    public ResponseEntity<?> processBillDoneQuantity(
+            @Valid @RequestBody ProcessFoodDTO processFoodDTO,
+            BindingResult result,
+            @PathVariable(value = "id") String id
+    ) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
         if (!processFoodDTO.getBillId().equals(id))
@@ -118,7 +125,8 @@ public class BillController {
     @PostMapping("/{billId}/moving-to/{tableId}")
     public ResponseEntity<Bill> changeTable(
             @PathVariable(value = "billId") String billId,
-            @PathVariable(value = "tableId") Integer tableId) {
+            @PathVariable(value = "tableId") Integer tableId
+    ) {
         return new ResponseEntity<>(billService.changeTable(billId, tableId), HttpStatus.OK);
     }
 
@@ -126,7 +134,8 @@ public class BillController {
     public ResponseEntity<?> updateBill(
             @Valid @RequestBody Bill bill,
             BindingResult result,
-            @PathVariable(value = "id") String id) {
+            @PathVariable(value = "id") String id
+    ) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
         if (!bill.getId().equals(id))
@@ -138,11 +147,19 @@ public class BillController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(value = "id") String id) {
-        billService.delete(id);
+    @DeleteMapping("/{billId}")
+    public ResponseEntity<?> delete(
+            @PathVariable(value = "billId") String billId,
+            @RequestParam(value = "force", defaultValue = "false") boolean force,
+            Principal principal
+    ) {
+        if (force) {
+            AuthInfoDTO infoDTO = appUtils.extractUserInfoFromToken(principal);
+            billService.forceDelete(billId, infoDTO.getId());
+        } else {
+            billService.delete(billId);
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
 }
