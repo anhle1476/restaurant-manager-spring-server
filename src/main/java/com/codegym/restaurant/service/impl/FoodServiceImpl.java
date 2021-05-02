@@ -48,7 +48,7 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public Food getById(Integer id) {
         return foodRepository.findAvailableById(id)
-                .orElseThrow(() -> new FoodNotFoundException("Món không tồn tại"));
+                .orElseThrow(() -> new FoodNotFoundException("Món không tồn tại hoặc đã bị xóa"));
     }
 
     @Override
@@ -109,12 +109,18 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public void restore(Integer integer) {
-        Food food = foodRepository.findById(integer)
-                .orElseThrow(() -> new FoodNotFoundException("Món ăn không tồn tại"));
+    public Food restore(Integer id) {
+        Food food = getById(id);
         if (!food.isDeleted())
             throw new EntityRestoreFailedException("Không thể phục hồi khi đối tượng chưa xóa");
         food.setDeleted(false);
-        foodRepository.save(food);
+        return foodRepository.save(food);
+    }
+
+    @Override
+    public Food toggleAvailability(Integer id) {
+        Food food = getById(id);
+        food.setAvailable(!food.isAvailable());
+        return foodRepository.save(food);
     }
 }
