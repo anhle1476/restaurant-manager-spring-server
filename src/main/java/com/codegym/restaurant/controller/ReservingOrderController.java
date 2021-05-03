@@ -4,7 +4,9 @@ import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.model.bussiness.ReservingOrder;
 import com.codegym.restaurant.service.impl.ReservingOrderServiceImpl;
 import com.codegym.restaurant.utils.AppUtils;
+import com.codegym.restaurant.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -34,16 +36,19 @@ public class ReservingOrderController {
     @GetMapping
     private ResponseEntity<List<ReservingOrder>> listReservingOrder(
             @RequestParam(value = "deleted", required = false) String deleted,
-            @RequestParam(value = "date", required = false) LocalDate date) {
-        reservingOrderService.autoDeletedOverTime();
-        List<ReservingOrder> reservingOrderList;
-        if (date != null) {
+            @RequestParam(value = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        if (date != null)
             return new ResponseEntity<>(reservingOrderService.findReservingOrdersBy(date), HttpStatus.OK);
-        }
-        reservingOrderList = deleted == null || !deleted.equals("true")
+
+        List<ReservingOrder> reservingOrderList = deleted == null || !deleted.equals("true")
                 ? reservingOrderService.getAll()
                 : reservingOrderService.getAllDeleted();
         return new ResponseEntity<>(reservingOrderList, HttpStatus.OK);
+    }
+
+    @GetMapping("/today")
+    private ResponseEntity<List<ReservingOrder>> todayReservingOrder() {
+        return new ResponseEntity<>(reservingOrderService.findTodayOrders(), HttpStatus.OK);
     }
 
     @PostMapping

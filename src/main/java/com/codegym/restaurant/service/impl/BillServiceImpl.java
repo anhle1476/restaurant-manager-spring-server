@@ -173,8 +173,10 @@ public class BillServiceImpl implements BillService {
             BillDetail newBillDetail = newBillDetailsMap.get(foodId);
             if (newBillDetail == null || newBillDetail.getQuantity() == 0) {
                 // case 1: bill moi khong ton tai mon nay -> dua vao list de chuan bi xoa
-                if (oldBillDetail.getDoneQuantity() > 0)
+                if (oldBillDetail.getDoneQuantity() > 0 && !oldBillDetail.getFood().getFoodType().isRefundable())
                     throw new BillUpdateFailedException("Không thể xóa món đã nấu xong");
+                if (newBillDetail != null)
+                    newBillDetailsMap.remove(foodId);
                 deleteBillDetail.add(oldBillDetail);
             } else {
                 // case 2: bill moi co ton tai mon -> cap nhat

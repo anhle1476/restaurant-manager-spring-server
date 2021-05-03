@@ -80,6 +80,15 @@ public class ReservingOrderServiceImpl implements ReservingService {
     }
 
     @Override
+    public List<ReservingOrder> findTodayOrders() {
+        autoDeletedOverTime();
+        LocalDate today = dateUtils.getCurrentDate();
+        ZonedDateTime startTimeDate = dateUtils.startOfDate(today);
+        ZonedDateTime endTimeDate = dateUtils.endOfDate(today);
+        return reservingRepository.findAvailableReservingOrdersBy(startTimeDate, endTimeDate);
+    }
+
+    @Override
     public void autoDeletedOverTime() {
         ZonedDateTime time = dateUtils.now().minusHours(2);
         reservingRepository.autoDeletedOrderOverTime(time);
