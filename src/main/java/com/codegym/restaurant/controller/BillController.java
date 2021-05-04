@@ -62,7 +62,7 @@ public class BillController {
     }
 
     @GetMapping("/report")
-    public ResponseEntity<?> MonthReport(@RequestParam(name = "month", required = false) String month) {
+    public ResponseEntity<?> monthReport(@RequestParam(name = "month", required = false) String month) {
         return new ResponseEntity<>(billService.monthReport(month), HttpStatus.OK);
     }
 
@@ -79,7 +79,7 @@ public class BillController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createBIll(@Valid @RequestBody Bill bill, BindingResult result) {
+    public ResponseEntity<?> createBill(@Valid @RequestBody Bill bill, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
         try {
