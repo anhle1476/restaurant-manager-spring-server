@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface BillRepository extends JpaRepository<Bill,String> {
-    @Query("SELECT b from Bill b where b.id like %:id% ")
+    @Query("SELECT b from Bill b where b.payTime is not null and b.id like %:id% ")
     List<Bill> findBillByUUID(String id);
 
     @Query("SELECT b from Bill b where b.payTime >= :firstTime and b.payTime <= :lastTime order by b.payTime")
