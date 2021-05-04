@@ -140,8 +140,14 @@ public class BillServiceImpl implements BillService {
         checkTableInUse(tabledId);
         AppTable table = appTableService.getById(tabledId);
         bill.setAppTable(table.getParent() != null ? table.getParent() : table);
+        List<BillDetail> billDetails = bill.getBillDetails()
+                .stream()
+                .filter(detail -> detail.getQuantity() > 0)
+                .collect(Collectors.toList());
+        if (billDetails.isEmpty())
+            throw new BillUpdateFailedException("Không thể tạo hóa đơn không có món nào");
+        bill.setBillDetails(billDetails);
         Bill saved = billRepository.save(bill);
-        List<BillDetail> billDetails = bill.getBillDetails();
         for (BillDetail billDetail : billDetails) {
             billDetail.setBill(saved);
         }
