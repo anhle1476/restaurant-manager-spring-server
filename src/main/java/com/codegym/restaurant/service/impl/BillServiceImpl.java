@@ -11,6 +11,7 @@ import com.codegym.restaurant.model.bussiness.Bill;
 import com.codegym.restaurant.model.bussiness.BillDetail;
 import com.codegym.restaurant.model.bussiness.Food;
 import com.codegym.restaurant.model.hr.Staff;
+import com.codegym.restaurant.repository.AppTableRepository;
 import com.codegym.restaurant.repository.BillDetailRepository;
 import com.codegym.restaurant.repository.BillRepository;
 import com.codegym.restaurant.repository.StaffRepository;
@@ -214,8 +215,6 @@ public class BillServiceImpl implements BillService {
         paymentBill.setDiscountDescription(bill.getDiscountDescription());
         paymentBill.setLastPrice(total + bill.getSurcharge() - bill.getDiscount());
         paymentBill.setStaff(staff);
-//        bills.setAppTable(bills.getAppTable().getParent()==null);
-        // TODO:  TACH BAN
         return billRepository.save(paymentBill);
     }
 
