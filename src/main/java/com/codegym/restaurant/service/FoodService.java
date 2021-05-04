@@ -19,5 +19,7 @@ public interface FoodService {
 
     void delete(Integer id);
 
-    void restore(Integer id);
+    Food restore(Integer id);
+
+    Food toggleAvailability(Integer id);
 }

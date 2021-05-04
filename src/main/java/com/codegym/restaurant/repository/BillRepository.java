@@ -7,18 +7,19 @@ import org.springframework.stereotype.Repository;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BillRepository extends JpaRepository<Bill,String> {
     @Query("SELECT b from Bill b where b.id like %:id% ")
     List<Bill> findBillByUUID(String id);
 
-    @Query("SELECT b from Bill b where b.payTime >= :firstTime and b.payTime <= :lastTime ")
+    @Query("SELECT b from Bill b where b.payTime >= :firstTime and b.payTime <= :lastTime order by b.payTime")
     List<Bill> findBillByMonthOrDate(ZonedDateTime firstTime, ZonedDateTime lastTime);
 
-    @Query("SELECT b from Bill b where b.payTime is null")
     List<Bill> findBillByPayTimeIsNull();
 
-    @Query("SELECT b from Bill b where b.appTable.id = :idTable and b.payTime is null ")
-    Bill checkBillByAppTableAndPayTime(Integer idTable);
+    Optional<Bill> findBillByPayTimeIsNullAndId(String id);
+
+    boolean existsByPayTimeIsNullAndAppTableId(Integer appTableId);
 }

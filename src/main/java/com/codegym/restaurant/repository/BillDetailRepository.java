@@ -11,5 +11,4 @@ import java.util.Optional;
 public interface BillDetailRepository extends JpaRepository<BillDetail,Integer> {
     @Query("SELECT b from BillDetail b where b.bill.id = :billId and b.food.id = :foodId")
     Optional<BillDetail> findBillDetailByBillIdAndFoodId(String billId, Integer foodId);
-
 }

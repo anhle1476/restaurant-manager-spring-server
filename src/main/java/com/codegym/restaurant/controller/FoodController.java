@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -90,8 +89,12 @@ public class FoodController {
     }
 
     @PostMapping("/{id}/restore")
-    public ResponseEntity<?> restoreFood(@PathVariable(value = "id") Integer id) {
-        foodService.restore(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Food> restoreFood(@PathVariable(value = "id") Integer id) {
+        return new ResponseEntity<>(foodService.restore(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/toggle-availability")
+    public ResponseEntity<Food> toggleAvailability(@PathVariable(value = "id") Integer id) {
+        return new ResponseEntity<>(foodService.toggleAvailability(id), HttpStatus.OK);
     }
 }

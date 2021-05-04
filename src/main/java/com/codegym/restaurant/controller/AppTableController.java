@@ -105,6 +105,6 @@ public class AppTableController {
 
     @PostMapping("/{id}/separate")
     private ResponseEntity<?> separateTable(@PathVariable(value = "id") Integer id) {
-        return new ResponseEntity<>(appTableService.separateTables(id), HttpStatus.OK);
+        return new ResponseEntity<>(appTableService.separateTableById(id), HttpStatus.OK);
     }
 }

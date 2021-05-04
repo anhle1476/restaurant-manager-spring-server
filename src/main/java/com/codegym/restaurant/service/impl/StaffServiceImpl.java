@@ -5,6 +5,7 @@ import com.codegym.restaurant.dto.UpdateAccountPasswordDTO;
 import com.codegym.restaurant.dto.UpdateStaffPasswordDTO;
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
+import com.codegym.restaurant.exception.UpdatePasswordFailedException;
 import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.repository.StaffRepository;
 import com.codegym.restaurant.service.SalaryDetailService;
@@ -73,7 +74,7 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
         found.setFullname(staff.getFullname());
         found.setPhoneNumber(staff.getPhoneNumber());
         found.setRole(staff.getRole());
-        // TODO: kiem tra luong cua found co giong voi luong cua staff truyen vo khong
+        // kiem tra luong cua found co giong voi luong cua staff truyen vo khong
         if (found.getSalaryPerShift() != staff.getSalaryPerShift()) {
             found.setSalaryPerShift(staff.getSalaryPerShift());
             salaryDetailService.updateSalaryDetailsWhenStaffSalaryChanged(found);
@@ -111,8 +112,8 @@ public class StaffServiceImpl implements UserDetailsService, StaffService {
                 .orElseThrow(() -> new StaffNotFoundException("Tài khoản đã bị khóa, không thể đổi mật khẩu"));
         boolean matches = passwordEncoder.matches(updateAccountPasswordDTO.getCurrentPassword(), staff.getPassword());
         if (!matches)
-            throw new RuntimeException("Sai mật khẩu");
-        // TODO: tao class UpdatePasswordFailedException 400
+            throw new UpdatePasswordFailedException("Sai mật khẩu");
+
         staff.setPassword(passwordEncoder.encode(updateAccountPasswordDTO.getNewPassword()));
         staffRepository.save(staff);
     }

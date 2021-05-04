@@ -1,6 +1,5 @@
 package com.codegym.restaurant.model.bussiness;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -26,7 +25,7 @@ public class ReservingOrder {
     @NotNull(message = "Ngày đặt bàn không được để trống")
     private ZonedDateTime reservingTime;
 
-    @Pattern(regexp = "^[\\pL ]{4,50}$", message = "Tên khách hàng phải chứa từ 4-50 ký tự và không có ký tự đặc biệt")
+    @Pattern(regexp = "^[\\pL 0-9&.,():+-]{2,50}$", message = "Tên khách hàng phải chứa từ 2-50 ký tự, bao gồm chữ, số hoặc các ký tự &.,():+-")
     @NotBlank(message = "Họ và tên khách hàng không được trống")
     private String customerName;
 
