@@ -8,6 +8,8 @@ import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.TemporalUnit;
+import java.util.Date;
 
 @Component
 public class DateUtils {
@@ -74,5 +76,9 @@ public class DateUtils {
 
     public ZonedDateTime endOfMonth(String dateStr) {
         return endOfDate(getLastDateOfMonth(dateStr));
+    }
+
+    public Date dateFromNow(int amount, TemporalUnit unit) {
+        return Date.from(now().plus(amount, unit).toInstant());
     }
 }

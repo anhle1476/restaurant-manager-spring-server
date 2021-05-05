@@ -6,9 +6,9 @@
       "description": "Jwt secret key config."
     },
     {
-      "name": "application.jwt.token-prefix",
+      "name": "application.jwt.cors-pattern",
       "type": "java.lang.String",
-      "description": "Jwt token prefix."
+      "description": "Description for application.jwt.cors-pattern."
     },
     {
       "name": "application.jwt.token-expiration-after-days",

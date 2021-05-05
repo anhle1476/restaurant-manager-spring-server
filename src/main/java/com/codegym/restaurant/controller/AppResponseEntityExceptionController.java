@@ -20,6 +20,7 @@ import com.codegym.restaurant.exception.FoodTypeNameExistsException;
 import com.codegym.restaurant.exception.FoodTypeNotFoundException;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.exception.InvalidDateInputException;
+import com.codegym.restaurant.exception.InvalidJwtException;
 import com.codegym.restaurant.exception.InvalidScheduleException;
 import com.codegym.restaurant.exception.ReservingOrderNotFoundException;
 import com.codegym.restaurant.exception.RoleNotFoundException;
@@ -40,6 +41,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 @RestController
 public class AppResponseEntityExceptionController extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(value = InvalidJwtException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleInvalidJwtException(InvalidJwtException ex) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), InvalidJwtException.ERROR_CODE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = EntityRestoreFailedException.class)
     public ResponseEntity<ExceptionResponseDTO> handleEntityRestoreFailedException(EntityRestoreFailedException ex) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), EntityRestoreFailedException.ERROR_CODE);

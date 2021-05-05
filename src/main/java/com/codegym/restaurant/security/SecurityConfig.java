@@ -3,13 +3,13 @@ package com.codegym.restaurant.security;
 import com.codegym.restaurant.security.jwt.JwtConfig;
 import com.codegym.restaurant.security.jwt.JwtUsernamePasswordAuthenticationFilter;
 import com.codegym.restaurant.security.jwt.JwtVerifierFilter;
+import com.codegym.restaurant.utils.JwtUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,7 +23,7 @@ import javax.crypto.SecretKey;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static com.codegym.restaurant.model.hr.RoleCode.*;
+import static com.codegym.restaurant.model.hr.RoleCode.ADMIN;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
     private final JwtConfig jwtConfig;
-    private final SecretKey secretKey;
+    private final JwtUtils jwtUtils;
 
 
     @Override
@@ -41,11 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtUsernamePasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
-                .addFilterAfter(new JwtVerifierFilter(jwtConfig, secretKey), JwtUsernamePasswordAuthenticationFilter.class)
+                .addFilter(new JwtUsernamePasswordAuthenticationFilter(authenticationManager(), jwtUtils))
+                .addFilterAfter(new JwtVerifierFilter(jwtUtils), JwtUsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/register").permitAll()
-                .antMatchers( "/csrf", "/v2/api-docs", "/swagger-resources/configuration/ui", "/configuration/ui", "/swagger-resources", "/swagger-resources/configuration/security", "/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
+                .antMatchers("/", "/login", "/refresh", "/clear-cookie").permitAll()
+                .antMatchers("/csrf", "/v2/api-docs", "/swagger-resources/configuration/ui", "/configuration/ui", "/swagger-resources", "/swagger-resources/configuration/security", "/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
                 .antMatchers("/api/v1/staffs/**", "/api/v1/roles/**").hasAnyAuthority(ADMIN.name())
                 .anyRequest()
                 .authenticated();
@@ -70,10 +70,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("*"));
+        configuration.setAllowedOriginPatterns(Collections.singletonList(jwtConfig.getCorsPattern()));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
         configuration.setExposedHeaders(Collections.singletonList("x-auth-token"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
