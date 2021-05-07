@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8d5ee1ea6dfd74899a60dcb0d5188885",
+    "revision": "855baa6bbd7150e06caebd1e352f086c",
     "url": "./index.html"
   },
   {
-    "revision": "8d218af92590a4ba3844",
+    "revision": "ceae28e45fb467eb5c44",
     "url": "./tables/css/2.e9ecda13.chunk.css"
   },
   {
-    "revision": "013bb2657cb3cb38b428",
-    "url": "./tables/css/main.7b4b0f58.chunk.css"
+    "revision": "522591a112843298bba9",
+    "url": "./tables/css/main.d4d412cb.chunk.css"
   },
   {
-    "revision": "8d218af92590a4ba3844",
-    "url": "./tables/js/2.8d218af9.chunk.js"
+    "revision": "ceae28e45fb467eb5c44",
+    "url": "./tables/js/2.ceae28e4.chunk.js"
   },
   {
-    "revision": "013bb2657cb3cb38b428",
-    "url": "./tables/js/main.013bb265.chunk.js"
+    "revision": "522591a112843298bba9",
+    "url": "./tables/js/main.522591a1.chunk.js"
   },
   {
     "revision": "2a54d9e93026e45eee9d",
@@ -52,10 +52,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./tables/media/Package_outlined.a27e25b6.svg"
   },
   {
-    "revision": "1e823918a9ae0cc9b00c4659479e4f2d",
-    "url": "./tables/media/Typography.1e823918.svg"
-  },
-  {
     "revision": "83542cf8870cc6652503a5be45bae35d",
     "url": "./tables/media/account.83542cf8.svg"
   },
@@ -84,36 +80,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./tables/media/logout.575f587e.svg"
   },
   {
-    "revision": "ceb4c09cf44b0d649bae0ab5abb55aa7",
-    "url": "./tables/media/orders.ceb4c09c.svg"
-  },
-  {
-    "revision": "013ee8fb311ffd63bcd50efd379af24a",
-    "url": "./tables/media/smileImg.013ee8fb.svg"
-  },
-  {
-    "revision": "bd347da150c7a29bb65a46f984d17e95",
-    "url": "./tables/media/stocks.bd347da1.svg"
-  },
-  {
-    "revision": "0fb6db630cbb62e3e8f83db33a7aeaf6",
-    "url": "./tables/media/stocksDown.0fb6db63.svg"
-  },
-  {
     "revision": "7ea18898033ed6d16e3685720a4a473c",
     "url": "./tables/media/tables.7ea18898.svg"
   },
   {
-    "revision": "1983cf5b9c2eb01a16f4d88710d0197d",
-    "url": "./tables/media/total-sale.1983cf5b.svg"
-  },
-  {
     "revision": "300b3ba5078cabfcc411c48585a962cb",
     "url": "./tables/media/ui-elements.300b3ba5.svg"
-  },
-  {
-    "revision": "45bb36d41de69ffcbd4fb78ddd70c05b",
-    "url": "./tables/media/usersImg.45bb36d4.svg"
   },
   {
     "revision": "b9ed454597f274af2e8b37ac99f1b4bc",

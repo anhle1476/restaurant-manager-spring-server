@@ -93,21 +93,24 @@ public class BillServiceImpl implements BillService {
     public MonthReportDTO monthReport(String month) {
         MonthReportDTO monthReportDTO = new MonthReportDTO();
         Map<LocalDate, Long> incomeByDate = new TreeMap<>();
-        Map<Food, Integer> foodQuantitySold = new HashMap<>();
+        Map<String, Integer> foodQuantitySold = new HashMap<>();
+        long totalOfMonth = 0;
         List<Bill> billList = getAllBillOfMonth(month);
         for (Bill bill : billList) {
             LocalDate date = bill.getPayTime().toLocalDate();
             // cong don tong bill cua ngay trong map
             incomeByDate.merge(date, bill.getLastPrice(), Long::sum);
+            totalOfMonth += bill.getLastPrice();
 
             for (BillDetail billDetail : bill.getBillDetails()) {
-                Integer quantitySold = foodQuantitySold.get(billDetail.getFood());
-                if (quantitySold != null)
-                    foodQuantitySold.put(billDetail.getFood(), quantitySold + billDetail.getQuantity());
-                foodQuantitySold.put(billDetail.getFood(), billDetail.getQuantity());
+                String foodName = billDetail.getFood().getName();
+                Integer quantitySold = foodQuantitySold.get(foodName);
+                if (quantitySold == null)
+                    quantitySold = 0;
+                foodQuantitySold.put(foodName, quantitySold + billDetail.getQuantity());
             }
         }
-        monthReportDTO.setTotalOfMonth(totalProceedsInTheMonth(month));
+        monthReportDTO.setTotalOfMonth(totalOfMonth);
         monthReportDTO.setIncomeByDate(incomeByDate);
         monthReportDTO.setFoodQuantitySold(foodQuantitySold);
         return monthReportDTO;

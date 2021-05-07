@@ -4,7 +4,6 @@ import com.codegym.restaurant.dto.StaffCreationDTO;
 import com.codegym.restaurant.dto.UpdateStaffPasswordDTO;
 import com.codegym.restaurant.exception.IdNotMatchException;
 import com.codegym.restaurant.model.hr.SalaryDetail;
-import com.codegym.restaurant.model.hr.Shift;
 import com.codegym.restaurant.model.hr.Staff;
 import com.codegym.restaurant.service.SalaryDetailService;
 import com.codegym.restaurant.service.StaffService;
@@ -43,11 +42,16 @@ public class StaffController {
     private ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<List<Staff>> show(@RequestParam(name = "deleted", required = false) String deleted) {
+    public ResponseEntity<List<Staff>> getAllStaff(@RequestParam(name = "deleted", required = false) String deleted) {
         List<Staff> staffList = deleted == null || !deleted.equals("true")
                 ? staffService.getAll()
                 : staffService.getAllDeleted();
         return new ResponseEntity<>(staffList, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getStaffById(@PathVariable(value = "id") Integer id) {
+        return new ResponseEntity<>(staffService.getById(id), HttpStatus.OK);
     }
 
     @PostMapping
@@ -65,7 +69,7 @@ public class StaffController {
             BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
-            if (!staff.getId().equals(id))
+        if (!staff.getId().equals(id))
             throw new IdNotMatchException("Id không trùng khớp");
         return new ResponseEntity<>(staffService.update(staff), HttpStatus.CREATED);
     }
