@@ -7,6 +7,7 @@ import com.codegym.restaurant.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ public class ShiftController {
     private ShiftServiceImpl shiftService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER','CHEF','MISC')")
     public ResponseEntity<List<Shift>> show(@RequestParam(name = "deleted", defaultValue = "false") String deleted) {
         List<Shift> shiftList = deleted.equals("both")
                 ? shiftService.getAllWithBothDeletedStatus()
@@ -41,6 +43,7 @@ public class ShiftController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> create(@Valid @RequestBody Shift shift, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
@@ -48,6 +51,7 @@ public class ShiftController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> update(@Valid @RequestBody Shift shift,
                                     BindingResult result,
                                     @PathVariable(value = "id") Integer id) {
@@ -59,12 +63,14 @@ public class ShiftController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Integer id) {
         shiftService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}/restore")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Shift> restore(@PathVariable(value = "id") Integer id) {
         shiftService.restore(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

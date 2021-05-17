@@ -7,6 +7,7 @@ import com.codegym.restaurant.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ public class ViolationController {
     private AppUtils appUtils;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER','CHEF','MISC')")
     public ResponseEntity<List<Violation>> show(@RequestParam(value = "deleted", required = false) String deleted){
         List<Violation> violations = deleted == null || !deleted.equals("true")
                 ? violationService.getAll()
@@ -39,6 +41,7 @@ public class ViolationController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> create(@Valid @RequestBody Violation violation, BindingResult result){
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
@@ -46,6 +49,7 @@ public class ViolationController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> update(@Valid @RequestBody Violation violation,
                                     BindingResult result,
                                     @PathVariable(value = "id") Integer id){
@@ -57,12 +61,14 @@ public class ViolationController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Violation> delete(@PathVariable(value = "id") Integer id){
         violationService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}/restore")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Violation> restore(@PathVariable(value = "id") Integer id){
         violationService.restore(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

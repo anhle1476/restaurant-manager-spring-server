@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,7 @@ public class FoodController {
     private FoodFormImageValidator imageValidator;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER','CHEF','MISC')")
     public ResponseEntity<List<Food>> showAllFoods(@RequestParam(name = "deleted", required = false) String deleted) {
         List<Food> foodTypes = deleted == null || !deleted.equals("true")
                 ? foodService.getAll()
@@ -50,6 +52,7 @@ public class FoodController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> createFood(@Valid @ModelAttribute FoodFormDTO food, BindingResult result) {
         imageValidator.validate(food, result);
         if (result.hasErrors())
@@ -66,6 +69,7 @@ public class FoodController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateFood(
             @PathVariable(value = "id") Integer id,
             @Valid @ModelAttribute FoodFormDTO food,
@@ -83,17 +87,20 @@ public class FoodController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteFood(@PathVariable(value = "id") Integer id) {
         foodService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}/restore")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Food> restoreFood(@PathVariable(value = "id") Integer id) {
         return new ResponseEntity<>(foodService.restore(id), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/toggle-availability")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHEF')")
     public ResponseEntity<Food> toggleAvailability(@PathVariable(value = "id") Integer id) {
         return new ResponseEntity<>(foodService.toggleAvailability(id), HttpStatus.OK);
     }

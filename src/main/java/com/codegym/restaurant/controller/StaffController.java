@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,7 @@ public class StaffController {
     private ModelMapper modelMapper;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER','CHEF','MISC')")
     public ResponseEntity<List<Staff>> getAllStaff(@RequestParam(name = "deleted", required = false) String deleted) {
         List<Staff> staffList = deleted == null || !deleted.equals("true")
                 ? staffService.getAll()
@@ -50,11 +52,13 @@ public class StaffController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> getStaffById(@PathVariable(value = "id") Integer id) {
         return new ResponseEntity<>(staffService.getById(id), HttpStatus.OK);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> createStaff(@Valid @RequestBody StaffCreationDTO staffCreationDTO, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
@@ -63,6 +67,7 @@ public class StaffController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateStaff(
             @PathVariable(value = "id") Integer id,
             @Valid @RequestBody Staff staff,
@@ -75,18 +80,21 @@ public class StaffController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteStaff(@PathVariable(value = "id") Integer id) {
         staffService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}/restore")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Staff> restore(@PathVariable(value = "id") Integer id) {
         staffService.restore(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}/update-password")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateStaffPassword(
             @PathVariable(value = "id") Integer id,
             @Valid @RequestBody UpdateStaffPasswordDTO updateStaffPasswordDTO,
@@ -100,6 +108,7 @@ public class StaffController {
     }
 
     @GetMapping("/{id}/salaries")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<SalaryDetail>> findAllSalaries(@PathVariable(value = "id") Integer id) {
         return new ResponseEntity<>(salaryDetailService.findByStaffId(id), HttpStatus.OK);
     }

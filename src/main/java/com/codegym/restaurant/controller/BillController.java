@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,11 +39,13 @@ public class BillController {
     private AppUtils appUtils;
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER')")
     public ResponseEntity<?> findByUUID(@PathVariable(value = "id") String id) {
         return new ResponseEntity<>(billService.getById(id), HttpStatus.OK);
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER')")
     public ResponseEntity<List<Bill>> getAllBills(
             @RequestParam(name = "month", required = false) String month,
             @RequestParam(name = "date", required = false) String date,
@@ -57,16 +60,19 @@ public class BillController {
     }
 
     @GetMapping("/by-table")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER')")
     public ResponseEntity<Map<Integer, Bill>> mapBillByTableId() {
         return new ResponseEntity<>(billService.mapBillByTableId(), HttpStatus.OK);
     }
 
     @GetMapping("/report")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER','CHEF','MISC')")
     public ResponseEntity<?> monthReport(@RequestParam(name = "month", required = false) String month) {
         return new ResponseEntity<>(billService.monthReport(month), HttpStatus.OK);
     }
 
     @GetMapping("/income")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER','CHEF','MISC')")
     public ResponseEntity<?> getTotalIncome(
             @RequestParam(value = "month", required = false) String month,
             @RequestParam(value = "date", required = false) String date
@@ -79,6 +85,7 @@ public class BillController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER')")
     public ResponseEntity<?> createBill(@Valid @RequestBody Bill bill, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
@@ -103,12 +110,14 @@ public class BillController {
     }
 
     @PostMapping("/{billId}/payment")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER')")
     public ResponseEntity<?> doPayment(@PathVariable(value = "billId") String billId, Principal principal) {
         AuthInfoDTO infoDTO = appUtils.extractUserInfoFromToken(principal);
         return new ResponseEntity<>(billService.doPayment(billId, infoDTO.getId()), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/process-food")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER')")
     public ResponseEntity<?> processBillDoneQuantity(
             @Valid @RequestBody ProcessFoodDTO processFoodDTO,
             BindingResult result,
@@ -123,6 +132,7 @@ public class BillController {
     }
 
     @PostMapping("/{billId}/moving-to/{tableId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER')")
     public ResponseEntity<Bill> changeTable(
             @PathVariable(value = "billId") String billId,
             @PathVariable(value = "tableId") Integer tableId
@@ -131,6 +141,7 @@ public class BillController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER')")
     public ResponseEntity<?> updateBill(
             @Valid @RequestBody Bill bill,
             BindingResult result,
@@ -148,6 +159,7 @@ public class BillController {
     }
 
     @DeleteMapping("/{billId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER')")
     public ResponseEntity<?> delete(
             @PathVariable(value = "billId") String billId,
             @RequestParam(value = "force", defaultValue = "false") boolean force,

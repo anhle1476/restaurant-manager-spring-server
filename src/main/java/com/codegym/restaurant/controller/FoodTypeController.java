@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,7 @@ public class FoodTypeController {
     private AppUtils appUtils;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER','CHEF','MISC')")
     public ResponseEntity<List<FoodType>> show(@RequestParam(name = "deleted", required = false) String deleted) {
         List<FoodType> foodTypes = deleted == null || !deleted.equals("true")
                 ? foodTypeService.getAll()
@@ -41,6 +43,7 @@ public class FoodTypeController {
         return new ResponseEntity<>(foodTypes, HttpStatus.OK);
     }
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> createFoodType(@Valid @RequestBody FoodType foodType, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
@@ -52,6 +55,7 @@ public class FoodTypeController {
         }
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateFoodType(
             @PathVariable(value = "id") Integer id,
             @Valid @RequestBody FoodType foodType,
@@ -69,17 +73,20 @@ public class FoodTypeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteFoodType(@PathVariable(value = "id") Integer id) {
         foodTypeService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}/restore")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<FoodType> restore(@PathVariable(value = "id") Integer id) {
         foodTypeService.restore(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @GetMapping("/{id}/foods")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<Food>> findAllFoodByFoodType(@PathVariable(value = "id") Integer id) {
         return new ResponseEntity<>(foodTypeService.findAllFoodByFoodType(id), HttpStatus.OK);
     }

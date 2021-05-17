@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,11 +36,13 @@ public class ScheduleController {
     private AppUtils appUtils;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER','CHEF','MISC')")
     public ResponseEntity<List<Schedule>> showSchedule() {
         return new ResponseEntity<>(scheduleService.getAll(), HttpStatus.OK);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> createSchedule(@Valid @RequestBody Schedule schedule, BindingResult result) {
         if (result.hasErrors())
             return appUtils.mapErrorToResponse(result);
@@ -52,6 +55,7 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateSchedule(
             @Valid @RequestBody Schedule schedule,
             BindingResult result,
@@ -68,12 +72,14 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Integer id) {
         scheduleService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/by-month/{yearMonth}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CASHIER','CHEF','MISC')")
     public ResponseEntity<Map<LocalDate, List<Schedule>>> findSchedulesOfMonth(@PathVariable(value = "yearMonth") String yearMonth) {
         return new ResponseEntity<>(scheduleService.findSchedulesOfMonth(yearMonth), HttpStatus.OK);
     }

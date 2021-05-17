@@ -1,16 +1,16 @@
 package com.codegym.restaurant.controller;
 
 import com.codegym.restaurant.dto.ExceptionResponseDTO;
-
+import com.codegym.restaurant.exception.AppTableNameExistsException;
 import com.codegym.restaurant.exception.AppTableNotAParentException;
+import com.codegym.restaurant.exception.AppTableNotFoundException;
 import com.codegym.restaurant.exception.AreaNameExistsException;
+import com.codegym.restaurant.exception.AreaNotFoundException;
 import com.codegym.restaurant.exception.BillDetailUpdateFailedException;
-import com.codegym.restaurant.exception.BillNotFoundException;
 import com.codegym.restaurant.exception.BillInUsingTableException;
+import com.codegym.restaurant.exception.BillNotFoundException;
 import com.codegym.restaurant.exception.BillUpdateFailedException;
 import com.codegym.restaurant.exception.DoPaymentFailedException;
-import com.codegym.restaurant.exception.AppTableNotFoundException;
-import com.codegym.restaurant.exception.AreaNotFoundException;
 import com.codegym.restaurant.exception.EntityRestoreFailedException;
 import com.codegym.restaurant.exception.FoodImageUploadFailedException;
 import com.codegym.restaurant.exception.FoodNameExistsException;
@@ -28,7 +28,6 @@ import com.codegym.restaurant.exception.SalaryDetailNotFoundException;
 import com.codegym.restaurant.exception.ScheduleNotFoundException;
 import com.codegym.restaurant.exception.ShiftNotFoundException;
 import com.codegym.restaurant.exception.StaffNotFoundException;
-import com.codegym.restaurant.exception.AppTableNameExistsException;
 import com.codegym.restaurant.exception.UpdatePasswordFailedException;
 import com.codegym.restaurant.exception.ViolationNotFoundException;
 import org.springframework.http.HttpStatus;

@@ -110,9 +110,10 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public Food restore(Integer id) {
-        Food food = getById(id);
+        Food food = foodRepository.findById(id)
+                .orElseThrow(() -> new FoodNotFoundException("Món không tồn tại"));;
         if (!food.isDeleted())
-            throw new EntityRestoreFailedException("Không thể phục hồi khi đối tượng chưa xóa");
+            throw new EntityRestoreFailedException("Không thể phục hồi khi món chưa xóa");
         food.setDeleted(false);
         return foodRepository.save(food);
     }
